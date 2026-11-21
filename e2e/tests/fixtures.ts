@@ -27,6 +27,6 @@ export const modal = (page: Page) => page.locator("dialog").first();
 /** 첫 글자의 opacity — SplitText 가 다시 재생되면 잠깐 1 보다 작아진다 */
 export const firstCharOpacity = (scope: ReturnType<Page["locator"]>) =>
   scope.evaluate((el) => {
-    const char = el.querySelector("[aria-label] span[aria-hidden] > span");
+    const char = el.querySelector("[data-char]");
     return char ? Number(getComputedStyle(char).opacity) : -1;
   });

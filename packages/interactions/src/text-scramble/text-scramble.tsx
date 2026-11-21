@@ -1,5 +1,6 @@
 import { useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { visuallyHidden } from "../lib/visually-hidden.css.ts";
 import * as css from "./text-scramble.css.ts";
 import { cx } from "../lib/cx.ts";
 
@@ -33,7 +34,9 @@ export function TextScramble({ text, duration = 1.2, className }: TextScramblePr
   }, [inView, reduce, text, duration]);
 
   return (
-    <span ref={ref} className={cx(css.root, className)} aria-label={text}>
+    <span ref={ref} className={cx(css.root, className)}>
+      {/* 역할 없는 span 의 aria-label 은 읽히지 않을 수 있어, 읽을 글은 숨긴 텍스트로 둔다 */}
+      <span className={visuallyHidden}>{text}</span>
       <span aria-hidden>{reduce ? text : output}</span>
     </span>
   );

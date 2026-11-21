@@ -14,7 +14,7 @@ export const scroller = style({
   overflowY: "auto",
   borderRadius: vars.radius.md,
   background: vars.color.surface,
-  // 포커스 가능한 자식이 없는 스크롤 상자는 브라우저가 Tab 으로 포커스를 준다
+  // tabIndex 로 Tab 포커스를 받는 스크롤 상자
   selectors: {
     "&:focus-visible": { outline: `2px solid ${vars.color.inverse}`, outlineOffset: 2 },
   },
