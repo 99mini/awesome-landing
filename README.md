@@ -56,10 +56,15 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 
 ```sh
 pnpm skills:install                 # .claude/skills/hallmark 복원
-# 랜딩 dev 서버를 띄운 뒤
-HALLMARK_PUPPETEER=<puppeteer-core 설치 폴더> \
-  node .claude/skills/hallmark/scripts/sloplint.mjs landings/editorial/src --url http://localhost:5201 --genre editorial
+pnpm audit:design editorial         # 빌드 → vite preview(5320~) → sloplint 정적 + 렌더
+pnpm audit:design gallery           # 갤러리는 --scope app
+pnpm audit:design all
+# 렌더 검사(대비·접힘·겹침)에는 puppeteer-core 가 필요 — 전역 설치 대신
+HALLMARK_PUPPETEER=<puppeteer-core 설치 폴더> pnpm audit:design all
 ```
+
+빌드된 `dist/assets/*.css` 를 함께 검사하므로 VE 스타일의 `:focus-visible`·`:active`(26a/26b)도 실제로 판정된다.
+`.css.ts` 에 쓴 `/* Hallmark · ... */` 스탬프·waive·dismissed 주석은 빌드된 CSS 맨 앞으로 옮겨서 검사한다. FAIL 이 있으면 exit 1.
 
 Claude Code 에서는 `/hallmark audit <path>`, 새 페이지는 `/hallmark custom ...` 으로 방향을 잡고 구현은 이 레포 구조(React + VE + Motion)로 옮긴다. 지켜야 할 기준은 CLAUDE.md 의 "디자인 기준".
 

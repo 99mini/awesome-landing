@@ -31,7 +31,7 @@ AI 가 만든 티가 나는 기본값을 피한다. 랜딩·데모·갤러리 UI
 - 보라→파랑/분홍, 시안-온-다크 그라디언트 금지. 블러 블롭은 그 움직임이 데모 대상일 때만 (CSS 에 `Hallmark · waive 29` 주석으로 근거 기록).
 - 히어로는 제목 + 한 문장 + 액션. 1440×900 한 화면에 약 80단어 이하.
 - 제목은 `overflow-wrap: break-word; min-width: 0`, 이미지 그리드는 `minmax(0, 1fr)`, `100vw` 금지 (reset 이 `overflow-x: clip` 처리).
-- 랜딩 검사: `pnpm skills:install` 후 dev 서버를 띄우고
-  `node .claude/skills/hallmark/scripts/sloplint.mjs landings/<name>/src --url http://localhost:<port> --genre <genre>`.
+- 디자인 검사: `pnpm skills:install` 후 `pnpm audit:design <landing|gallery|all>`.
+  빌드된 CSS 까지 검사하므로 26a/26b(포커스·active)도 실제로 판정된다 — FAIL 이면 진짜 문제.
   render 검사에는 puppeteer-core 가 필요 — 전역 설치 대신 `HALLMARK_PUPPETEER=<puppeteer-core 가 설치된 폴더>`.
-  VE 스타일은 정적 검사가 읽지 못해 26a/26b(포커스·active) 가 항상 FAIL 로 나온다 — 브라우저에서 확인 후 무시.
+  waive·dismissed 는 `.css.ts` 의 `/* Hallmark · waive <gate> · <근거> */` 주석으로 남기면 검사에 반영된다.
