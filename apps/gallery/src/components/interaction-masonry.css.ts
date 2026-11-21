@@ -1,5 +1,5 @@
 import { vars } from "@awesome/theme";
-import { style } from "@vanilla-extract/css";
+import { createVar, style } from "@vanilla-extract/css";
 import { focusRing, stage } from "../styles/ui.css.ts";
 
 export const masonry = style({
@@ -71,4 +71,11 @@ export const title = style({
   display: "inline-block",
   fontSize: "1.05rem",
   fontWeight: 700,
+});
+
+/** 화면 밖이라 데모를 내린 동안 — 마지막으로 잰 높이를 유지해 masonry 열이 다시 섞이지 않게 */
+export const pausedHeight = createVar();
+
+export const paused = style({
+  height: pausedHeight,
 });

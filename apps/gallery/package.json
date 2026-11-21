@@ -13,6 +13,7 @@
     "@awesome/interactions": "workspace:*",
     "@awesome/theme": "workspace:*",
     "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/dynamic": "catalog:",
     "motion": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
