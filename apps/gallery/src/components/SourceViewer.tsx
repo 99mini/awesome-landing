@@ -1,4 +1,4 @@
-import { loadSources, type SourceFile } from "@awesome/interactions/registry";
+import { loadSources, type SourceFile } from "@awesome/interactions/sources";
 import { useEffect, useMemo, useState } from "react";
 import { highlight } from "sugar-high";
 import * as css from "./SourceViewer.css.ts";

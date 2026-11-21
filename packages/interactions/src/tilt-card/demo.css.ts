@@ -8,5 +8,8 @@ export const card = style({
   height: 180,
   borderRadius: vars.radius.lg,
   fontWeight: 700,
-  background: "linear-gradient(135deg, #6d5dfc, #e05cff)",
+  // 주황 램프 위에서 4.5:1 이상 — 흰 글자는 3.2:1 로 부족하다
+  color: "oklch(22% 0.04 40)",
+  // 보라→분홍 그라디언트는 Hallmark 2a — 한 색조(주황) 안의 램프로
+  background: "linear-gradient(135deg, oklch(74% 0.16 55), oklch(64% 0.2 30))",
 });
