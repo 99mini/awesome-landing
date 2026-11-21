@@ -46,7 +46,13 @@ function PreviewCard({
       layoutCrossfade={false}
       className={css.card}
       style={{ borderRadius: 20 }}
-      onClick={() => onOpen(meta.slug)}
+      onClick={(e) => {
+        // 데모 안의 버튼·링크·입력·다이얼로그를 조작한 클릭은 모달을 열지 않는다 (제목 버튼은 예외)
+        const target = e.target as Element;
+        const control = target.closest("button, a, input, select, textarea, dialog");
+        if (control && !control.hasAttribute("data-open-interaction")) return;
+        onOpen(meta.slug);
+      }}
     >
       <motion.div
         layoutId={`stage-${meta.slug}`}
@@ -65,7 +71,7 @@ function PreviewCard({
       </motion.div>
       <motion.footer layout="position" className={css.footer}>
         <span className={ui.badge}>{meta.category}</span>
-        <button type="button" className={css.openButton}>
+        <button type="button" className={css.openButton} data-open-interaction>
           <motion.span
             layoutId={`title-${meta.slug}`}
             layoutCrossfade={false}
