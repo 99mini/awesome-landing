@@ -1,0 +1,7 @@
+{
+  "name": "aurora",
+  "title": "Aurora",
+  "description": "움직이는 오로라 그라디언트 히어로 + 마그네틱 CTA",
+  "port": 5200,
+  "tags": ["hero", "gradient", "saas"]
+}
