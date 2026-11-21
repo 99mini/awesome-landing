@@ -103,6 +103,8 @@ function Item<T extends string>({
       value={item}
       dragListener={false}
       dragControls={controls}
+      // Motion 은 드래그 요소에 tabindex=0 을 붙인다 — 키보드 이동은 손잡이가 맡으므로 항목은 Tab 정지점에서 뺀다
+      tabIndex={-1}
       className={cx(css.item, className)}
       layout="position"
       whileDrag={reduce ? undefined : { scale: 1.02 }}

@@ -32,6 +32,8 @@ test.describe("gesture interactions", () => {
       .filter({ hasText: "Prototype" })
       .getByRole("listitem");
     await expect(items).toHaveText(["Design", "Prototype", "Test", "Ship"]);
+    // 키보드 정지점은 손잡이뿐 — 항목 자체가 Tab 을 받으면 링 없는 빈 정지점이 생긴다
+    await expect(items.first()).toHaveAttribute("tabindex", "-1");
 
     const handle = modal(page).getByRole("button", { name: /^Reorder Design/ });
     await drag(page, handle, 0, 110);
