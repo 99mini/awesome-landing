@@ -8,18 +8,33 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ],
     "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "react/no-array-index-key": "off",
     "import/no-unassigned-import": [
       "warn",
-      { "allow": ["**/*.css", "**/*.css.ts", "@awesome/theme/reset"] }
+      {
+        "allow": ["**/*.css", "**/*.css.ts", "@awesome/theme/reset"]
+      }
     ]
   },
   "env": {
     "builtin": true,
     "browser": true
   },
-  "ignorePatterns": ["**/dist/**", "templates/**", ".claude/**", ".hallmark/**"]
+  "ignorePatterns": ["**/dist/**", "templates/**", ".claude/**", ".hallmark/**"],
+  "overrides": [
+    {
+      "files": ["e2e/**"],
+      "rules": {
+        "no-await-in-loop": "off"
+      }
+    }
+  ]
 }

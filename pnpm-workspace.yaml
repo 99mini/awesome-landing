@@ -2,6 +2,7 @@ packages:
   - apps/*
   - landings/*
   - packages/*
+  - e2e
 
 # 모든 워크스페이스가 공유하는 버전 (package.json 에서 "catalog:" 로 참조)
 catalog:
@@ -10,6 +11,7 @@ catalog:
   "@types/react": ^19.3.0
   "@types/react-dom": ^19.3.0
   "@types/node": ^24.19.2
+  "@playwright/test": ^1.65.1
   motion: ^14.14.0
   "@vanilla-extract/css": ^1.21.3
   "@vanilla-extract/dynamic": ^2.1.5

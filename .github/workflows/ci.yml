@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: check + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm check
+      - run: pnpm build
+
+  e2e:
+    name: e2e (playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Install Chromium
+        run: pnpm --filter @awesome/e2e exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7
+
+  design-audit:
+    name: design audit (hallmark)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Restore the Hallmark skill from skills-lock.json
+        run: pnpm skills:install
+      - name: Install puppeteer-core outside the repo
+        run: npm i --prefix "$RUNNER_TEMP/pptr" --no-audit --no-fund puppeteer-core
+      - name: Audit every target
+        env:
+          HALLMARK_PUPPETEER: ${{ runner.temp }}/pptr
+          CHROME_PATH: /usr/bin/google-chrome
+        run: pnpm audit:design all
