@@ -1,4 +1,4 @@
-import type { InteractionMeta } from "../types.ts";
+import type { ControlValues, InteractionMeta } from "../types.ts";
 import { MagneticButton } from "./MagneticButton.tsx";
 import * as css from "./demo.css.ts";
 
@@ -9,8 +9,15 @@ export const meta: InteractionMeta = {
   category: "cursor",
   tags: ["spring", "pointer"],
   replayable: false,
+  controls: {
+    strength: { label: "Strength", min: 0, max: 1, step: 0.05, default: 0.35 },
+  },
 };
 
-export default function Demo() {
-  return <MagneticButton className={css.button}>Get started</MagneticButton>;
+export default function Demo({ strength }: ControlValues) {
+  return (
+    <MagneticButton className={css.button} strength={strength}>
+      Get started
+    </MagneticButton>
+  );
 }
