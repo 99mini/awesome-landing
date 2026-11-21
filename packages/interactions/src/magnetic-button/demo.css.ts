@@ -10,4 +10,7 @@ export const button = style({
   fontSize: "1rem",
   fontWeight: 600,
   cursor: "pointer",
+  selectors: {
+    "&:focus-visible": { outline: `2px solid ${vars.color.inverse}`, outlineOffset: 3 },
+  },
 });

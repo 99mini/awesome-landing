@@ -87,7 +87,7 @@ export const entry = style({
   justifyContent: "space-between",
   gap: 12,
   width: "100%",
-  padding: "9px 10px",
+  padding: "8px 12px",
   border: 0,
   borderBottom: rule,
   background: "transparent",
@@ -119,7 +119,7 @@ export const entryKind = style({
 export const stageColumn = style({
   display: "grid",
   alignContent: "start",
-  gap: 14,
+  gap: 16,
   "@media": { "(min-width: 961px)": { position: "sticky", top: 16, alignSelf: "start" } },
 });
 
@@ -268,7 +268,7 @@ export const steps = style({
 
 export const step = style({
   display: "grid",
-  gap: 10,
+  gap: 12,
 });
 
 export const stepText = style({
@@ -278,7 +278,7 @@ export const stepText = style({
 
 export const code = style({
   display: "block",
-  padding: "14px 16px",
+  padding: "12px 16px",
   overflowX: "auto",
   borderRadius: 10,
   background: ix.color.stage,

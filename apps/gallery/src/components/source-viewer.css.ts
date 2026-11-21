@@ -26,7 +26,7 @@ export const tabs = style({
 export const tab = style([
   focusRing,
   {
-    padding: "4px 10px",
+    padding: "4px 12px",
     border: 0,
     borderRadius: vars.radius.sm,
     background: "none",

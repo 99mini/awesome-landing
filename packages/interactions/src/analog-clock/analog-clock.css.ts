@@ -30,10 +30,10 @@ export const hourHand = style({ ...hand, strokeWidth: 6 });
 export const minuteHand = style({ ...hand, strokeWidth: 4 });
 export const secondHand = style({
   ...hand,
-  stroke: "var(--clock-accent, #ef4444)",
+  stroke: "var(--clock-accent, currentColor)",
   strokeWidth: 1.5,
 });
 
 export const pin = style({
-  fill: "var(--clock-accent, #ef4444)",
+  fill: "var(--clock-accent, currentColor)",
 });
