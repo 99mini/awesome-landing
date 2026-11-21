@@ -185,6 +185,9 @@ catalogs:
     '@vanilla-extract/css':
       specifier: ^1.21.3
       version: 1.21.3
+    '@vanilla-extract/dynamic':
+      specifier: ^2.1.5
+      version: 2.1.5
     '@vanilla-extract/vite-plugin':
       specifier: ^5.2.6
       version: 5.2.6
@@ -322,6 +325,46 @@ importers:
         specifier: 'catalog:'
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)
 
+  landings/editorial:
+    dependencies:
+      '@awesome/interactions':
+        specifier: workspace:*
+        version: link:../../packages/interactions
+      '@awesome/theme':
+        specifier: workspace:*
+        version: link:../../packages/theme
+      '@vanilla-extract/css':
+        specifier: 'catalog:'
+        version: 1.21.3
+      motion:
+        specifier: 'catalog:'
+        version: 14.14.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.1(react@19.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      '@vanilla-extract/vite-plugin':
+        specifier: 'catalog:'
+        version: 5.2.6(@types/node@26.6.6)(esbuild@0.28.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2))
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2))
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)
+
   packages/interactions:
     dependencies:
       '@awesome/theme':
@@ -330,6 +373,9 @@ importers:
       '@vanilla-extract/css':
         specifier: 'catalog:'
         version: 1.21.3
+      '@vanilla-extract/dynamic':
+        specifier: 'catalog:'
+        version: 2.1.5
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
@@ -1139,6 +1185,9 @@ packages:
 
   '@vanilla-extract/css@1.21.3':
     resolution: {integrity: sha512-h7wXxEowNLjhGfTHqReoSBWjAzxDADM8yUuUL/enDWXQVwy50JnY8xFNaie04XHTmrBPKJjwcwRNuTGlFIJLSA==}
+
+  '@vanilla-extract/dynamic@2.1.5':
+    resolution: {integrity: sha512-QGIFGb1qyXQkbzx6X6i3+3LMc/iv/ZMBttMBL+Wm/DetQd36KsKsFg5CtH3qy+1hCA/5w93mEIIAiL4fkM8ycw==}
 
   '@vanilla-extract/integration@8.0.11':
     resolution: {integrity: sha512-f24QLKpY6qN1AJcWxvbfP6H3BNJPkLC6La52OfRje6KNPTrlFX4nBlw10UDyPI7pwwh6zXR7IKyD/LCmWQBnpg==}
@@ -2175,6 +2224,10 @@ snapshots:
       picocolors: 1.1.1
     transitivePeerDependencies:
       - babel-plugin-macros
+
+  '@vanilla-extract/dynamic@2.1.5':
+    dependencies:
+      '@vanilla-extract/private': 1.0.9
 
   '@vanilla-extract/integration@8.0.11':
     dependencies:
