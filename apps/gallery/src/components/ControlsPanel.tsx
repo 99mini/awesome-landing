@@ -19,6 +19,20 @@ export function ControlsPanel({ controls, values, onChange, onReset }: ControlsP
       </div>
       {Object.entries(controls).map(([key, c]) => {
         const value = values[key] ?? c.default;
+        if (c.kind === "toggle") {
+          return (
+            <label key={key} className={css.row}>
+              <span>{c.label}</span>
+              <input
+                type="checkbox"
+                className={css.toggle}
+                checked={value === 1}
+                onChange={(e) => onChange(key, e.currentTarget.checked ? 1 : 0)}
+              />
+              <output className={css.value}>{value === 1 ? "On" : "Off"}</output>
+            </label>
+          );
+        }
         return (
           <label key={key} className={css.row}>
             <span>{c.label}</span>
