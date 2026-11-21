@@ -70,7 +70,6 @@ function PreviewCard({
         )}
       </motion.div>
       <motion.footer layout="position" className={css.footer}>
-        <span className={ui.badge}>{meta.category}</span>
         <button type="button" className={css.openButton} data-open-interaction>
           <motion.span
             layoutId={`title-${meta.slug}`}
@@ -80,7 +79,7 @@ function PreviewCard({
             {meta.title}
           </motion.span>
         </button>
-        <Tags tags={meta.tags} />
+        <Tags tags={[meta.category, ...(meta.tags ?? [])]} />
       </motion.footer>
     </motion.article>
   );

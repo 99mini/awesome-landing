@@ -62,7 +62,7 @@ export const code = style({
   margin: 0,
   padding: "16px 0",
   overflow: "auto",
-  background: "#0e0e13",
+  background: vars.code.ground,
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
   fontSize: "0.8rem",
   lineHeight: 1.6,
@@ -71,15 +71,15 @@ export const code = style({
 
   // sugar-high 토큰 색
   vars: {
-    "--sh-class": "#7dd3fc",
-    "--sh-identifier": "#e4e4e7",
-    "--sh-sign": "#8b8b98",
-    "--sh-property": "#93c5fd",
-    "--sh-entity": "#5eead4",
-    "--sh-jsxliterals": "#c4b5fd",
-    "--sh-string": "#86efac",
-    "--sh-keyword": "#f9a8d4",
-    "--sh-comment": "#6b6b78",
+    "--sh-class": vars.code.class,
+    "--sh-identifier": vars.code.identifier,
+    "--sh-sign": vars.code.sign,
+    "--sh-property": vars.code.property,
+    "--sh-entity": vars.code.entity,
+    "--sh-jsxliterals": vars.code.jsx,
+    "--sh-string": vars.code.string,
+    "--sh-keyword": vars.code.keyword,
+    "--sh-comment": vars.code.comment,
   },
 });
 
@@ -90,7 +90,7 @@ globalStyle(`${code} .sh__line::before`, {
   display: "inline-block",
   width: 40,
   marginRight: 16,
-  color: "#4a4a55",
+  color: vars.code.lineNumber,
   textAlign: "right",
 });
 

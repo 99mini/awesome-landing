@@ -6,6 +6,7 @@ export const area = style({
   placeItems: "center",
   width: "100%",
   minHeight: 220,
+  padding: 16,
   border: `1px dashed ${vars.color.border}`,
   borderRadius: vars.radius.md,
 });
@@ -17,7 +18,7 @@ export const hint = style({
 });
 
 export const dot = style({
-  background: "#fff",
+  background: vars.color.inverse,
   // 글자 위를 지날 때 색이 반전된다
   mixBlendMode: "difference",
 });

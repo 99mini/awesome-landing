@@ -12,5 +12,5 @@ export const item = style({
 });
 
 export const dot = style({
-  color: vars.color.accent,
+  color: vars.color.signal,
 });

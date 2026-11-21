@@ -84,9 +84,6 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
           </motion.div>
 
           <motion.div layout="position" className={css.body}>
-            <motion.span className={css.category} {...fade}>
-              {meta.category}
-            </motion.span>
             <motion.h2
               layoutId={`title-${meta.slug}`}
               layoutCrossfade={false}
@@ -99,7 +96,7 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
               {meta.description}
             </motion.p>
             <motion.div {...fade}>
-              <Tags tags={meta.tags} />
+              <Tags tags={[meta.category, ...(meta.tags ?? [])]} />
               <p className={css.source}>
                 source: <code>packages/interactions/src/{meta.slug}/</code>
               </p>

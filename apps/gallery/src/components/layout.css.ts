@@ -1,5 +1,6 @@
 import { vars } from "@awesome/theme";
 import { style } from "@vanilla-extract/css";
+import { focusRing } from "../styles/ui.css.ts";
 
 export const shell = style({
   maxWidth: 1120,
@@ -11,11 +12,15 @@ export const header = style({
   padding: "24px 0",
 });
 
-export const logo = style({
-  fontWeight: 800,
-  fontSize: "1.25rem",
-});
+export const logo = style([
+  focusRing,
+  {
+    borderRadius: vars.radius.sm,
+    fontWeight: 800,
+    fontSize: "1.25rem",
+  },
+]);
 
 export const logoAccent = style({
-  color: vars.color.accent,
+  color: vars.color.muted,
 });

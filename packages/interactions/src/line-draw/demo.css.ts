@@ -7,6 +7,6 @@ export const chart = style({
 });
 
 export const series = styleVariants({
-  primary: { color: vars.color.accent },
-  secondary: { color: "#5eead4" },
+  primary: { color: vars.color.signal },
+  secondary: { color: vars.color.signalAlt },
 });
