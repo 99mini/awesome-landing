@@ -20,22 +20,6 @@ const field = {
   fontSize: "0.95rem",
 } as const;
 
-/** 입력칸 테두리는 주변과 3:1 이상 — 일반 border 토큰은 1.4:1 로 부족하다 */
-const fieldEdge = { borderColor: vars.color.muted } as const;
-
-export const search = style([
-  focusRing,
-  {
-    ...field,
-    ...fieldEdge,
-    flex: "1 1 220px",
-    minWidth: 0,
-    maxWidth: 320,
-    padding: "0 16px",
-    selectors: { "&::placeholder": { color: vars.color.muted } },
-  },
-]);
-
 export const chips = style({
   display: "flex",
   flexWrap: "wrap",
@@ -71,16 +55,6 @@ export const count = style({
   opacity: 0.7,
   fontVariantNumeric: "tabular-nums",
 });
-
-export const select = style([
-  focusRing,
-  {
-    ...field,
-    ...fieldEdge,
-    padding: "0 16px",
-    cursor: "pointer",
-  },
-]);
 
 export const summary = style({
   marginLeft: "auto",

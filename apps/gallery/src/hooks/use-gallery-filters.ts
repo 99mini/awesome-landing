@@ -13,6 +13,12 @@ export const TAGS = [...new Set(interactions.flatMap((m) => m.meta.tags ?? []))]
   a.localeCompare(b),
 );
 
+/** 태그·카테고리별 인터랙션 수 (전체 기준, 실제 값) */
+export const tagCount = (tag: string) =>
+  interactions.filter((m) => m.meta.tags?.includes(tag)).length;
+export const categoryCount = (category: string) =>
+  interactions.filter((m) => m.meta.category === category).length;
+
 type FilterKey = "category" | "tag" | "q";
 
 function matches(
@@ -46,15 +52,22 @@ export function useGalleryFilters() {
   const tag = params.get("tag");
   const q = params.get("q") ?? "";
 
-  function set(key: FilterKey, value: string | null, replace = false) {
+  /** 여러 값을 한 번에 바꾼다 — 연속 setParams 는 서로를 덮어쓸 수 있어 한 번의 갱신으로 묶는다 */
+  function update(changes: Partial<Record<FilterKey, string | null>>, replace = false) {
     setParams(
       (prev) => {
-        if (value) prev.set(key, value);
-        else prev.delete(key);
+        for (const [key, value] of Object.entries(changes)) {
+          if (value) prev.set(key, value);
+          else prev.delete(key);
+        }
         return prev;
       },
       { replace, preventScrollReset: true },
     );
+  }
+
+  function set(key: FilterKey, value: string | null, replace = false) {
+    update({ [key]: value }, replace);
   }
 
   function clear() {
@@ -72,5 +85,5 @@ export function useGalleryFilters() {
   const filtered = interactions.filter((m) => matches(m, category, tag, q.trim()));
   const active = Boolean(category || tag || q);
 
-  return { category, tag, q, filtered, active, set, clear };
+  return { category, tag, q, filtered, active, set, update, clear };
 }
