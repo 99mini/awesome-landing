@@ -105,9 +105,11 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
           >
             ✕
           </motion.button>
-          <motion.div className="modal-replay" {...fade}>
-            <ReplayButton replayKey={replayKey} onReplay={replay} />
-          </motion.div>
+          {meta.replayable !== false && (
+            <motion.div className="modal-replay" {...fade}>
+              <ReplayButton replayKey={replayKey} onReplay={replay} />
+            </motion.div>
+          )}
         </motion.dialog>
       </div>
     </>

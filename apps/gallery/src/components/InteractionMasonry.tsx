@@ -55,7 +55,9 @@ function PreviewCard({
         <motion.div layout="position" className="demo-fit">
           <Demo key={replayKey} />
         </motion.div>
-        <ReplayButton replayKey={replayKey} onReplay={replay} className="replay-card" />
+        {meta.replayable !== false && (
+          <ReplayButton replayKey={replayKey} onReplay={replay} className="replay-card" />
+        )}
       </motion.div>
       <motion.footer layout="position" className="preview-footer">
         <span className="badge">{meta.category}</span>

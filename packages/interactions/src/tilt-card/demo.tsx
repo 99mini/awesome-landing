@@ -7,6 +7,7 @@ export const meta: InteractionMeta = {
   description: "포인터 위치에 따라 기울어지는 원근 카드",
   category: "hover",
   tags: ["perspective", "useTransform"],
+  replayable: false,
 };
 
 export default function Demo() {
