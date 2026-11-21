@@ -3,13 +3,6 @@ import { style } from "@vanilla-extract/css";
 
 /** 갤러리 전반에서 재사용하는 작은 스타일 조각 */
 
-export const badge = style({
-  fontSize: "0.75rem",
-  color: vars.color.accent,
-  textTransform: "uppercase",
-  letterSpacing: "0.08em",
-});
-
 export const muted = style({
   color: vars.color.muted,
 });
@@ -35,7 +28,7 @@ export const stage = style({
   display: "grid",
   placeItems: "center",
   overflow: "hidden",
-  background: `radial-gradient(circle at 50% 0%, ${vars.color.stageGlow}, ${vars.color.stageBase})`,
+  background: vars.color.stage,
 });
 
 /** 원형 아이콘 버튼 (닫기·다시 보기) */

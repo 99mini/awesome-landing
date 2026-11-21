@@ -1,5 +1,6 @@
 import { vars } from "@awesome/theme";
 import { style } from "@vanilla-extract/css";
+import { focusRing } from "../styles/ui.css.ts";
 
 export const section = style({
   marginTop: 48,
@@ -16,18 +17,21 @@ export const grid = style({
   gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
 });
 
-export const landingCard = style({
-  display: "block",
-  height: "100%",
-  padding: 20,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.md,
-  background: vars.color.surface,
-  transition: "border-color 0.2s, transform 0.2s",
-  selectors: {
-    "&:hover": { borderColor: vars.color.accent, transform: "translateY(-2px)" },
+export const landingCard = style([
+  focusRing,
+  {
+    display: "block",
+    height: "100%",
+    padding: 20,
+    border: `1px solid ${vars.color.border}`,
+    borderRadius: vars.radius.md,
+    background: vars.color.surface,
+    transition: "border-color 0.2s, transform 0.2s",
+    selectors: {
+      "&:hover": { borderColor: vars.color.accent, transform: "translateY(-2px)" },
+    },
   },
-});
+]);
 
 export const landingTitle = style({
   margin: "8px 0 4px",

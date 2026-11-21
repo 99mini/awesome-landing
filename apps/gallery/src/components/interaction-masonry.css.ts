@@ -52,9 +52,11 @@ export const footer = style({
 export const openButton = style([
   focusRing,
   {
-    display: "block",
+    display: "flex",
+    alignItems: "center",
+    minHeight: 36,
     padding: 0,
-    margin: "6px 0 0",
+    margin: "4px 0 0",
     border: 0,
     borderRadius: vars.radius.sm,
     background: "none",

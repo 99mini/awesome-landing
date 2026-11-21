@@ -1,6 +1,6 @@
 import { vars } from "@awesome/theme";
 import { style } from "@vanilla-extract/css";
-import { badge, iconButton, muted, stage } from "../styles/ui.css.ts";
+import { iconButton, muted, stage } from "../styles/ui.css.ts";
 
 export const backdrop = style({
   position: "fixed",
@@ -42,15 +42,12 @@ export const modalStage = style([
     minHeight: "min(56svh, 520px)",
     margin: 12,
     padding: "48px 24px",
-    background: `radial-gradient(circle at 50% 0%, ${vars.color.stageGlowStrong}, ${vars.color.stageBase})`,
   },
 ]);
 
 export const body = style({
   padding: "4px 28px 28px",
 });
-
-export const category = style([badge, { display: "block" }]);
 
 export const title = style({
   display: "inline-block",

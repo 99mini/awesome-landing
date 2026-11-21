@@ -17,9 +17,9 @@ const surface = {
 };
 
 export const tone = styleVariants({
-  spring: { ...surface, background: "oklch(34% 0.06 262)" },
-  layout: { ...surface, background: "oklch(34% 0.05 170)" },
-  focus: { ...surface, background: "oklch(34% 0.05 60)" },
+  spring: { ...surface, background: vars.color.toneA },
+  layout: { ...surface, background: vars.color.toneB },
+  focus: { ...surface, background: vars.color.toneC },
 });
 
 export const card = style({
@@ -36,7 +36,8 @@ export const cardTitle = style({
 export const cardHint = style({
   display: "block",
   marginTop: 6,
-  color: vars.color.muted,
+  // 색 면 위에서는 muted 가 4.5:1 에 못 미친다
+  color: vars.color.text,
   fontSize: "0.85rem",
 });
 

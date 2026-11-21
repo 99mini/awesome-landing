@@ -10,5 +10,5 @@ export const list = style({
 export const item = style({
   padding: "1.5rem",
   borderRadius: vars.radius.md,
-  background: "#1c1c22",
+  background: vars.color.surfaceRaised,
 });
