@@ -70,3 +70,19 @@ export const tools = style({
   gap: 16,
   marginTop: 24,
 });
+
+/** 이전·다음 — 닫기·다시 보기와 반대편(왼쪽 위) */
+export const pager = style({
+  position: "absolute",
+  top: 20,
+  left: 20,
+  display: "flex",
+  gap: 8,
+});
+
+export const pagerButton = style([
+  iconButton,
+  {
+    selectors: { "&:active": { transform: "translateY(1px)" } },
+  },
+]);
