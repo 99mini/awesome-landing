@@ -1,0 +1,7 @@
+{
+  "name": "editorial",
+  "title": "Editorial",
+  "description": "세리프 타이포 중심의 라이트 에디토리얼 — 스크램블·마키·카운트업",
+  "port": 5201,
+  "tags": ["editorial", "typography", "light"]
+}

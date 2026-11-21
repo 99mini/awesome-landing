@@ -12,6 +12,7 @@ catalog:
   "@types/node": ^24.19.2
   motion: ^14.14.0
   "@vanilla-extract/css": ^1.21.3
+  "@vanilla-extract/dynamic": ^2.1.5
   "@vanilla-extract/vite-plugin": ^5.2.6
   react-router: ^8.5.2
   sugar-high: ^2.7.0
