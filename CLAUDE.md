@@ -32,6 +32,8 @@ AI 가 만든 티가 나는 기본값을 피한다. 랜딩·데모·갤러리 UI
 - 색과 글꼴은 토큰으로만: `@awesome/theme` 의 `vars`, 랜딩은 자체 `theme.css.ts`(`createGlobalTheme`). 컴포넌트 스타일에 색 리터럴·`#000`/`#fff` 금지.
 - `transition: all` 금지. `width`·`height`·`top`·`left` 애니메이션 금지 — `transform`·`opacity` 만.
 - 모든 애니메이션은 `prefers-reduced-motion` 대응. 모든 인터랙티브 요소는 즉시 나타나는 `:focus-visible`.
+- 드래그·스와이프로만 되는 조작은 없게 한다: 같은 동작을 키보드나 버튼으로도 (Reorder 는 손잡이에서 ↑/↓, Swipe 는 버튼). 갤러리 모달이 ←/→ 를 쓰므로 데모 키보드 조작은 ↑/↓ 등으로.
+- 흐리게 보이는 글자도 읽혀야 한다 — 효과용으로 흐린 텍스트도 대비 기준(큰 글자 3:1)을 지킨다 (Storybook axe 가 잡는다).
 - 제목 안의 한 단어만 이탤릭·색·굵기로 강조 금지. 제목은 한 스타일.
 - eyebrow(제목 위 작은 라벨)·자간 넓힌 대문자 라벨(15px 이하 uppercase 또는 letter-spacing > 0.03em) 금지. 워드마크·`<time>`·바이라인은 예외.
 - 템플릿 구두점 금지: `A · B · C` 중점 나열, 버튼/링크 뒤 화살표(`Get started →`), 본문의 em/en 대시. 마키 구분자는 예외.

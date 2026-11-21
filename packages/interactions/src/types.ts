@@ -1,6 +1,6 @@
 import type { ComponentType, LazyExoticComponent } from "react";
 
-export type InteractionCategory = "cursor" | "scroll" | "hover" | "text" | "layout";
+export type InteractionCategory = "cursor" | "scroll" | "hover" | "text" | "layout" | "gesture";
 
 /**
  * 갤러리 조절기로 노출할 숫자 prop.
