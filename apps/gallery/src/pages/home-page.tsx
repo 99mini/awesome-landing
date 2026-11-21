@@ -65,7 +65,7 @@ export function HomePage() {
 
       <section className={css.section}>
         <h2 className={css.sectionTitle}>Interactions</h2>
-        <GalleryFilters filters={filters} />
+        <GalleryFilters filters={filters} onOpen={open} />
         <LayoutGroup>
           {filters.filtered.length > 0 ? (
             <InteractionMasonry items={filters.filtered} onOpen={open} />
