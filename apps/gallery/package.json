@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@awesome/interactions": "workspace:*",
+    "@awesome/theme": "workspace:*",
+    "@vanilla-extract/css": "catalog:",
     "motion": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"

@@ -1,5 +1,6 @@
 import type { InteractionMeta } from "../types.ts";
 import { SplitText } from "./SplitText.tsx";
+import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {
   slug: "split-text",
@@ -11,7 +12,7 @@ export const meta: InteractionMeta = {
 
 export default function Demo() {
   return (
-    <h2 style={{ fontSize: "clamp(2rem, 6vw, 4rem)", margin: 0 }}>
+    <h2 className={css.heading}>
       <SplitText text="Build something beautiful." />
     </h2>
   );

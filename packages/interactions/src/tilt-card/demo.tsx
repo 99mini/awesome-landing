@@ -1,5 +1,6 @@
 import type { InteractionMeta } from "../types.ts";
 import { TiltCard } from "./TiltCard.tsx";
+import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {
   slug: "tilt-card",
@@ -13,19 +14,7 @@ export const meta: InteractionMeta = {
 export default function Demo() {
   return (
     <TiltCard>
-      <div
-        style={{
-          width: 280,
-          height: 180,
-          borderRadius: 20,
-          display: "grid",
-          placeItems: "center",
-          fontWeight: 700,
-          background: "linear-gradient(135deg, #6d5dfc, #e05cff)",
-        }}
-      >
-        Hover me
-      </div>
+      <div className={css.card}>Hover me</div>
     </TiltCard>
   );
 }

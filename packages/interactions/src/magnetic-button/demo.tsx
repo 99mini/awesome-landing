@@ -1,5 +1,6 @@
 import type { InteractionMeta } from "../types.ts";
 import { MagneticButton } from "./MagneticButton.tsx";
+import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {
   slug: "magnetic-button",
@@ -11,20 +12,5 @@ export const meta: InteractionMeta = {
 };
 
 export default function Demo() {
-  return (
-    <MagneticButton
-      style={{
-        padding: "1rem 2.5rem",
-        borderRadius: 999,
-        border: "none",
-        background: "#fff",
-        color: "#000",
-        fontSize: "1rem",
-        fontWeight: 600,
-        cursor: "pointer",
-      }}
-    >
-      Get started
-    </MagneticButton>
-  );
+  return <MagneticButton className={css.button}>Get started</MagneticButton>;
 }

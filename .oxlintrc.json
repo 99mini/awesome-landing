@@ -11,7 +11,10 @@
     "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "react/no-array-index-key": "off",
-    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }]
+    "import/no-unassigned-import": [
+      "warn",
+      { "allow": ["**/*.css", "**/*.css.ts", "@awesome/theme/reset"] }
+    ]
   },
   "env": {
     "builtin": true,

@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Navigate, RouterProvider, useParams } from "react-router";
 import { Layout } from "./components/Layout.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
-import "./styles.css";
+import "./styles/global.css.ts";
 
 /** 예전 `/interactions/:slug` 링크 호환 → `/?interaction=:slug` */
 function LegacyInteractionRedirect() {
