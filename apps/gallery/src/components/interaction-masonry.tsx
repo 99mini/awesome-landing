@@ -1,7 +1,7 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { motion } from "motion/react";
-import { useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useLastHeight, useVisibility } from "../hooks/use-visibility.ts";
 import { ReplayButton, useReplay } from "./replay-button.tsx";
 import { Tags } from "./tags.tsx";
@@ -11,23 +11,36 @@ import * as css from "./interaction-masonry.css.ts";
 interface InteractionMasonryProps {
   items: InteractionDemoModule[];
   onOpen: (slug: string) => void;
+  /** 카드들이 처음 화면에 그려진 뒤 한 번 불린다 */
+  onReady?: () => void;
 }
 
-export function InteractionMasonry({ items, onOpen }: InteractionMasonryProps) {
+/** Suspense 가 풀려 카드가 실제로 그려진 뒤에만 실행된다 */
+function Ready({ onReady }: { onReady?: () => void }) {
+  useEffect(() => onReady?.(), [onReady]);
+  return null;
+}
+
+export function InteractionMasonry({ items, onOpen, onReady }: InteractionMasonryProps) {
   return (
-    <div className={css.masonry}>
-      {items.map((mod, i) => (
-        <motion.div
-          key={mod.meta.slug}
-          className={css.item}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <PreviewCard mod={mod} onOpen={onOpen} />
-        </motion.div>
-      ))}
-    </div>
+    // 처음에는 화면 근처 데모들이 모두 준비된 뒤 한 번에 그린다 — 카드마다 따로 늘어나며 열이 흔들리지 않게.
+    // 그 뒤에 보이게 되는 카드는 transition 이라 이 fallback 으로 돌아오지 않는다.
+    <Suspense fallback={null}>
+      <Ready onReady={onReady} />
+      <div className={css.masonry}>
+        {items.map((mod, i) => (
+          <motion.div
+            key={mod.meta.slug}
+            className={css.item}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <PreviewCard mod={mod} onOpen={onOpen} />
+          </motion.div>
+        ))}
+      </div>
+    </Suspense>
   );
 }
 
@@ -81,6 +94,7 @@ function PreviewCard({
               : undefined
           }
         >
+          {/* 데모 코드는 카드가 화면 근처에 처음 올 때 받는다 (Suspense 는 masonry 전체에 하나) */}
           {!paused && <Demo key={replayKey} {...controlDefaults(meta.controls)} />}
         </motion.div>
         {meta.replayable !== false && (

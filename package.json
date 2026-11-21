@@ -18,7 +18,8 @@
     "test:e2e": "pnpm --filter @awesome/e2e test",
     "stories:gen": "node scripts/gen-stories.mjs",
     "storybook": "pnpm --filter @awesome/storybook storybook",
-    "test:stories": "pnpm --filter @awesome/storybook test"
+    "test:stories": "pnpm --filter @awesome/storybook test",
+    "check:bundle": "node scripts/check-bundle.mjs"
   },
   "devDependencies": {
     "oxfmt": "catalog:",

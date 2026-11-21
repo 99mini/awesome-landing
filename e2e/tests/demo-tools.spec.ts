@@ -27,7 +27,13 @@ test.describe("replay, source viewer and controls", () => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/?interaction=tilt-card");
     const tabs = modal(page).getByRole("tab");
-    await expect(tabs).toHaveText(["tilt-card.tsx", "tilt-card.css.ts", "demo.tsx", "demo.css.ts"]);
+    await expect(tabs).toHaveText([
+      "tilt-card.tsx",
+      "tilt-card.css.ts",
+      "demo.tsx",
+      "demo.css.ts",
+      "meta.ts",
+    ]);
     await tabs.nth(1).click();
     await expect(modal(page).getByRole("tabpanel")).toContainText(
       'import { style } from "@vanilla-extract/css"',

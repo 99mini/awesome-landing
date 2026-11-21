@@ -1,12 +1,16 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
 import { motion } from "motion/react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ControlsPanel } from "./controls-panel.tsx";
 import { ReplayButton, useReplay } from "./replay-button.tsx";
-import { SourceViewer } from "./source-viewer.tsx";
 import { Tags } from "./tags.tsx";
 import * as ui from "../styles/ui.css.ts";
 import * as css from "./interaction-modal.css.ts";
+
+/** 소스 보기(하이라이터 포함)는 모달을 열 때만 받는다 */
+const SourceViewer = lazy(() =>
+  import("./source-viewer.tsx").then((m) => ({ default: m.SourceViewer })),
+);
 
 interface InteractionModalProps {
   mod: InteractionDemoModule;
@@ -161,7 +165,9 @@ function ModalContent({
         <motion.div layout="position" className={ui.demoFit}>
           {/* key 는 데모 props(숫자 전용) 와 섞이지 않도록 Fragment 에 둔다 */}
           <Fragment key={demoKey}>
-            <Demo {...values} />
+            <Suspense fallback={null}>
+              <Demo {...values} />
+            </Suspense>
           </Fragment>
         </motion.div>
       </motion.div>
@@ -194,7 +200,9 @@ function ModalContent({
               onReset={() => setValues(controlDefaults(meta.controls))}
             />
           )}
-          <SourceViewer slug={meta.slug} />
+          <Suspense fallback={<p className={ui.muted}>Loading source…</p>}>
+            <SourceViewer slug={meta.slug} />
+          </Suspense>
         </motion.div>
       </motion.div>
 

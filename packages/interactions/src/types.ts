@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, LazyExoticComponent } from "react";
 
 export type InteractionCategory = "cursor" | "scroll" | "hover" | "text" | "layout";
 
@@ -39,11 +39,14 @@ export interface InteractionMeta {
   controls?: InteractionControls;
 }
 
-/** 각 인터랙션 폴더의 `demo.tsx` 가 export 해야 하는 모양 */
+/**
+ * 레지스트리 항목 — `meta.ts` 는 바로 읽고, 데모(`demo.tsx`)는 처음 렌더될 때 불러온다.
+ * `default` 는 React.lazy 컴포넌트라 <Suspense> 안에서 렌더해야 한다.
+ */
 export interface InteractionDemoModule {
   meta: InteractionMeta;
   /** controls 의 현재 값이 props 로 전달된다 */
-  default: ComponentType<ControlValues>;
+  default: LazyExoticComponent<ComponentType<ControlValues>>;
 }
 
 export interface SourceFile {

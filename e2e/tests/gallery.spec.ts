@@ -65,6 +65,27 @@ test.describe("gallery routing and modal", () => {
     await expect(page.locator("dialog")).toHaveCount(0);
   });
 
+  test("lazy demos do not shift the layout on first load (CLS < 0.1)", async ({ page }) => {
+    // 데모 코드를 늦게 받으므로, 카드가 하나씩 늘어나며 열이 흔들리지 않는지 본다
+    await page.addInitScript(() => {
+      const w = window as unknown as { cls: number };
+      w.cls = 0;
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries() as (PerformanceEntry & {
+          value: number;
+          hadRecentInput: boolean;
+        })[]) {
+          if (!entry.hadRecentInput) w.cls += entry.value;
+        }
+      }).observe({ type: "layout-shift", buffered: true });
+    });
+    await page.goto("/");
+    await expect(page.locator("article").first()).toBeVisible();
+    await page.waitForTimeout(1500);
+    const cls = await page.evaluate(() => (window as unknown as { cls: number }).cls);
+    expect(cls).toBeLessThan(0.1);
+  });
+
   test("no horizontal scroll on a phone", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");

@@ -7,7 +7,7 @@ import {
 } from "@awesome/interactions/registry";
 import { cx } from "@awesome/interactions";
 import { motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import * as css from "./app.css.ts";
 
 const GALLERY = "http://localhost:5173";
@@ -33,7 +33,11 @@ const kinds = Object.entries(
 
 function Demo({ mod }: { mod: InteractionDemoModule }) {
   const { default: Component, meta } = mod;
-  return <Component {...controlDefaults(meta.controls)} />;
+  return (
+    <Suspense fallback={null}>
+      <Component {...controlDefaults(meta.controls)} />
+    </Suspense>
+  );
 }
 
 export function App() {

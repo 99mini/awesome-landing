@@ -1,3 +1,4 @@
+import { startTransition } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 const PARAM = "interaction";
@@ -44,13 +45,16 @@ export function useSelectedInteraction() {
 
   /** 모달 안에서 다른 인터랙션으로 — history 를 쌓지 않아 닫기/뒤로가기는 여전히 한 번에 갤러리로 */
   function replace(next: string) {
-    setParams(
-      (prev) => {
-        prev.set(PARAM, next);
-        return prev;
-      },
-      { replace: true, state: location.state, preventScrollReset: true },
-    );
+    // ←/→ 로 넘어간 데모의 코드를 받는 동안 지금 모달을 그대로 둔다
+    startTransition(() => {
+      setParams(
+        (prev) => {
+          prev.set(PARAM, next);
+          return prev;
+        },
+        { replace: true, state: location.state, preventScrollReset: true },
+      );
+    });
   }
 
   return { slug, open, close, replace };

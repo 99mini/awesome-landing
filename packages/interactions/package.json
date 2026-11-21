@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./registry": "./src/registry.ts",
-    "./sources": "./src/sources.ts"
+    "./sources": "./src/sources.ts",
+    "./demo/*": "./src/*/demo.tsx"
   },
   "scripts": {
     "typecheck": "tsc"

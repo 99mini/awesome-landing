@@ -91,10 +91,13 @@ test.describe("filters, tag dropdown and autocomplete search", () => {
 
   test("category chip filters and Back restores", async ({ page }) => {
     await page.goto("/");
+    // 데모를 늦게 받으므로 카드가 처음 그려질 때까지 기다린 뒤 조작한다
+    await expect(page.locator("article").first()).toBeVisible();
+    const all = await page.locator("article").count();
     await page.getByRole("button", { name: /^text/ }).click();
     await expect(page).toHaveURL(/category=text/);
-    const cards = await page.locator("article").count();
-    expect(cards).toBeGreaterThan(0);
+    await expect(page.locator("article")).not.toHaveCount(all);
+    await expect(page.locator("article")).not.toHaveCount(0);
     await page.goBack();
     await expect(page).not.toHaveURL(/category=/);
   });
