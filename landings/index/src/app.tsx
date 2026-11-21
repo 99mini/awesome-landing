@@ -6,7 +6,7 @@ import {
   type InteractionDemoModule,
 } from "@awesome/interactions/registry";
 import { cx } from "@awesome/interactions";
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { Suspense, useState } from "react";
 import * as css from "./app.css.ts";
 
@@ -29,7 +29,7 @@ const componentName = (slug: string) =>
   slug.replace(/(^|-)(\w)/g, (_, _dash: string, c: string) => c.toUpperCase());
 
 const kinds = Object.entries(
-  Object.groupBy(interactions, (m) => m.meta.category) as Record<string, InteractionDemoModule[]>,
+  Object.groupBy(interactions, (it) => it.meta.category) as Record<string, InteractionDemoModule[]>,
 ).toSorted((a, b) => b[1].length - a[1].length);
 
 function Demo({ mod }: { mod: InteractionDemoModule }) {
@@ -94,7 +94,7 @@ export function App() {
               aria-live="polite"
               aria-label={selected.meta.title}
             >
-              <motion.div
+              <m.div
                 key={slug}
                 className={css.stageDemo}
                 initial={{ opacity: 0 }}
@@ -102,7 +102,7 @@ export function App() {
                 transition={{ duration: reduce ? 0 : 0.25 }}
               >
                 <Demo mod={selected} />
-              </motion.div>
+              </m.div>
             </div>
             <p className={css.caption}>
               <span className={css.captionTitle}>{selected.meta.title}</span>
@@ -126,7 +126,7 @@ export function App() {
               <div key={kind} className={css.kind}>
                 <span className={css.kindCount}>{members.length}</span>
                 <span className={css.kindName}>{KIND_NAMES[kind as InteractionCategory]}</span>
-                <p className={css.kindMembers}>{members.map((m) => m.meta.title).join(", ")}</p>
+                <p className={css.kindMembers}>{members.map((it) => it.meta.title).join(", ")}</p>
               </div>
             ))}
           </div>

@@ -1,4 +1,4 @@
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { m, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import * as css from "./line-draw.css.ts";
 import { smoothPath } from "./path.ts";
@@ -61,7 +61,7 @@ export function LineDraw({
         const time = reduce ? 0 : duration;
         return (
           <g key={i} className={lineClassName?.(i)}>
-            <motion.path
+            <m.path
               d={d}
               className={css.line}
               style={{ strokeWidth: thickness }}
@@ -73,7 +73,7 @@ export function LineDraw({
               }}
             />
             {end && (
-              <motion.circle
+              <m.circle
                 className={css.dot}
                 cx={end[0]}
                 cy={end[1]}

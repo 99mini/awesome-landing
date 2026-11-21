@@ -1,5 +1,5 @@
 import { MagneticButton, ScrollReveal, SplitText } from "@awesome/interactions";
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import * as css from "./app.css.ts";
 
@@ -30,7 +30,7 @@ export function App() {
       <section className={css.hero}>
         <div className={css.aurora} aria-hidden>
           {css.blobs.map(({ color, className }, i) => (
-            <motion.span
+            <m.span
               key={i}
               className={className}
               style={{ background: color }}

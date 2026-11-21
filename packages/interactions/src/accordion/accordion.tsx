@@ -1,4 +1,4 @@
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, LayoutGroup, m, useReducedMotion } from "motion/react";
 import { useId, useState, type ReactNode } from "react";
 import { cx } from "../lib/cx.ts";
 import * as css from "./accordion.css.ts";
@@ -57,7 +57,7 @@ export function Accordion({
           const panelId = `${id}-${item.id}-panel`;
           const triggerId = `${id}-${item.id}-trigger`;
           return (
-            <motion.div
+            <m.div
               key={item.id}
               layout={reduce ? false : "position"}
               transition={transition}
@@ -73,7 +73,7 @@ export function Accordion({
                   onClick={() => toggle(item.id)}
                 >
                   <span>{item.title}</span>
-                  <motion.svg
+                  <m.svg
                     viewBox="0 0 16 16"
                     width="16"
                     height="16"
@@ -86,14 +86,14 @@ export function Accordion({
                     transition={transition}
                   >
                     <path d="M8 3v10M3 8h10" />
-                  </motion.svg>
+                  </m.svg>
                 </button>
               </h3>
               {/* popLayout: 닫히는 패널이 페이드하는 동안 자리를 차지하지 않는다 — 열리는 패널과
                   잠깐 둘 다 자리를 잡아 아래 항목이 밀렸다가 튀어 오르던 문제 */}
               <AnimatePresence initial={false} mode="popLayout">
                 {expanded && (
-                  <motion.section
+                  <m.section
                     id={panelId}
                     aria-labelledby={triggerId}
                     className={cx(css.panel, panelClassName)}
@@ -104,10 +104,10 @@ export function Accordion({
                     transition={transition}
                   >
                     {item.content}
-                  </motion.section>
+                  </m.section>
                 )}
               </AnimatePresence>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

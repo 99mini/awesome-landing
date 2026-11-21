@@ -1,6 +1,6 @@
 import {
   animate,
-  motion,
+  m,
   useInView,
   useMotionValue,
   useReducedMotion,
@@ -42,8 +42,8 @@ export function CountUp({ to, from = 0, duration = 1.6, format, locale, classNam
   }, [inView, reduce, value, to, duration]);
 
   return (
-    <motion.span ref={ref} className={className}>
+    <m.span ref={ref} className={className}>
       {text}
-    </motion.span>
+    </m.span>
   );
 }

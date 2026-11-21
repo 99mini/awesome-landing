@@ -1,6 +1,6 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { Suspense, useEffect, useRef } from "react";
 import { useLastHeight, useVisibility } from "../hooks/use-visibility.ts";
 import { ReplayButton, useReplay } from "./replay-button.tsx";
@@ -29,7 +29,7 @@ export function InteractionMasonry({ items, onOpen, onReady }: InteractionMasonr
       <Ready onReady={onReady} />
       <div className={css.masonry}>
         {items.map((mod, i) => (
-          <motion.div
+          <m.div
             key={mod.meta.slug}
             className={css.item}
             initial={{ opacity: 0, y: 24 }}
@@ -37,7 +37,7 @@ export function InteractionMasonry({ items, onOpen, onReady }: InteractionMasonr
             transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <PreviewCard mod={mod} onOpen={onOpen} />
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </Suspense>
@@ -63,7 +63,7 @@ function PreviewCard({
   return (
     // 카드 어디를 눌러도 열린다. 키보드는 제목 버튼(Enter/Space)의 click 이 카드로 버블링된다
     // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <motion.article
+    <m.article
       layoutId={`shell-${meta.slug}`}
       layoutCrossfade={false}
       className={css.card}
@@ -76,7 +76,7 @@ function PreviewCard({
         onOpen(meta.slug);
       }}
     >
-      <motion.div
+      <m.div
         ref={stageRef}
         layoutId={`stage-${meta.slug}`}
         layoutCrossfade={false}
@@ -84,7 +84,7 @@ function PreviewCard({
         style={{ borderRadius: 14 }}
         data-demo-paused={paused || undefined}
       >
-        <motion.div
+        <m.div
           ref={demoRef}
           layout="position"
           className={paused && lastHeight !== null ? `${ui.demoFit} ${css.paused}` : ui.demoFit}
@@ -96,25 +96,21 @@ function PreviewCard({
         >
           {/* 데모 코드는 카드가 화면 근처에 처음 올 때 받는다 (Suspense 는 masonry 전체에 하나) */}
           {!paused && <Demo key={replayKey} {...controlDefaults(meta.controls)} />}
-        </motion.div>
+        </m.div>
         {meta.replayable !== false && (
           <div className={css.replaySlot}>
             <ReplayButton replayKey={replayKey} onReplay={replay} size="sm" />
           </div>
         )}
-      </motion.div>
-      <motion.footer layout="position" className={css.footer}>
+      </m.div>
+      <m.footer layout="position" className={css.footer}>
         <button type="button" className={css.openButton} data-open-interaction>
-          <motion.span
-            layoutId={`title-${meta.slug}`}
-            layoutCrossfade={false}
-            className={css.title}
-          >
+          <m.span layoutId={`title-${meta.slug}`} layoutCrossfade={false} className={css.title}>
             {meta.title}
-          </motion.span>
+          </m.span>
         </button>
         <Tags tags={[meta.category, ...(meta.tags ?? [])]} />
-      </motion.footer>
-    </motion.article>
+      </m.footer>
+    </m.article>
   );
 }

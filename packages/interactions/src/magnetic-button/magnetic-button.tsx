@@ -1,7 +1,7 @@
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { m, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import type { ComponentProps, PointerEvent } from "react";
 
-interface MagneticButtonProps extends ComponentProps<typeof motion.button> {
+interface MagneticButtonProps extends ComponentProps<typeof m.button> {
   /** 커서를 따라가는 정도 (0 ~ 1) */
   strength?: number;
 }
@@ -24,7 +24,7 @@ export function MagneticButton({ strength = 0.35, style, ...props }: MagneticBut
   }
 
   return (
-    <motion.button
+    <m.button
       {...props}
       style={{ ...style, x, y }}
       onPointerMove={handleMove}

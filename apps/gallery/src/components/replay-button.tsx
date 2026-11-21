@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { useState, type MouseEvent } from "react";
 import * as css from "./replay-button.css.ts";
 
@@ -22,7 +22,7 @@ export function ReplayButton({ replayKey, onReplay, size = "md" }: ReplayButtonP
   }
 
   return (
-    <motion.button
+    <m.button
       layout="position"
       type="button"
       className={css.size[size]}
@@ -30,7 +30,7 @@ export function ReplayButton({ replayKey, onReplay, size = "md" }: ReplayButtonP
       title="다시 보기"
       onClick={handleClick}
     >
-      <motion.svg
+      <m.svg
         viewBox="0 0 24 24"
         width="16"
         height="16"
@@ -45,7 +45,7 @@ export function ReplayButton({ replayKey, onReplay, size = "md" }: ReplayButtonP
       >
         <path d="M3 12a9 9 0 1 0 3-6.7" />
         <path d="M3 4v5h5" />
-      </motion.svg>
-    </motion.button>
+      </m.svg>
+    </m.button>
   );
 }
