@@ -1,6 +1,6 @@
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import type { ReactNode } from "react";
-import * as css from "./Marquee.css.ts";
+import * as css from "./marquee.css.ts";
 
 interface MarqueeProps {
   children: ReactNode;

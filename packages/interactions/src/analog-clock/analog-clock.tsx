@@ -7,7 +7,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import * as css from "./AnalogClock.css.ts";
+import * as css from "./analog-clock.css.ts";
 
 interface AnalogClockProps {
   /** true: 모든 바늘이 연속으로 흐른다 / false: 초침이 1초마다 스프링으로 '틱' */

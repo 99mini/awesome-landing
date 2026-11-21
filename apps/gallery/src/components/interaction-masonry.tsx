@@ -1,9 +1,9 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
 import { motion } from "motion/react";
-import { ReplayButton, useReplay } from "./ReplayButton.tsx";
-import { Tags } from "./Tags.tsx";
+import { ReplayButton, useReplay } from "./replay-button.tsx";
+import { Tags } from "./tags.tsx";
 import * as ui from "../styles/ui.css.ts";
-import * as css from "./InteractionMasonry.css.ts";
+import * as css from "./interaction-masonry.css.ts";
 
 interface InteractionMasonryProps {
   items: InteractionDemoModule[];

@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { AnalogClock } from "./AnalogClock.tsx";
+import { AnalogClock } from "./analog-clock.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

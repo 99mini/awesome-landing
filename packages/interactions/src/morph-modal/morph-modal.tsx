@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import * as css from "./MorphModal.css.ts";
+import * as css from "./morph-modal.css.ts";
 
 interface MorphModalProps {
   /** 닫혀 있을 때 보이는 카드 내용 */

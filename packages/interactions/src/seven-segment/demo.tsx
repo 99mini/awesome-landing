@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { SevenSegment } from "./SevenSegment.tsx";
+import { SevenSegment } from "./seven-segment.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

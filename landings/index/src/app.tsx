@@ -7,7 +7,7 @@ import {
 } from "@awesome/interactions/registry";
 import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
-import * as css from "./App.css.ts";
+import * as css from "./app.css.ts";
 
 const GALLERY = "http://localhost:5173";
 

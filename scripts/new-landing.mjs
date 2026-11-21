@@ -32,7 +32,7 @@ const port = Math.max(5199, ...ports) + 1;
 
 await cp(join(root, "templates/landing"), target, { recursive: true });
 
-const files = ["package.json", "landing.json", "index.html", "src/App.tsx"];
+const files = ["package.json", "landing.json", "index.html", "src/app.tsx"];
 await Promise.all(
   files.map(async (file) => {
     const path = join(target, file);

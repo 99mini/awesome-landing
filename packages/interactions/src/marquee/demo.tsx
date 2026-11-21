@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { Marquee } from "./Marquee.tsx";
+import { Marquee } from "./marquee.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

@@ -7,7 +7,7 @@ import {
   TextScramble,
 } from "@awesome/interactions";
 import { Fragment } from "react";
-import * as css from "./App.css.ts";
+import * as css from "./app.css.ts";
 
 const TOPICS = ["Kinetic type", "Slow motion", "Negative space", "Rhythm", "Restraint"];
 

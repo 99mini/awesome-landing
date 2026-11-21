@@ -1,12 +1,12 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
 import { motion } from "motion/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { ControlsPanel } from "./ControlsPanel.tsx";
-import { ReplayButton, useReplay } from "./ReplayButton.tsx";
-import { SourceViewer } from "./SourceViewer.tsx";
-import { Tags } from "./Tags.tsx";
+import { ControlsPanel } from "./controls-panel.tsx";
+import { ReplayButton, useReplay } from "./replay-button.tsx";
+import { SourceViewer } from "./source-viewer.tsx";
+import { Tags } from "./tags.tsx";
 import * as ui from "../styles/ui.css.ts";
-import * as css from "./InteractionModal.css.ts";
+import * as css from "./interaction-modal.css.ts";
 
 interface InteractionModalProps {
   mod: InteractionDemoModule;

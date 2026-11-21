@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { SplitText } from "./SplitText.tsx";
+import { SplitText } from "./split-text.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

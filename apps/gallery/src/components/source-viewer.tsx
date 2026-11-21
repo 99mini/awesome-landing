@@ -1,7 +1,7 @@
 import { loadSources, type SourceFile } from "@awesome/interactions/sources";
 import { useEffect, useMemo, useState } from "react";
 import { highlight } from "sugar-high";
-import * as css from "./SourceViewer.css.ts";
+import * as css from "./source-viewer.css.ts";
 
 export function SourceViewer({ slug }: { slug: string }) {
   const [files, setFiles] = useState<SourceFile[] | null>(null);

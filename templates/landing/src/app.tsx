@@ -1,5 +1,5 @@
 import { ScrollReveal, SplitText } from "@awesome/interactions";
-import * as css from "./App.css.ts";
+import * as css from "./app.css.ts";
 
 export function App() {
   return (
