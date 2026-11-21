@@ -20,5 +20,5 @@
     "builtin": true,
     "browser": true
   },
-  "ignorePatterns": ["**/dist/**", "templates/**"]
+  "ignorePatterns": ["**/dist/**", "templates/**", ".claude/**", ".hallmark/**"]
 }

@@ -50,6 +50,19 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 | `pnpm check`                 | fmt:check + lint + typecheck |
 | `pnpm fmt` / `pnpm lint:fix` | 포맷 / 린트 자동 수정        |
 
+## 디자인 품질 (Hallmark)
+
+[Hallmark](https://github.com/Nutlope/hallmark) 스킬을 프로젝트 범위로 쓴다. 본체는 커밋하지 않고 `skills-lock.json` 으로 버전을 고정한다.
+
+```sh
+pnpm skills:install                 # .claude/skills/hallmark 복원
+# 랜딩 dev 서버를 띄운 뒤
+HALLMARK_PUPPETEER=<puppeteer-core 설치 폴더> \
+  node .claude/skills/hallmark/scripts/sloplint.mjs landings/editorial/src --url http://localhost:5201 --genre editorial
+```
+
+Claude Code 에서는 `/hallmark audit <path>`, 새 페이지는 `/hallmark custom ...` 으로 방향을 잡고 구현은 이 레포 구조(React + VE + Motion)로 옮긴다. 지켜야 할 기준은 CLAUDE.md 의 "디자인 기준".
+
 ## 규칙
 
 - 의존성 버전은 `pnpm-workspace.yaml` 의 `catalog` 에서만 관리하고 각 패키지에선 `"catalog:"` 로 참조.
