@@ -18,6 +18,7 @@ const KIND_NAMES: Record<InteractionCategory, string> = {
   scroll: "Waits for the scroll",
   text: "Moves the type",
   layout: "Reshapes the layout",
+  gesture: "Follows a drag",
 };
 
 /** 큰 무대에 올릴 세 가지 — 폭이 필요한 것들 */
