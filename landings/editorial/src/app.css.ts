@@ -1,3 +1,8 @@
+/* Hallmark · checked: 2026-11-21 · genre: editorial
+ * floor: 0 FAIL · fixed: 19, 24b, 38i, 38iii, 46a, 54, 58, 63, 64, 65, 67 · structural: none printed
+ * built: the project · redesign: polish · v2.0.0 */
+/* Hallmark · waive 72 · the ticker band is full bleed and its track is clipped at the page edge · the ticker of kinetic type, slow motion and restraint runs past the edge of the page on purpose */
+
 import { style } from "@vanilla-extract/css";
 import { ed } from "./theme.css.ts";
 
@@ -21,7 +26,7 @@ export const masthead = style({
   gridTemplateColumns: "1fr auto 1fr",
   alignItems: "baseline",
   gap: 16,
-  padding: "20px 0 14px",
+  padding: "20px 0 16px",
   borderBottom: rule,
   color: ed.color.muted,
   fontSize: "0.95rem",

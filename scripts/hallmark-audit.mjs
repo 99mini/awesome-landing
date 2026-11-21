@@ -139,8 +139,127 @@ async function focusAudit(puppeteerPath, url) {
   }
 }
 
-/** 스탬프 본문(theme:/idea:)이 맨 앞, 그다음 critique, 나머지(waive/dismissed/answered) */
-const stampRank = (line) => (/· (theme|idea):/.test(line) ? 0 : /· critique:/.test(line) ? 1 : 2);
+/**
+ * sloplint 73(다른 요소 아래 깔린 글자)을 다시 확인한다.
+ * sloplint 는 글자 사각형의 중심에 무엇이 있는지만 보고, 조상의 overflow 로 잘려 보이지 않는
+ * 글자(예: 카드 안에서 흐르는 마키)도 겹침으로 센다. 같은 방식으로 훑되, 그 점이 overflow 조상의
+ * 상자 밖이면(잘려서 화면에 없으면) 제외한다. 남는 것이 진짜 겹침이다.
+ */
+async function occlusionRecheck(puppeteerPath, url) {
+  const chrome = CHROMES.find((p) => p && existsSync(p));
+  if (!chrome) return null;
+  const puppeteer = (await import(pathToFileURL(puppeteerPath).href)).default;
+  const browser = await puppeteer.launch({ executablePath: chrome, headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1440, height: 900 });
+    await page.goto(url, { waitUntil: "networkidle0" });
+    await new Promise((r) => setTimeout(r, 600));
+    return await page.evaluate(async () => {
+      // 아래 skip·vis·unseen·숨김 조상 판정은 sloplint 의 observeOcclusion 과 같다 — 다른 점은 clipped 하나뿐
+      const skip =
+        'script, style, noscript, svg, [aria-hidden="true"], nav, header, dialog, [popover], [role="menu"], details:not([open]), [hidden]';
+      // oxlint-disable-next-line unicorn/consistent-function-scoping
+      const vis = (el) => {
+        const cs = getComputedStyle(el);
+        if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0)
+          return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 3 && r.height > 3;
+      };
+      // oxlint-disable-next-line unicorn/consistent-function-scoping
+      const unseen = (el) => {
+        const cs = getComputedStyle(el);
+        return (
+          parseFloat(cs.opacity) < 0.05 ||
+          (/^(transparent|rgba\(0, 0, 0, 0\))$/.test(cs.backgroundColor) &&
+            cs.backgroundImage === "none" &&
+            !(el.innerText || "").trim() &&
+            !/^(IMG|svg|CANVAS|VIDEO|PICTURE)$/.test(el.tagName) &&
+            !el.querySelector("img, svg, canvas, video"))
+        );
+      };
+      // oxlint-disable-next-line unicorn/consistent-function-scoping
+      const hiddenByAncestor = (el) => {
+        for (let p = el; p && p !== document.body; p = p.parentElement) {
+          const cs = getComputedStyle(p);
+          if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0)
+            return true;
+        }
+        return false;
+      };
+      // page.evaluate 안에서 직렬화돼 브라우저에서 실행되므로 바깥으로 뺄 수 없다
+      // oxlint-disable-next-line unicorn/consistent-function-scoping
+      const pinned = (el) => {
+        for (let p = el; p && p !== document.body; p = p.parentElement)
+          if (/fixed|sticky/.test(getComputedStyle(p).position)) return true;
+        return false;
+      };
+      // 점이 overflow 로 잘리는 조상 상자 밖이면 화면에 그려지지 않는다
+      // page.evaluate 안에서 직렬화돼 브라우저에서 실행되므로 바깥으로 뺄 수 없다
+      // oxlint-disable-next-line unicorn/consistent-function-scoping
+      const clipped = (el, x, y) => {
+        for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+          const cs = getComputedStyle(p);
+          if (cs.overflowX === "visible" && cs.overflowY === "visible") continue;
+          const r = p.getBoundingClientRect();
+          if (x < r.left || x > r.right || y < r.top || y > r.bottom) return true;
+        }
+        return false;
+      };
+      const runs = [];
+      const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let t = tw.nextNode(); t; t = tw.nextNode()) {
+        const host = t.parentElement;
+        if (!t.textContent.trim() || !host || host.closest(skip)) continue;
+        if (hiddenByAncestor(host) || host.closest("[data-slot]") || !vis(host)) continue;
+        runs.push({ t, host });
+      }
+      const real = [];
+      const H = document.documentElement.scrollHeight;
+      for (let y = 0; y < H; y += Math.max(200, innerHeight - 100)) {
+        window.scrollTo(0, y);
+        // oxlint-disable-next-line no-await-in-loop
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        for (const { t, host } of runs) {
+          if (pinned(host)) continue;
+          const rg = document.createRange();
+          rg.selectNodeContents(t);
+          for (const q of rg.getClientRects()) {
+            if (q.width < 6 || q.height < 6) continue;
+            const cx = q.left + q.width / 2;
+            const cy = q.top + q.height / 2;
+            if (cy < 0 || cy >= innerHeight || cx < 0 || cx >= innerWidth) continue;
+            if (clipped(host, cx, cy)) continue;
+            const ghost = getComputedStyle(host).pointerEvents === "none";
+            if (ghost) host.style.setProperty("pointer-events", "auto", "important");
+            const top = document.elementFromPoint(cx, cy);
+            if (ghost) host.style.removeProperty("pointer-events");
+            if (
+              !top ||
+              top === host ||
+              host.contains(top) ||
+              top.contains(host) ||
+              pinned(top) ||
+              unseen(top)
+            )
+              continue;
+            real.push(`${top.tagName.toLowerCase()} over "${t.textContent.trim().slice(0, 16)}"`);
+            break;
+          }
+        }
+      }
+      window.scrollTo(0, 0);
+      return real;
+    });
+  } finally {
+    await browser.close();
+  }
+}
+
+/** 스탬프 본문(theme:/idea:, 또는 checked:)이 맨 앞, 그다음 critique, 나머지(waive/dismissed/answered) */
+const stampRank = (line) =>
+  /· (theme|idea|checked):/.test(line) ? 0 : /· critique:/.test(line) ? 1 : 2;
 
 /** src 아래 .css.ts 에서 `Hallmark ·` 로 시작하는 블록 주석을 한 줄짜리로 모은다 */
 function authoredStamps(dir) {
@@ -272,8 +391,21 @@ async function audit(name, render) {
       console.error(run.stderr || run.stdout);
       return { name, fails: 1, error: "sloplint output was not JSON" };
     }
-    printReport(name, report);
     let fails = report.summary.fails;
+    // 73 이 overflow 로 잘린 글자 때문이면(화면에 없음) 확인된 오탐으로 내린다
+    const occlusion = (report.findings ?? []).find((f) => f.gate === "73" && f.grade === "FAIL");
+    if (occlusion && url && puppeteerPath) {
+      const real = await occlusionRecheck(puppeteerPath, url);
+      if (real && real.length === 0) {
+        occlusion.grade = "DISMISSED";
+        occlusion.evidence +=
+          " — rechecked: the covered text is clipped by an overflow ancestor and never painted";
+        fails -= 1;
+      } else if (real) {
+        occlusion.evidence += ` — rechecked, real overlaps: ${real.slice(0, 3).join("; ")}`;
+      }
+    }
+    printReport(name, report);
     if (url && puppeteerPath) {
       const focus = await focusAudit(puppeteerPath, url);
       if (focus.skipped) console.log(`  focus check skipped: ${focus.skipped}`);
@@ -293,7 +425,8 @@ async function audit(name, render) {
 
 function printReport(name, report) {
   const { summary, findings = [] } = report;
-  const order = { FAIL: 0, REFLEX: 1, WARN: 2 };
+  const dismissed = findings.filter((f) => f.grade === "DISMISSED").length;
+  const order = { FAIL: 0, REFLEX: 1, WARN: 2, DISMISSED: 3 };
   const shown = findings
     .filter((f) => f.grade in order)
     .toSorted((a, b) => order[a.grade] - order[b.grade]);
@@ -302,10 +435,10 @@ function printReport(name, report) {
       ? "render"
       : `${f.file?.replace(`${root}/`, "")}:${f.line}`;
     console.log(`  ${f.grade.padEnd(6)} ${String(f.gate).padEnd(4)} ${f.evidence}  (${where})`);
-    if (f.grade !== "WARN") console.log(`  ${"".padEnd(11)}→ ${f.fix}`);
+    if (f.grade === "FAIL" || f.grade === "REFLEX") console.log(`  ${"".padEnd(11)}→ ${f.fix}`);
   }
   console.log(
-    `  ${name}: ${summary.fails} FAIL · ${summary.reflex} REFLEX · ${summary.warns} WARN · render ${summary.render}`,
+    `  ${name}: ${summary.fails - dismissed} FAIL · ${summary.reflex} REFLEX · ${summary.warns} WARN${dismissed ? ` · ${dismissed} dismissed after recheck` : ""} · render ${summary.render}`,
   );
 }
 

@@ -4,7 +4,7 @@ import { style } from "@vanilla-extract/css";
 export const list = style({
   display: "flex",
   flexWrap: "wrap",
-  gap: 6,
+  gap: 8,
   padding: 0,
   margin: "12px 0 0",
   listStyle: "none",

@@ -39,7 +39,8 @@ export const layerContained = style({ ...layer, position: "absolute", inset: 0 }
 export const backdrop = style({
   position: "absolute",
   inset: 0,
-  background: "rgb(0 0 0 / 0.45)",
+  // 기본값은 페이지 바탕색(Canvas)으로 덮어 흐리게 — 바꾸려면 --morph-backdrop
+  background: "var(--morph-backdrop, color-mix(in oklab, Canvas 60%, transparent))",
 });
 
 export const panel = style({
@@ -63,7 +64,7 @@ export const close = style({
   position: "absolute",
   top: 12,
   right: 12,
-  padding: "6px 12px",
+  padding: "8px 12px",
   border: "1px solid currentColor",
   borderRadius: 999,
   background: "transparent",

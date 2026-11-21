@@ -39,7 +39,7 @@ export const search = style([
 export const chips = style({
   display: "flex",
   flexWrap: "wrap",
-  gap: 6,
+  gap: 8,
   // <fieldset> 기본 테두리·여백 제거
   minWidth: 0,
   margin: 0,
@@ -51,7 +51,7 @@ export const chip = style([
   focusRing,
   {
     ...field,
-    padding: "0 14px",
+    padding: "0 16px",
     cursor: "pointer",
     transition: "background-color 0.15s, border-color 0.15s, color 0.15s",
     selectors: {
@@ -67,7 +67,7 @@ export const chip = style([
 ]);
 
 export const count = style({
-  marginLeft: 6,
+  marginLeft: 8,
   opacity: 0.7,
   fontVariantNumeric: "tabular-nums",
 });
@@ -77,7 +77,7 @@ export const select = style([
   {
     ...field,
     ...fieldEdge,
-    padding: "0 14px",
+    padding: "0 16px",
     cursor: "pointer",
   },
 ]);

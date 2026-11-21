@@ -3,6 +3,8 @@ import { style, styleVariants } from "@vanilla-extract/css";
 
 export const area = style({
   position: "relative",
+  // 데모가 도는 무대는 항상 어둡다 — 페이지가 밝은 테마여도 어두운 막으로
+  vars: { "--morph-backdrop": vars.color.scrim },
   display: "grid",
   gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
   gap: 12,
@@ -35,7 +37,7 @@ export const cardTitle = style({
 
 export const cardHint = style({
   display: "block",
-  marginTop: 6,
+  marginTop: 8,
   // 색 면 위에서는 muted 가 4.5:1 에 못 미친다
   color: vars.color.text,
   fontSize: "0.85rem",

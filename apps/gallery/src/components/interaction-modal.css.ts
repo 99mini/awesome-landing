@@ -7,7 +7,6 @@ export const backdrop = style({
   inset: 0,
   zIndex: 10,
   background: vars.color.overlay,
-  backdropFilter: "blur(8px)",
 });
 
 export const layer = style({

@@ -11,7 +11,9 @@ const scroll = keyframes({
 export const viewport = style({
   overflow: "hidden",
   // 양 끝을 부드럽게 흐리게
-  maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
+  // mask 는 알파만 쓰므로 불투명한 currentColor 로 충분하다
+  maskImage:
+    "linear-gradient(to right, transparent, currentColor 8%, currentColor 92%, transparent)",
 });
 
 export const track = style({

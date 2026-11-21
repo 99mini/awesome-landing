@@ -24,7 +24,7 @@ export const heading = style({
 export const reset = style([
   focusRing,
   {
-    padding: "2px 10px",
+    padding: "4px 12px",
     border: `1px solid ${vars.color.border}`,
     borderRadius: vars.radius.pill,
     background: "none",
