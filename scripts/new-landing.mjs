@@ -46,5 +46,6 @@ await Promise.all(
 
 console.log(`✔ landings/${name} created (port ${port})`);
 console.log("  next: pnpm install && pnpm --filter @landing/" + name + " dev");
-// 갤러리는 import.meta.glob 으로 landing.json 을 모으는데, 앱 루트 밖의 새 파일은 dev 서버가 감지하지 못한다
-console.log("  갤러리 dev 서버가 켜져 있다면 재시작해야 목록에 나타납니다.");
+console.log(
+  "  켜져 있는 갤러리 dev 서버는 자동으로 새로 고쳐 목록에 추가합니다 (apps/gallery/vite/landing-watch-plugin.ts).",
+);

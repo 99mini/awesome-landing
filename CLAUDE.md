@@ -10,7 +10,7 @@
   인터랙션 컴포넌트(`packages/interactions/src/<slug>/<slug>.tsx`)는 테마 import 금지 — 데모(`demo.css.ts`)만 사용.
   motion value 와 layout 애니메이션용 `borderRadius` 만 inline style 허용.
 - 새 Vite 앱은 `vanillaExtractPlugin()` 필수. 워크스페이스 패키지의 `.css.ts` 는 앱 플러그인이 컴파일한다.
-- 공유 `.css.ts`(예: `styles/ui.css.ts`, `@awesome/theme`)에서 스타일을 지우거나 순서를 바꾸면 dev 서버의 VE 캐시가 클래스 해시를 어긋나게 남길 수 있다. 화면이 이상하면 dev 서버 재시작부터.
+- 공유 `.css.ts`(`styles/ui.css.ts`, `@awesome/theme`) 수정 후 클래스 해시가 어긋난 현상이 한 번 있었으나 재현되지 않는다 (단일·다중 파일 동시 수정, 일시적 import 오류, 수정 직후 oxfmt 모두 확인). 테마·global 스타일 변경은 entry 까지 올라가 전체 새로고침되며, entry 는 `import.meta.hot.data` 로 root 를 재사용한다. 그래도 클래스와 스타일이 어긋나면 dev 서버 재시작.
 - 갤러리 UI 강조색(`vars.color.accent`)은 선택·상태·포커스에만. 데모 안의 강조는 `vars.color.signal`/`signalAlt`.
 - 새 인터랙션: `packages/interactions/src/<slug>/{<slug>.tsx,<slug>.css.ts,demo.tsx,demo.css.ts}` + `src/index.ts` export. 계속 조작하는 인터랙션은 `meta.replayable: false`. 숫자 props 는 `meta.controls` 로 노출하고 데모는 `ControlValues` 를 props 로 받아 컴포넌트에 전달.
 - 갤러리 소스 보기는 `?source` 쿼리(apps/gallery/vite/source-plugin.ts). `.css.ts` 는 VE 가 가로채므로 `?raw` 를 쓰지 말 것.
