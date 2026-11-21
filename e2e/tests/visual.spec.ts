@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures.ts";
 import { URLS } from "./urls.ts";
@@ -8,12 +9,8 @@ import { URLS } from "./urls.ts";
  * 시간에 따라 바뀌는 것(아날로그 시계, 7세그먼트 시각)은 숨긴다.
  */
 
-// 스크린샷을 찍는 동안에만 넣는 CSS — 마스크는 맨 위에 칠해져 모달 뒤의 요소까지 모달 위에 보이므로,
-// 대신 그 요소들을 숨긴다 (자리는 그대로)
-const HIDE_TIME = `
-  svg[aria-label="Analog clock"],
-  [role="img"][aria-label*=":"] { visibility: hidden !important; }
-`;
+// 시간에 따라 바뀌는 부분을 숨기는 CSS (visual-hide.css 참고)
+const HIDE_TIME = fileURLToPath(new URL("./visual-hide.css", import.meta.url));
 
 /** 웹폰트와 지연 로드된 데모가 자리잡을 때까지 */
 async function settle(page: Page) {
@@ -26,7 +23,7 @@ test.describe("gallery", () => {
     await page.goto("/");
     await expect(page.locator("article").first()).toBeVisible();
     await settle(page);
-    await expect(page).toHaveScreenshot("gallery-home.png", { style: HIDE_TIME });
+    await expect(page).toHaveScreenshot("gallery-home.png", { stylePath: HIDE_TIME });
   });
 
   for (const slug of ["accordion", "swipe-cards", "reorder-list"] as const) {
@@ -37,7 +34,7 @@ test.describe("gallery", () => {
         await page.getByRole("button", { name: "Why not animate height?" }).click();
       }
       await settle(page);
-      await expect(page).toHaveScreenshot(`gallery-modal-${slug}.png`, { style: HIDE_TIME });
+      await expect(page).toHaveScreenshot(`gallery-modal-${slug}.png`, { stylePath: HIDE_TIME });
     });
   }
 });
@@ -48,7 +45,7 @@ for (const name of ["aurora", "editorial", "index"] as const) {
       await page.goto(URLS[name]);
       await expect(page.locator("h1")).toBeVisible();
       await settle(page);
-      await expect(page).toHaveScreenshot(`${name}-desktop.png`, { style: HIDE_TIME });
+      await expect(page).toHaveScreenshot(`${name}-desktop.png`, { stylePath: HIDE_TIME });
     });
 
     test("phone first screen", async ({ page }) => {
@@ -56,7 +53,7 @@ for (const name of ["aurora", "editorial", "index"] as const) {
       await page.goto(URLS[name]);
       await expect(page.locator("h1")).toBeVisible();
       await settle(page);
-      await expect(page).toHaveScreenshot(`${name}-phone.png`, { style: HIDE_TIME });
+      await expect(page).toHaveScreenshot(`${name}-phone.png`, { stylePath: HIDE_TIME });
     });
   });
 }

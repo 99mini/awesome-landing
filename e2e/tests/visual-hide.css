@@ -1,0 +1,7 @@
+/* 스크린샷을 찍는 동안에만 넣는 CSS (toHaveScreenshot 의 stylePath).
+   시간에 따라 바뀌는 것(아날로그 시계, 7세그먼트 시각)을 숨긴다 — 자리는 그대로.
+   마스크는 맨 위에 칠해져 모달 뒤의 요소까지 모달 위에 보이므로 쓰지 않는다. */
+svg[aria-label="Analog clock"],
+[role="img"][aria-label*=":"] {
+  visibility: hidden !important;
+}
