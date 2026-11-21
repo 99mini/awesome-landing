@@ -50,3 +50,8 @@ export const value = style({
   fontVariantNumeric: "tabular-nums",
   textAlign: "right",
 });
+
+export const toggle = style([
+  focusRing,
+  { justifySelf: "start", width: 18, height: 18, margin: 0, accentColor: vars.color.accent },
+]);

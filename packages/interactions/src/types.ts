@@ -2,9 +2,13 @@ import type { ComponentType } from "react";
 
 export type InteractionCategory = "cursor" | "scroll" | "hover" | "text" | "layout";
 
-/** 갤러리 조절기(슬라이더)로 노출할 숫자 prop */
+/**
+ * 갤러리 조절기로 노출할 숫자 prop.
+ * `kind: "toggle"` 이면 체크박스로 표시하고 값은 0/1 (min/max/step 은 무시).
+ */
 export interface NumberControl {
   label: string;
+  kind?: "range" | "toggle";
   min: number;
   max: number;
   step: number;
