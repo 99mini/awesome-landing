@@ -1,3 +1,4 @@
+import { MotionProvider } from "@awesome/interactions/motion";
 import { MotionConfig } from "motion/react";
 import { StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
@@ -31,8 +32,10 @@ if (import.meta.hot) import.meta.hot.data.root = root;
 
 root.render(
   <StrictMode>
-    <MotionConfig reducedMotion="user">
-      <RouterProvider router={router} />
-    </MotionConfig>
+    <MotionProvider>
+      <MotionConfig reducedMotion="user">
+        <RouterProvider router={router} />
+      </MotionConfig>
+    </MotionProvider>
   </StrictMode>,
 );

@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { visuallyHidden } from "../lib/visually-hidden.css.ts";
 import * as css from "./split-text.css.ts";
 import { cx } from "../lib/cx.ts";
@@ -17,7 +17,7 @@ export function SplitText({ text, stagger = 0.03, className }: SplitTextProps) {
   let index = 0;
 
   return (
-    <motion.span
+    <m.span
       className={cx(css.root, className)}
       initial="hidden"
       whileInView="visible"
@@ -33,7 +33,7 @@ export function SplitText({ text, stagger = 0.03, className }: SplitTextProps) {
               {[...word].map((char) => {
                 const i = index++;
                 return (
-                  <motion.span
+                  <m.span
                     key={i}
                     data-char
                     className={css.char}
@@ -52,13 +52,13 @@ export function SplitText({ text, stagger = 0.03, className }: SplitTextProps) {
                     }}
                   >
                     {char}
-                  </motion.span>
+                  </m.span>
                 );
               })}
             </span>
           </span>
         ))}
       </span>
-    </motion.span>
+    </m.span>
   );
 }

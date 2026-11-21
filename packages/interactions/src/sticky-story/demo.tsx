@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { Fragment, useRef } from "react";
 import type { ControlValues } from "../types.ts";
 import * as css from "./demo.css.ts";
@@ -34,7 +34,7 @@ export default function Demo({ fade = 0.3 }: ControlValues) {
           ))}
           renderVisual={(active) => (
             <AnimatePresence mode="wait" initial={false}>
-              <motion.div
+              <m.div
                 key={active}
                 className={`${css.panel} ${css.tone[active as 0 | 1 | 2]}`}
                 initial={{ opacity: 0 }}
@@ -43,7 +43,7 @@ export default function Demo({ fade = 0.3 }: ControlValues) {
                 transition={{ duration: reduce ? 0 : fade / 2 }}
               >
                 <span className={css.panelNumber}>{active + 1}</span>
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           )}
         />

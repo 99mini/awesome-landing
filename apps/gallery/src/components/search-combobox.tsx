@@ -5,7 +5,7 @@
  */
 /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/click-events-have-key-events */
 import { interactions } from "@awesome/interactions/registry";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { CATEGORIES, TAGS, categoryCount, tagCount } from "../hooks/use-gallery-filters.ts";
 import { Search } from "./icons.tsx";
@@ -39,13 +39,13 @@ function rank<T>(items: T[], text: (item: T) => string, q: string) {
 
 function suggest(query: string): Suggestion[] {
   const q = query.trim().toLowerCase();
-  const found: Suggestion[] = rank(interactions, (m) => m.meta.title, q)
+  const found: Suggestion[] = rank(interactions, (it) => it.meta.title, q)
     .slice(0, LIMIT.interaction)
-    .map((m) => ({
+    .map((it) => ({
       kind: "interaction" as const,
-      value: m.meta.slug,
-      label: m.meta.title,
-      meta: m.meta.category,
+      value: it.meta.slug,
+      label: it.meta.title,
+      meta: it.meta.category,
     }));
   // 빈 검색어에서는 인터랙션만 보여준다 (태그·카테고리는 옆 컨트롤에 이미 있다)
   if (!q) return found;
@@ -208,7 +208,7 @@ export function SearchCombobox({ value, onChange, onPick }: SearchComboboxProps)
 
       <AnimatePresence>
         {visible && (
-          <motion.div
+          <m.div
             ref={listRef}
             id={`${id}-list`}
             role="listbox"
@@ -255,7 +255,7 @@ export function SearchCombobox({ value, onChange, onPick }: SearchComboboxProps)
                 })}
               </div>
             ))}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

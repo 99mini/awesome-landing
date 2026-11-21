@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef, type ReactNode, type RefObject } from "react";
 
 interface ParallaxProps {
@@ -33,8 +33,8 @@ export function Parallax({
   const y = useTransform(scrollYProgress, [0, 1], [distance * speed, -distance * speed]);
 
   return (
-    <motion.div ref={ref} className={className} style={{ y: reduce ? 0 : y }}>
+    <m.div ref={ref} className={className} style={{ y: reduce ? 0 : y }}>
       {children}
-    </motion.div>
+    </m.div>
   );
 }

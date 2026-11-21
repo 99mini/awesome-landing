@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { m, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useRef, type RefObject } from "react";
 import { cx } from "../lib/cx.ts";
 import { visuallyHidden } from "../lib/visually-hidden.css.ts";
@@ -60,9 +60,9 @@ function Word({
   const opacity = useTransform(progress, range, [dim, 1]);
   return (
     <>
-      <motion.span data-word style={{ opacity }}>
+      <m.span data-word style={{ opacity }}>
         {children}
-      </motion.span>{" "}
+      </m.span>{" "}
     </>
   );
 }

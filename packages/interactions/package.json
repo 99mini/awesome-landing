@@ -3,8 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "sideEffects": [
+    "**/*.css.ts",
+    "**/*.css"
+  ],
   "exports": {
     ".": "./src/index.ts",
+    "./motion": "./src/motion/motion-provider.tsx",
     "./registry": "./src/registry.ts",
     "./sources": "./src/sources.ts",
     "./demo/*": "./src/*/demo.tsx"

@@ -86,6 +86,18 @@ Claude Code 에서는 `/hallmark audit <path>`, 새 페이지는 `/hallmark cust
 
 - 의존성 버전은 `pnpm-workspace.yaml` 의 `catalog` 에서만 관리하고 각 패키지에선 `"catalog:"` 로 참조.
 - 애니메이션은 `motion/react` 사용, `useReducedMotion` 으로 접근성 대응.
+- 컴포넌트는 가벼운 `m.*` 를 쓰고, 애니메이션 기능은 `MotionProvider`(`LazyMotion`)가 첫 화면 뒤에 받는다.
+  인터랙션을 쓰는 앱은 루트를 한 번 감싼다:
+
+  ```tsx
+  import { MotionProvider } from "@awesome/interactions/motion";
+  root.render(
+    <MotionProvider>
+      <App />
+    </MotionProvider>,
+  );
+  ```
+
 - 스타일은 vanilla-extract(`*.css.ts`)로 컴포넌트 옆에 둔다. 전역 `.css` 파일·string className 은 쓰지 않는다.
   - 색·반경·폰트·이징은 `@awesome/theme` 의 `vars` 토큰 사용 (CSS 변수 `--al-*`, 외부에서 덮어쓰기 가능).
   - 인터랙션 컴포넌트는 구조 스타일만 갖고, 겉모습은 `className` 과 CSS 변수로 열어 둔다. 테마에 의존하지 않는다.

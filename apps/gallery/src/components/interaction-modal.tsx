@@ -1,5 +1,5 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { Fragment, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ControlsPanel } from "./controls-panel.tsx";
 import { ReplayButton, useReplay } from "./replay-button.tsx";
@@ -9,7 +9,7 @@ import * as css from "./interaction-modal.css.ts";
 
 /** 소스 보기(하이라이터 포함)는 모달을 열 때만 받는다 */
 const SourceViewer = lazy(() =>
-  import("./source-viewer.tsx").then((m) => ({ default: m.SourceViewer })),
+  import("./source-viewer.tsx").then((mod) => ({ default: mod.SourceViewer })),
 );
 
 interface InteractionModalProps {
@@ -75,7 +75,7 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
 
   return (
     <>
-      <motion.div
+      <m.div
         className={css.backdrop}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -83,7 +83,7 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
         onClick={onClose}
       />
       <div className={css.layer}>
-        <motion.dialog
+        <m.dialog
           open
           layoutId={morph ? `shell-${meta.slug}` : undefined}
           layoutCrossfade={false}
@@ -98,7 +98,7 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
           <ModalContent key={meta.slug} mod={mod} morph={morph} titleId={titleId} />
 
           {(onPrev || onNext) && (
-            <motion.div className={css.pager} {...fade}>
+            <m.div className={css.pager} {...fade}>
               <button
                 type="button"
                 className={css.pagerButton}
@@ -117,9 +117,9 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
               >
                 <Chevron direction="right" />
               </button>
-            </motion.div>
+            </m.div>
           )}
-          <motion.button
+          <m.button
             ref={closeRef}
             type="button"
             className={css.close}
@@ -128,8 +128,8 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
             {...fade}
           >
             ✕
-          </motion.button>
-        </motion.dialog>
+          </m.button>
+        </m.dialog>
       </div>
     </>
   );
@@ -155,25 +155,25 @@ function ModalContent({
 
   return (
     <>
-      <motion.div
+      <m.div
         layoutId={morph ? `stage-${meta.slug}` : undefined}
         layoutCrossfade={false}
         className={css.modalStage}
         style={{ borderRadius: 20 }}
         {...enter}
       >
-        <motion.div layout="position" className={ui.demoFit}>
+        <m.div layout="position" className={ui.demoFit}>
           {/* key 는 데모 props(숫자 전용) 와 섞이지 않도록 Fragment 에 둔다 */}
           <Fragment key={demoKey}>
             <Suspense fallback={null}>
               <Demo {...values} />
             </Suspense>
           </Fragment>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
-      <motion.div layout="position" className={css.body}>
-        <motion.h2
+      <m.div layout="position" className={css.body}>
+        <m.h2
           layoutId={morph ? `title-${meta.slug}` : undefined}
           layoutCrossfade={false}
           id={titleId}
@@ -181,17 +181,17 @@ function ModalContent({
           {...enter}
         >
           {meta.title}
-        </motion.h2>
-        <motion.p className={ui.muted} {...fade}>
+        </m.h2>
+        <m.p className={ui.muted} {...fade}>
           {meta.description}
-        </motion.p>
-        <motion.div {...fade}>
+        </m.p>
+        <m.div {...fade}>
           <Tags tags={[meta.category, ...(meta.tags ?? [])]} />
           <p className={css.source}>
             source: <code>packages/interactions/src/{meta.slug}/</code>
           </p>
-        </motion.div>
-        <motion.div className={css.tools} {...fade}>
+        </m.div>
+        <m.div className={css.tools} {...fade}>
           {meta.controls && (
             <ControlsPanel
               controls={meta.controls}
@@ -203,13 +203,13 @@ function ModalContent({
           <Suspense fallback={<p className={ui.muted}>Loading source…</p>}>
             <SourceViewer slug={meta.slug} />
           </Suspense>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {replayable && (
-        <motion.div className={css.replaySlot} {...fade}>
+        <m.div className={css.replaySlot} {...fade}>
           <ReplayButton replayKey={replayKey} onReplay={replay} />
-        </motion.div>
+        </m.div>
       )}
     </>
   );

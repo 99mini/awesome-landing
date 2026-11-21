@@ -1,3 +1,4 @@
+import { MotionProvider } from "@awesome/interactions/motion";
 import { StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { App } from "./app.tsx";
@@ -10,6 +11,8 @@ if (import.meta.hot) import.meta.hot.data.root = root;
 
 root.render(
   <StrictMode>
-    <App />
+    <MotionProvider>
+      <App />
+    </MotionProvider>
   </StrictMode>,
 );

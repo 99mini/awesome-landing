@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { COLON_W, DIGIT_H, DIGIT_W, GLYPHS, SEGMENTS } from "./geometry.ts";
 import * as css from "./seven-segment.css.ts";
 import { cx } from "../lib/cx.ts";
@@ -56,7 +56,7 @@ export function SevenSegment({
               {SEGMENTS.map((points, s) => {
                 const lit = GLYPHS[char]?.[s] === 1;
                 return (
-                  <motion.polygon
+                  <m.polygon
                     key={s}
                     points={points}
                     className={css.segment}

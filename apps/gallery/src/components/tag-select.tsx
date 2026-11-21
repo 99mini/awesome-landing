@@ -4,7 +4,7 @@
  * 키보드 조작은 옵션이 아니라 combobox(버튼·입력칸)가 맡으므로, 옵션의 click 은 포인터 전용이다.
  */
 /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/click-events-have-key-events */
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Check, Chevron } from "./icons.tsx";
 import * as css from "./listbox.css.ts";
@@ -156,7 +156,7 @@ export function TagSelect({ label, value, options, onChange }: TagSelectProps) {
 
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             ref={listRef}
             id={`${id}-list`}
             role="listbox"
@@ -194,7 +194,7 @@ export function TagSelect({ label, value, options, onChange }: TagSelectProps) {
                 </div>
               );
             })}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

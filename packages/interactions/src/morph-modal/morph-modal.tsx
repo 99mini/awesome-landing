@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import * as css from "./morph-modal.css.ts";
 import { cx } from "../lib/cx.ts";
@@ -70,7 +70,7 @@ export function MorphModal({
 
   return (
     <>
-      <motion.button
+      <m.button
         ref={triggerRef}
         type="button"
         layoutId={`${id}-shell`}
@@ -81,20 +81,20 @@ export function MorphModal({
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        <motion.span layout="position" className={css.content}>
+        <m.span layout="position" className={css.content}>
           {preview}
-        </motion.span>
-      </motion.button>
+        </m.span>
+      </m.button>
 
       <AnimatePresence onExitComplete={restoreFocus}>
         {open && (
-          <motion.div
+          <m.div
             ref={layerRef}
             className={contained ? css.layerContained : css.layerFixed}
             // 닫히는 동안에는 뒤의 카드를 바로 누를 수 있게
             exit={{ pointerEvents: "none" }}
           >
-            <motion.div
+            <m.div
               className={css.backdrop}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -102,7 +102,7 @@ export function MorphModal({
               transition={{ duration: reduce ? 0 : 0.2 }}
               onClick={close}
             />
-            <motion.dialog
+            <m.dialog
               open
               aria-modal={!contained}
               aria-label={label}
@@ -111,7 +111,7 @@ export function MorphModal({
               transition={transition}
               className={cx(css.panel, panelClassName)}
             >
-              <motion.div
+              <m.div
                 layout="position"
                 className={css.content}
                 initial={{ opacity: 0 }}
@@ -119,12 +119,12 @@ export function MorphModal({
                 exit={{ opacity: 0, transition: { duration: 0.08 } }}
               >
                 {children}
-              </motion.div>
+              </m.div>
               <button ref={closeRef} type="button" className={css.close} onClick={close}>
                 Close
               </button>
-            </motion.dialog>
-          </motion.div>
+            </m.dialog>
+          </m.div>
         )}
       </AnimatePresence>
     </>

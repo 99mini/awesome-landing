@@ -1,6 +1,6 @@
 import {
   AnimatePresence,
-  motion,
+  m,
   useMotionValue,
   useReducedMotion,
   useTransform,
@@ -103,7 +103,7 @@ function Card({
   }
 
   return (
-    <motion.div
+    <m.div
       className={cx(css.card, className)}
       style={{ x, rotate: reduce ? 0 : rotate, zIndex: 10 - depth }}
       drag={top ? "x" : false}
@@ -123,6 +123,6 @@ function Card({
       transition={{ type: "spring", stiffness: 400, damping: 32 }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

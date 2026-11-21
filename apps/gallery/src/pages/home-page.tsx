@@ -1,5 +1,5 @@
 import { findInteraction, interactions } from "@awesome/interactions/registry";
-import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { AnimatePresence, LayoutGroup, m } from "motion/react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { EmptyResult, GalleryFilters } from "../components/gallery-filters.tsx";
 import { InteractionMasonry } from "../components/interaction-masonry.tsx";
@@ -41,7 +41,7 @@ export function HomePage() {
     current.current = slug;
   }, [slug]);
   function go(step: number) {
-    const at = list.findIndex((m) => m.meta.slug === current.current);
+    const at = list.findIndex((it) => it.meta.slug === current.current);
     if (at < 0) return;
     // 양 끝에서는 반대쪽으로 순환한다
     const next = list[(at + step + list.length) % list.length];
@@ -58,7 +58,7 @@ export function HomePage() {
         <h2 className={css.sectionTitle}>Landings</h2>
         <div className={css.grid}>
           {landings.map((l, i) => (
-            <motion.a
+            <m.a
               key={l.name}
               className={css.landingCard}
               href={`http://localhost:${l.port}`}
@@ -71,7 +71,7 @@ export function HomePage() {
               <h3 className={css.landingTitle}>{l.title}</h3>
               <p className={css.landingText}>{l.description}</p>
               <Tags tags={l.tags} />
-            </motion.a>
+            </m.a>
           ))}
         </div>
       </section>

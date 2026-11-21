@@ -18,4 +18,5 @@ export { TextScramble } from "./text-scramble/text-scramble.tsx";
 export { TiltCard } from "./tilt-card/tilt-card.tsx";
 export { useTransitionName, useViewTransition } from "./view-transition/view-transition.tsx";
 export { cx } from "./lib/cx.ts";
+export { MotionProvider } from "./motion/motion-provider.tsx";
 export type { InteractionMeta, InteractionCategory } from "./types.ts";

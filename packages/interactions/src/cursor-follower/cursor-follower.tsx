@@ -1,5 +1,5 @@
 import { assignInlineVars } from "@vanilla-extract/dynamic";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { m, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { useState, type PointerEvent, type ReactNode } from "react";
 import * as css from "./cursor-follower.css.ts";
 import { cx } from "../lib/cx.ts";
@@ -52,7 +52,7 @@ export function CursorFollower({
       onPointerLeave={() => setVisible(false)}
     >
       {children}
-      <motion.div
+      <m.div
         aria-hidden
         className={cx(css.dot, dotClassName)}
         style={{ x, y }}

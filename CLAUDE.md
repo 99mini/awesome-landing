@@ -6,6 +6,9 @@
 - 파일명은 kebab-case (`interaction-modal.tsx`, `use-selected-interaction.ts`). oxlint `unicorn/filename-case` 가 error 로 검사한다. 컴포넌트 이름(export)은 PascalCase 그대로.
 - 의존성 추가 시 `pnpm-workspace.yaml` catalog 에 버전을 넣고 패키지에선 `"catalog:"`.
 - 애니메이션은 `motion/react` import. 모든 인터랙션은 `useReducedMotion` 대응.
+  컴포넌트는 `motion.*` 가 아니라 `m.*` (oxlint `no-restricted-imports` 가 막는다). 기능 묶음은 `MotionProvider`
+  (`@awesome/interactions/motion`, `LazyMotion`)가 나중에 받으니, 새 앱·스토리 루트는 이것으로 감싼다.
+  `@awesome/interactions` 는 `sideEffects` 를 `.css.ts` 로 한정 — barrel 에서 하나만 가져와도 다른 컴포넌트가 따라오지 않는다.
 - 스타일은 vanilla-extract `*.css.ts` (컴포넌트 옆, `import * as css from "./X.css.ts"`). 토큰은 `@awesome/theme` 의 `vars`.
   인터랙션 컴포넌트(`packages/interactions/src/<slug>/<slug>.tsx`)는 테마 import 금지 — 데모(`demo.css.ts`)만 사용.
   motion value 와 layout 애니메이션용 `borderRadius` 만 inline style 허용.
@@ -16,7 +19,7 @@
 - `meta.ts`(제목·카테고리·controls)는 첫 로드에 들어가고 `demo.tsx` 는 처음 그려질 때 받는다(레지스트리의 `default` 는 lazy).
   데모를 렌더하는 곳은 `<Suspense>` 안에 둔다. 갤러리 masonry 는 경계가 하나라 첫 화면이 한 번에 그려지고(CLS 방지),
   카드가 새로 보이거나 필터·모달 이동은 transition 이라 지금 화면을 유지한다. 데모에 meta 를 다시 넣지 말 것 — 첫 로드가 다시 커진다.
-- `pnpm check:bundle` — 갤러리 진입 JS·데모 하나·소스 보기의 gzip 크기 예산 (CI 가 build 다음에 확인).
+- `pnpm check:bundle` — 앱마다 첫 로드 JS(entry + 정적 import 전부)의 gzip 예산, Motion 기능 묶음이 첫 로드로 새지 않았는지, 갤러리 데모 하나·소스 보기 크기 (CI 가 build 다음에 확인).
 - 갤러리 소스 보기는 `?source` 쿼리(apps/gallery/vite/source-plugin.ts). `.css.ts` 는 VE 가 가로채므로 `?raw` 를 쓰지 말 것.
 - 새 랜딩: `pnpm new:landing <name> "Title"`.
 - 변경 후 `pnpm check` 통과 확인. 갤러리·랜딩 동작을 바꿨다면 `pnpm test:e2e` (Playwright, production 빌드를 vite preview 로 띄워 검사).
