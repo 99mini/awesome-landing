@@ -247,6 +247,9 @@ importers:
       '@vanilla-extract/css':
         specifier: 'catalog:'
         version: 1.21.3
+      '@vanilla-extract/dynamic':
+        specifier: 'catalog:'
+        version: 2.1.5
       motion:
         specifier: 'catalog:'
         version: 14.14.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

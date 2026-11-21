@@ -1,5 +1,8 @@
 import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
+import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { motion } from "motion/react";
+import { useRef } from "react";
+import { useLastHeight, useVisibility } from "../hooks/use-visibility.ts";
 import { ReplayButton, useReplay } from "./replay-button.tsx";
 import { Tags } from "./tags.tsx";
 import * as ui from "../styles/ui.css.ts";
@@ -37,6 +40,12 @@ function PreviewCard({
 }) {
   const { meta, default: Demo } = mod;
   const { replayKey, replay } = useReplay();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const demoRef = useRef<HTMLDivElement>(null);
+  // 화면 밖 카드의 데모는 내려서 rAF·타이머·애니메이션을 멈춘다 (모달의 데모는 항상 돈다)
+  const paused = useVisibility(stageRef) === false;
+  // 내리기 직전 높이를 그대로 둔다 — 카드 높이가 변하면 masonry 열이 다시 섞인다
+  const lastHeight = useLastHeight(demoRef, paused);
 
   return (
     // 카드 어디를 눌러도 열린다. 키보드는 제목 버튼(Enter/Space)의 click 이 카드로 버블링된다
@@ -55,13 +64,24 @@ function PreviewCard({
       }}
     >
       <motion.div
+        ref={stageRef}
         layoutId={`stage-${meta.slug}`}
         layoutCrossfade={false}
         className={css.cardStage}
         style={{ borderRadius: 14 }}
+        data-demo-paused={paused || undefined}
       >
-        <motion.div layout="position" className={ui.demoFit}>
-          <Demo key={replayKey} {...controlDefaults(meta.controls)} />
+        <motion.div
+          ref={demoRef}
+          layout="position"
+          className={paused && lastHeight !== null ? `${ui.demoFit} ${css.paused}` : ui.demoFit}
+          style={
+            paused && lastHeight !== null
+              ? assignInlineVars({ [css.pausedHeight]: `${lastHeight}px` })
+              : undefined
+          }
+        >
+          {!paused && <Demo key={replayKey} {...controlDefaults(meta.controls)} />}
         </motion.div>
         {meta.replayable !== false && (
           <div className={css.replaySlot}>
