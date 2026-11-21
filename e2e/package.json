@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test",
-    "typecheck": "tsc"
+    "test": "playwright test --project=chromium",
+    "typecheck": "tsc",
+    "test:visual": "playwright test --project=visual"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",

@@ -23,7 +23,9 @@
   테스트는 `e2e/tests/*.spec.ts` — 셀렉터는 role·aria·텍스트로 (production 빌드의 VE 클래스 이름은 해시라 쓸 수 없다).
 - 컴포넌트 테스트는 Storybook(`apps/storybook`): 모든 스토리를 브라우저에서 렌더하고 play 함수와 axe 접근성 검사를 돌린다 (`pnpm test:stories`).
   인터랙션 스토리는 생성물(`stories/interactions/`), 동작 검사는 직접 쓴다(`stories/behaviors/`). 테스트에서는 Motion 애니메이션이 즉시 끝난다.
-- CI(`.github/workflows/ci.yml`)는 PR 마다 check+build, e2e, storybook, `audit:design all` 을 돌린다.
+- 화면 회귀(`e2e/tests/visual.spec.ts`)는 CI 의 Playwright 컨테이너에서만 비교한다 — 로컬 macOS 에서 찍은 이미지는 커밋하지 말 것.
+  화면을 일부러 바꿨다면 PR 에 `update-snapshots` 라벨 → CI 가 새 기준 이미지를 커밋한다 → 라벨을 떼고 다시 돌려 비교 통과 확인.
+- CI(`.github/workflows/ci.yml`)는 PR 마다 check+build, e2e, visual, storybook, `audit:design all` 을 돌린다.
 
 ## 디자인 기준 (Hallmark Floor 중 우리 스택에 맞는 것)
 

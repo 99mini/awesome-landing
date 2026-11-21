@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+    # labeled: `update-snapshots` 라벨을 붙이면 화면 기준 이미지를 다시 만든다
+    types: [opened, synchronize, reopened, labeled]
   push:
     branches: [main]
 
@@ -55,6 +57,45 @@ jobs:
         run: pnpm --filter @awesome/storybook exec playwright install --with-deps chromium
       - name: Render every story, run play functions and axe
         run: pnpm test:stories
+
+  visual:
+    name: visual (screenshots)
+    runs-on: ubuntu-latest
+    # 기준 이미지와 같은 렌더링 환경 — 로컬(macOS)과는 글꼴 렌더링이 달라 비교하지 않는다
+    container: mcr.microsoft.com/playwright:v1.65.1-noble
+    permissions:
+      contents: write
+    env:
+      UPDATE: ${{ contains(github.event.pull_request.labels.*.name, 'update-snapshots') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref }}
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - uses: ./.github/actions/setup
+      - name: Compare screenshots
+        if: env.UPDATE != 'true'
+        run: pnpm test:visual
+      - name: Update screenshots and commit them to the PR branch
+        if: env.UPDATE == 'true'
+        run: |
+          pnpm --filter @awesome/e2e exec playwright test --project=visual --update-snapshots=all
+          git add e2e/tests/__screenshots__
+          if git diff --cached --quiet; then
+            echo "screenshots unchanged"
+          else
+            git -c user.name="github-actions[bot]" \
+                -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                commit -m "test(visual): update screenshots"
+            git push
+          fi
+      - name: Upload diffs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs
+          path: e2e/test-results
+          retention-days: 7
 
   design-audit:
     name: design audit (hallmark)

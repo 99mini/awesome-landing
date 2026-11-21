@@ -1,7 +1,7 @@
 {
   "name": "index",
   "title": "Index",
-  "description": "인터랙션 12종의 살아 있는 목차. 이름을 가리키면 그 인터랙션이 바로 동작한다",
+  "description": "모든 인터랙션의 살아 있는 목차. 이름을 가리키면 그 인터랙션이 바로 동작한다",
   "port": 5202,
   "tags": ["index", "hallmark-custom", "live"]
 }
