@@ -2,8 +2,8 @@ import { MotionConfig } from "motion/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Navigate, RouterProvider, useParams } from "react-router";
-import { Layout } from "./components/Layout.tsx";
-import { HomePage } from "./pages/HomePage.tsx";
+import { Layout } from "./components/layout.tsx";
+import { HomePage } from "./pages/home-page.tsx";
 import "./styles/global.css.ts";
 
 /** 예전 `/interactions/:slug` 링크 호환 → `/?interaction=:slug` */

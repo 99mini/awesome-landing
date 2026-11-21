@@ -1,11 +1,11 @@
 import { findInteraction, interactions } from "@awesome/interactions/registry";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
-import { InteractionMasonry } from "../components/InteractionMasonry.tsx";
-import { InteractionModal } from "../components/InteractionModal.tsx";
-import { Tags } from "../components/Tags.tsx";
-import { useSelectedInteraction } from "../hooks/useSelectedInteraction.ts";
+import { InteractionMasonry } from "../components/interaction-masonry.tsx";
+import { InteractionModal } from "../components/interaction-modal.tsx";
+import { Tags } from "../components/tags.tsx";
+import { useSelectedInteraction } from "../hooks/use-selected-interaction.ts";
 import { landings } from "../landings.ts";
-import * as css from "./HomePage.css.ts";
+import * as css from "./home-page.css.ts";
 
 export function HomePage() {
   const { slug, open, close } = useSelectedInteraction();

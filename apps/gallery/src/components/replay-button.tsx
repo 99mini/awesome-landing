@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState, type MouseEvent } from "react";
-import * as css from "./ReplayButton.css.ts";
+import * as css from "./replay-button.css.ts";
 
 /** 데모를 다시 마운트해 처음 상태부터 재생하기 위한 key */
 export function useReplay() {

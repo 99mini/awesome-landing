@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { TiltCard } from "./TiltCard.tsx";
+import { TiltCard } from "./tilt-card.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

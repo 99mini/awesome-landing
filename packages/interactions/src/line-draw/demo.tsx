@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { LineDraw } from "./LineDraw.tsx";
+import { LineDraw } from "./line-draw.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

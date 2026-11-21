@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { COLON_W, DIGIT_H, DIGIT_W, GLYPHS, SEGMENTS } from "./geometry.ts";
-import * as css from "./SevenSegment.css.ts";
+import * as css from "./seven-segment.css.ts";
 
 interface SevenSegmentProps {
   /** 표시할 문자열 — 0-9, '-', ' ', ':' */

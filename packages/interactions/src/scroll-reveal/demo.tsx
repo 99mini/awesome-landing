@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { ScrollReveal } from "./ScrollReveal.tsx";
+import { ScrollReveal } from "./scroll-reveal.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

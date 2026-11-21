@@ -1,4 +1,4 @@
-import * as css from "./Tags.css.ts";
+import * as css from "./tags.css.ts";
 
 export function Tags({ tags }: { tags?: string[] }) {
   if (!tags?.length) return null;

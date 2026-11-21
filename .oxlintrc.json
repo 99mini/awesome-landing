@@ -8,6 +8,7 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
     "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "react/no-array-index-key": "off",

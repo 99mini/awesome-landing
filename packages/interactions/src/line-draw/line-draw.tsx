@@ -1,6 +1,6 @@
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
-import * as css from "./LineDraw.css.ts";
+import * as css from "./line-draw.css.ts";
 import { smoothPath } from "./path.ts";
 
 interface LineDrawProps {

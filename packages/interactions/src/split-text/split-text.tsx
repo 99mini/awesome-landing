@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
-import * as css from "./SplitText.css.ts";
+import * as css from "./split-text.css.ts";
 
 interface SplitTextProps {
   text: string;

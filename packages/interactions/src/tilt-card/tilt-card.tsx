@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import type { PointerEvent, ReactNode } from "react";
-import * as css from "./TiltCard.css.ts";
+import * as css from "./tilt-card.css.ts";
 
 interface TiltCardProps {
   children: ReactNode;

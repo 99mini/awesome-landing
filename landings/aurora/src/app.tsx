@@ -1,7 +1,7 @@
 import { MagneticButton, ScrollReveal, SplitText } from "@awesome/interactions";
 import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
-import * as css from "./App.css.ts";
+import * as css from "./app.css.ts";
 
 const COMMAND = 'pnpm new:landing my-page "My page"';
 

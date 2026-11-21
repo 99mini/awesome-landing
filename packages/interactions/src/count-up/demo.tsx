@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { CountUp } from "./CountUp.tsx";
+import { CountUp } from "./count-up.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

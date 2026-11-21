@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { MagneticButton } from "./MagneticButton.tsx";
+import { MagneticButton } from "./magnetic-button.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

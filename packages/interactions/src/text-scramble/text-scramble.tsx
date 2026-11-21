@@ -1,6 +1,6 @@
 import { useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import * as css from "./TextScramble.css.ts";
+import * as css from "./text-scramble.css.ts";
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=?<>/[]{}";
 

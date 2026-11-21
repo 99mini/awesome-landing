@@ -25,7 +25,7 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 │  ├─ theme/                # @awesome/theme — 디자인 토큰(--al-*) + 공통 reset
 │  └─ interactions/         # @awesome/interactions — 재사용 인터랙션 컴포넌트
 │     └─ src/<slug>/
-│        ├─ Component.tsx   #   실제 구현 (index.ts 에서 export)
+│        ├─ <slug>.tsx      #   실제 구현 (index.ts 에서 export)
 │        └─ demo.tsx        #   meta + 데모 → 갤러리에 자동 등록
 ├─ templates/landing/       # new:landing 이 복사하는 템플릿
 ├─ scripts/new-landing.mjs

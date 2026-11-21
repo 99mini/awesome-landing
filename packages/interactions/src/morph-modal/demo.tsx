@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { MorphModal } from "./MorphModal.tsx";
+import { MorphModal } from "./morph-modal.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

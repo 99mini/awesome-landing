@@ -1,5 +1,5 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
-import { CursorFollower } from "./CursorFollower.tsx";
+import { CursorFollower } from "./cursor-follower.tsx";
 import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {

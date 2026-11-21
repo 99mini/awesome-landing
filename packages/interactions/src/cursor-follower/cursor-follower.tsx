@@ -1,7 +1,7 @@
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { useState, type PointerEvent, type ReactNode } from "react";
-import * as css from "./CursorFollower.css.ts";
+import * as css from "./cursor-follower.css.ts";
 
 interface CursorFollowerProps {
   children?: ReactNode;
