@@ -89,7 +89,9 @@ export function Accordion({
                   </motion.svg>
                 </button>
               </h3>
-              <AnimatePresence initial={false}>
+              {/* popLayout: 닫히는 패널이 페이드하는 동안 자리를 차지하지 않는다 — 열리는 패널과
+                  잠깐 둘 다 자리를 잡아 아래 항목이 밀렸다가 튀어 오르던 문제 */}
+              <AnimatePresence initial={false} mode="popLayout">
                 {expanded && (
                   <motion.section
                     id={panelId}
@@ -97,7 +99,8 @@ export function Accordion({
                     className={cx(css.panel, panelClassName)}
                     initial={{ opacity: 0, y: reduce ? 0 : -6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
+                    // 닫힘은 아래 항목이 미끄러져 올라오는 것으로 보여준다 — 내용이 남아 페이드하면 올라오는 제목과 겹친다
+                    exit={{ opacity: 0, transition: { duration: 0 } }}
                     transition={transition}
                   >
                     {item.content}

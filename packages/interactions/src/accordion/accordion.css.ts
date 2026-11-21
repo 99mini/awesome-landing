@@ -4,7 +4,10 @@ export const root = style({
   display: "grid",
 });
 
-export const item = style({});
+/** popLayout 이 닫히는 패널을 absolute 로 띄울 기준 */
+export const item = style({
+  position: "relative",
+});
 
 export const heading = style({
   margin: 0,

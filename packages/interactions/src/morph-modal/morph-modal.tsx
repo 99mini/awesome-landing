@@ -39,6 +39,7 @@ export function MorphModal({
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
   const transition = reduce
     ? { duration: 0 }
     : { type: "spring" as const, visualDuration: duration, bounce };
@@ -49,6 +50,8 @@ export function MorphModal({
     // 캡처 단계에서 먼저 받아 멈춘다 — 바깥 모달(예: 갤러리)이 같은 Esc 로 함께 닫히지 않도록
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
+      // 포커스가 이 패널 밖(예: 그 위에 열린 다른 모달)에 있으면 그쪽의 Esc 다 — 가로채지 않는다
+      if (!layerRef.current?.contains(document.activeElement)) return;
       e.stopImmediatePropagation();
       setOpen(false);
     };
@@ -86,6 +89,7 @@ export function MorphModal({
       <AnimatePresence onExitComplete={restoreFocus}>
         {open && (
           <motion.div
+            ref={layerRef}
             className={contained ? css.layerContained : css.layerFixed}
             // 닫히는 동안에는 뒤의 카드를 바로 누를 수 있게
             exit={{ pointerEvents: "none" }}

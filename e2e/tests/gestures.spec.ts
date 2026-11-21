@@ -82,6 +82,31 @@ test.describe("gesture interactions", () => {
     await expect(first).toHaveAttribute("aria-expanded", "false");
   });
 
+  test("accordion: switching panels moves the rows below without a jump", async ({ page }) => {
+    await page.goto("/?interaction=accordion");
+    const dialog = modal(page);
+    await dialog.getByRole("button", { name: "Why not animate height?" }).click();
+    await expect(dialog.getByRole("region", { name: "Why not animate height?" })).toBeVisible();
+    await page.waitForTimeout(600);
+    // 세 번째 제목의 위치를 프레임마다 기록 — 닫히는 패널이 자리를 쥐고 있다가 놓으면 한 프레임에 튄다
+    await page.evaluate(() => {
+      const w = window as unknown as { ys: number[] };
+      const third = [...document.querySelectorAll("dialog h3 button")][2]!;
+      w.ys = [];
+      const tick = () => {
+        w.ys.push(third.getBoundingClientRect().top);
+        if (w.ys.length < 50) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+    await dialog.getByRole("button", { name: "What does the keyboard get?" }).click();
+    await page.waitForFunction(() => (window as unknown as { ys: number[] }).ys.length >= 50);
+    const ys = await page.evaluate(() => (window as unknown as { ys: number[] }).ys);
+    const steps = ys.slice(1).map((y, i) => Math.abs(y - ys[i]!));
+    expect(Math.max(...steps)).toBeLessThan(12);
+    await expect(dialog.getByRole("region", { name: "Why not animate height?" })).toHaveCount(0);
+  });
+
   test("scroll highlight: words light up as the paragraph scrolls past", async ({ page }) => {
     await page.goto("/?interaction=scroll-highlight");
     const box = modal(page).locator("section[aria-label='Scroll highlight']");

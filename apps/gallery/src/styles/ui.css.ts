@@ -28,6 +28,8 @@ export const stage = style({
   display: "grid",
   placeItems: "center",
   overflow: "hidden",
+  // 데모 안의 z-index 가 카드 밖(갤러리 모달 등)과 겨루지 않게
+  isolation: "isolate",
   background: vars.color.stage,
 });
 
