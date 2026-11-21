@@ -1,6 +1,6 @@
 import { findInteraction, interactions } from "@awesome/interactions/registry";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { EmptyResult, GalleryFilters } from "../components/gallery-filters.tsx";
 import { InteractionMasonry } from "../components/interaction-masonry.tsx";
 import { InteractionModal } from "../components/interaction-modal.tsx";
@@ -23,6 +23,10 @@ export function HomePage() {
   const selected = slug ? findInteraction(slug) : undefined;
 
   const [session, setSession] = useState<ModalSession | null>(null);
+  // 주소로 바로 열 때도 모달이 카드보다 나중에 마운트되도록 masonry 가 처음 그려질 때까지 기다린다.
+  // (Motion 은 같은 layoutId 중 나중에 마운트된 쪽을 주인으로 삼아, 늦게 뜬 카드가 모달을 가려 버린다)
+  const [masonryReady, setMasonryReady] = useState(false);
+  const markReady = useCallback(() => setMasonryReady(true), []);
   // URL 에서 파생되는 상태 — 렌더 중에 맞춘다 (열림/닫힘이 URL 로만 결정되도록)
   if (selected && !session) setSession({ opened: selected.meta.slug, navigated: false });
   if (!selected && session) setSession(null);
@@ -77,12 +81,12 @@ export function HomePage() {
         <GalleryFilters filters={filters} onOpen={open} />
         <LayoutGroup>
           {filters.filtered.length > 0 ? (
-            <InteractionMasonry items={filters.filtered} onOpen={open} />
+            <InteractionMasonry items={filters.filtered} onOpen={open} onReady={markReady} />
           ) : (
             <EmptyResult onClear={filters.clear} />
           )}
           <AnimatePresence>
-            {selected && session && (
+            {selected && session && (masonryReady || filters.filtered.length === 0) && (
               <InteractionModal
                 key={session.opened}
                 mod={selected}

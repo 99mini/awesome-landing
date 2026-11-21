@@ -284,14 +284,18 @@ function authoredStamps(dir) {
   return lines.toSorted((a, b) => stampRank(a) - stampRank(b));
 }
 
+/**
+ * 스탬프·waiver 는 index.html 이 링크하는 진입 CSS 한 곳에만 붙인다.
+ * lazy 로 쪼개진 CSS 마다 붙이면 같은 waiver 가 여러 번 나와 "gate 당 하나" 규칙으로 거부된다.
+ */
 function stampBuiltCss(dir) {
   const stamps = authoredStamps(dir);
   if (!stamps.length) return 0;
-  const assets = join(dir, "dist", "assets");
-  for (const f of readdirSync(assets).filter((n) => n.endsWith(".css"))) {
-    const p = join(assets, f);
-    writeFileSync(p, `${stamps.join("\n")}\n${readFileSync(p, "utf8")}`);
-  }
+  const html = readFileSync(join(dir, "dist", "index.html"), "utf8");
+  const entries = [...html.matchAll(/href="\.?\/?(assets\/[^"]+\.css)"/g)].map((m) => m[1]);
+  if (!entries.length) return 0;
+  const p = join(dir, "dist", entries[0]);
+  writeFileSync(p, `${stamps.join("\n")}\n${readFileSync(p, "utf8")}`);
   return stamps.length;
 }
 
@@ -426,7 +430,7 @@ async function audit(name, render) {
 function printReport(name, report) {
   const { summary, findings = [] } = report;
   const dismissed = findings.filter((f) => f.grade === "DISMISSED").length;
-  const order = { FAIL: 0, REFLEX: 1, WARN: 2, DISMISSED: 3 };
+  const order = { FAIL: 0, REFLEX: 1, WARN: 2, REJECTED: 3, DISMISSED: 4 };
   const shown = findings
     .filter((f) => f.grade in order)
     .toSorted((a, b) => order[a.grade] - order[b.grade]);
@@ -438,7 +442,7 @@ function printReport(name, report) {
     if (f.grade === "FAIL" || f.grade === "REFLEX") console.log(`  ${"".padEnd(11)}→ ${f.fix}`);
   }
   console.log(
-    `  ${name}: ${summary.fails - dismissed} FAIL · ${summary.reflex} REFLEX · ${summary.warns} WARN${dismissed ? ` · ${dismissed} dismissed after recheck` : ""} · render ${summary.render}`,
+    `  ${name}: ${summary.fails - dismissed} FAIL · ${summary.reflex} REFLEX · ${summary.warns} WARN${dismissed ? ` · ${dismissed} dismissed after recheck` : ""}${summary.waived ? ` · ${summary.waived} waived` : ""}${summary.rejected ? ` · ${summary.rejected} waiver(s) rejected` : ""} · render ${summary.render}`,
   );
 }
 

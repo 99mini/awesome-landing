@@ -21,12 +21,15 @@ function argTypesFrom(controls: InteractionControls = {}): ArgTypes {
   );
 }
 
-/** 레지스트리의 인터랙션 하나를 스토리 재료로 */
+/**
+ * 레지스트리의 인터랙션 하나를 스토리 재료로 (args·argTypes·설명).
+ * 컴포넌트는 스토리 파일이 데모를 직접 import 한다 — 레지스트리의 lazy 컴포넌트를 쓰면
+ * 렌더 직후 fallback 이 먼저 그려져 axe 가 빈 화면을 검사할 수 있다.
+ */
 export function interactionStory(slug: string) {
   const mod = findInteraction(slug);
   if (!mod) throw new Error(`unknown interaction: ${slug}`);
   return {
-    component: mod.default,
     args: controlDefaults(mod.meta.controls),
     argTypes: argTypesFrom(mod.meta.controls),
     description: mod.meta.description,

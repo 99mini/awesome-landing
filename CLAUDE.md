@@ -12,7 +12,11 @@
 - 새 Vite 앱은 `vanillaExtractPlugin()` 필수. 워크스페이스 패키지의 `.css.ts` 는 앱 플러그인이 컴파일한다.
 - 공유 `.css.ts`(`styles/ui.css.ts`, `@awesome/theme`) 수정 후 클래스 해시가 어긋난 현상이 한 번 있었으나 재현되지 않는다 (단일·다중 파일 동시 수정, 일시적 import 오류, 수정 직후 oxfmt 모두 확인). 테마·global 스타일 변경은 entry 까지 올라가 전체 새로고침되며, entry 는 `import.meta.hot.data` 로 root 를 재사용한다. 그래도 클래스와 스타일이 어긋나면 dev 서버 재시작.
 - 갤러리 UI 강조색(`vars.color.accent`)은 선택·상태·포커스에만. 데모 안의 강조는 `vars.color.signal`/`signalAlt`.
-- 새 인터랙션: `packages/interactions/src/<slug>/{<slug>.tsx,<slug>.css.ts,demo.tsx,demo.css.ts}` + `src/index.ts` export, 그리고 `pnpm stories:gen` (Storybook 스토리 생성 — CI 가 `--check` 로 확인). 계속 조작하는 인터랙션은 `meta.replayable: false`. 숫자 props 는 `meta.controls` 로 노출하고 데모는 `ControlValues` 를 props 로 받아 컴포넌트에 전달.
+- 새 인터랙션: `packages/interactions/src/<slug>/{<slug>.tsx,<slug>.css.ts,meta.ts,demo.tsx,demo.css.ts}` + `src/index.ts` export, 그리고 `pnpm stories:gen` (Storybook 스토리 생성 — CI 가 `--check` 로 확인). 계속 조작하는 인터랙션은 `meta.replayable: false`. 숫자 props 는 `meta.controls` 로 노출하고 데모는 `ControlValues` 를 props 로 받아 컴포넌트에 전달.
+- `meta.ts`(제목·카테고리·controls)는 첫 로드에 들어가고 `demo.tsx` 는 처음 그려질 때 받는다(레지스트리의 `default` 는 lazy).
+  데모를 렌더하는 곳은 `<Suspense>` 안에 둔다. 갤러리 masonry 는 경계가 하나라 첫 화면이 한 번에 그려지고(CLS 방지),
+  카드가 새로 보이거나 필터·모달 이동은 transition 이라 지금 화면을 유지한다. 데모에 meta 를 다시 넣지 말 것 — 첫 로드가 다시 커진다.
+- `pnpm check:bundle` — 갤러리 진입 JS·데모 하나·소스 보기의 gzip 크기 예산 (CI 가 build 다음에 확인).
 - 갤러리 소스 보기는 `?source` 쿼리(apps/gallery/vite/source-plugin.ts). `.css.ts` 는 VE 가 가로채므로 `?raw` 를 쓰지 말 것.
 - 새 랜딩: `pnpm new:landing <name> "Title"`.
 - 변경 후 `pnpm check` 통과 확인. 갤러리·랜딩 동작을 바꿨다면 `pnpm test:e2e` (Playwright, production 빌드를 vite preview 로 띄워 검사).

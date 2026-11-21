@@ -20,6 +20,7 @@ export async function loadSources(slug: string): Promise<SourceFile[]> {
 }
 
 function sourceRank(name: string) {
+  if (name === "meta.ts") return 4;
   if (name.startsWith("demo")) return name.endsWith(".css.ts") ? 3 : 2;
   return name.endsWith(".css.ts") ? 1 : 0;
 }

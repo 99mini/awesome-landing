@@ -1,4 +1,4 @@
-import { useEffect, useState, type RefObject } from "react";
+import { startTransition, useEffect, useState, type RefObject } from "react";
 
 /**
  * 요소가 화면(± margin) 안에 있는지.
@@ -17,7 +17,9 @@ export function useVisibility(ref: RefObject<Element | null>, margin = "400px 0p
       if (cancelled) return;
       observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry) setVisible(entry.isIntersecting);
+          // transition 으로 바꿔야, 처음 보이는 데모의 코드를 받는 동안 React 가 지금 화면(자리표시)을
+          // 그대로 두고 masonry 바깥 Suspense 로 빠지지 않는다
+          if (entry) startTransition(() => setVisible(entry.isIntersecting));
         },
         { rootMargin: margin },
       );

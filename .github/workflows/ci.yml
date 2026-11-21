@@ -21,6 +21,8 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm check
       - run: pnpm build
+      - name: Bundle budget (gallery)
+        run: pnpm check:bundle
 
   e2e:
     name: e2e (playwright)

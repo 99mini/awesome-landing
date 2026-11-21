@@ -1,3 +1,4 @@
+import { startTransition } from "react";
 import {
   interactions,
   type InteractionCategory,
@@ -54,15 +55,18 @@ export function useGalleryFilters() {
 
   /** 여러 값을 한 번에 바꾼다 — 연속 setParams 는 서로를 덮어쓸 수 있어 한 번의 갱신으로 묶는다 */
   function update(changes: Partial<Record<FilterKey, string | null>>, replace = false) {
-    setParams(
-      (prev) => {
-        for (const [key, value] of Object.entries(changes)) {
-          if (value) prev.set(key, value);
-          else prev.delete(key);
-        }
-        return prev;
-      },
-      { replace, preventScrollReset: true },
+    // 새로 보이는 카드의 데모 코드를 받는 동안 지금 목록을 그대로 둔다 (빈 화면 깜빡임 방지)
+    startTransition(() =>
+      setParams(
+        (prev) => {
+          for (const [key, value] of Object.entries(changes)) {
+            if (value) prev.set(key, value);
+            else prev.delete(key);
+          }
+          return prev;
+        },
+        { replace, preventScrollReset: true },
+      ),
     );
   }
 
