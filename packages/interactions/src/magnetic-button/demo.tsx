@@ -7,6 +7,7 @@ export const meta: InteractionMeta = {
   description: "커서에 끌려오는 듯한 스프링 기반 CTA 버튼",
   category: "cursor",
   tags: ["spring", "pointer"],
+  replayable: false,
 };
 
 export default function Demo() {
