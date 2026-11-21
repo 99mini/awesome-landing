@@ -4,6 +4,7 @@ export { CursorFollower } from "./cursor-follower/CursorFollower.tsx";
 export { MagneticButton } from "./magnetic-button/MagneticButton.tsx";
 export { LineDraw } from "./line-draw/LineDraw.tsx";
 export { Marquee } from "./marquee/Marquee.tsx";
+export { MorphModal } from "./morph-modal/MorphModal.tsx";
 export { ScrollReveal } from "./scroll-reveal/ScrollReveal.tsx";
 export { SevenSegment } from "./seven-segment/SevenSegment.tsx";
 export { SplitText } from "./split-text/SplitText.tsx";
