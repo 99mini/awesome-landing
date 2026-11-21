@@ -3,6 +3,8 @@ import { style, styleVariants } from "@vanilla-extract/css";
 
 export const area = style({
   position: "relative",
+  // 패널(z-index 20)이 데모 밖의 모달보다 위에 그려지지 않도록 쌓임 맥락을 여기서 닫는다
+  isolation: "isolate",
   // 데모가 도는 무대는 항상 어둡다 — 페이지가 밝은 테마여도 어두운 막으로
   vars: { "--morph-backdrop": vars.color.scrim },
   display: "grid",
