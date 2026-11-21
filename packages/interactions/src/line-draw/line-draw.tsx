@@ -2,6 +2,7 @@ import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import * as css from "./line-draw.css.ts";
 import { smoothPath } from "./path.ts";
+import { cx } from "../lib/cx.ts";
 
 interface LineDrawProps {
   /** 시리즈별 y 값 배열 (x 는 균등 간격) */
@@ -47,7 +48,7 @@ export function LineDraw({
   return (
     <svg
       ref={ref}
-      className={className ? `${css.root} ${className}` : css.root}
+      className={cx(css.root, className)}
       viewBox={`0 0 ${width} ${height}`}
       role="img"
       aria-label="Line chart"

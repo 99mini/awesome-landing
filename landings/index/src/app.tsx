@@ -5,6 +5,7 @@ import {
   type InteractionCategory,
   type InteractionDemoModule,
 } from "@awesome/interactions/registry";
+import { cx } from "@awesome/interactions";
 import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import * as css from "./app.css.ts";
@@ -137,7 +138,7 @@ export function App() {
               return (
                 <figure
                   key={s}
-                  className={i === 2 ? `${css.largeStage} ${css.largeWide}` : css.largeStage}
+                  className={cx(css.largeStage, i === 2 && css.largeWide)}
                   aria-label={mod.meta.title}
                 >
                   <Demo mod={mod} />

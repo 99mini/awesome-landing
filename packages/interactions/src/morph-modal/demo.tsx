@@ -1,6 +1,7 @@
 import type { ControlValues, InteractionMeta } from "../types.ts";
 import { MorphModal } from "./morph-modal.tsx";
 import * as css from "./demo.css.ts";
+import { cx } from "../lib/cx.ts";
 
 export const meta: InteractionMeta = {
   slug: "morph-modal",
@@ -43,8 +44,8 @@ export default function Demo({ duration, bounce }: ControlValues) {
           label={item.title}
           duration={duration}
           bounce={bounce}
-          className={`${css.tone[item.key]} ${css.card}`}
-          panelClassName={`${css.tone[item.key]} ${css.panel}`}
+          className={cx(css.tone[item.key], css.card)}
+          panelClassName={cx(css.tone[item.key], css.panel)}
           preview={
             <>
               <span className={css.cardTitle}>{item.title}</span>

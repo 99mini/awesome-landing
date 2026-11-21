@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import * as css from "./morph-modal.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface MorphModalProps {
   /** 닫혀 있을 때 보이는 카드 내용 */
@@ -72,7 +73,7 @@ export function MorphModal({
         layoutId={`${id}-shell`}
         layoutCrossfade={false}
         transition={transition}
-        className={className ? `${css.trigger} ${className}` : css.trigger}
+        className={cx(css.trigger, className)}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen(true)}
@@ -104,7 +105,7 @@ export function MorphModal({
               layoutId={`${id}-shell`}
               layoutCrossfade={false}
               transition={transition}
-              className={panelClassName ? `${css.panel} ${panelClassName}` : css.panel}
+              className={cx(css.panel, panelClassName)}
             >
               <motion.div
                 layout="position"

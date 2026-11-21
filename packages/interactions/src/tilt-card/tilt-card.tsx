@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import type { PointerEvent, ReactNode } from "react";
 import * as css from "./tilt-card.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface TiltCardProps {
   children: ReactNode;
@@ -32,7 +33,7 @@ export function TiltCard({ children, maxTilt = 12, className }: TiltCardProps) {
   return (
     <div className={css.viewport}>
       <motion.div
-        className={className ? `${css.card} ${className}` : css.card}
+        className={cx(css.card, className)}
         style={{ rotateX, rotateY }}
         onPointerMove={handleMove}
         onPointerLeave={reset}

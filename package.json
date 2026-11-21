@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @awesome/gallery dev",
-    "dev:all": "pnpm -r --parallel --filter \"./apps/*\" --filter \"./landings/*\" dev",
+    "dev:all": "node scripts/dev-all.mjs",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "lint": "oxlint",

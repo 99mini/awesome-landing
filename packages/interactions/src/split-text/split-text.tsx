@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import * as css from "./split-text.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface SplitTextProps {
   text: string;
@@ -16,7 +17,7 @@ export function SplitText({ text, stagger = 0.03, className }: SplitTextProps) {
 
   return (
     <motion.span
-      className={className ? `${css.root} ${className}` : css.root}
+      className={cx(css.root, className)}
       aria-label={text}
       initial="hidden"
       whileInView="visible"

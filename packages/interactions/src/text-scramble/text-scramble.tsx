@@ -1,6 +1,7 @@
 import { useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import * as css from "./text-scramble.css.ts";
+import { cx } from "../lib/cx.ts";
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=?<>/[]{}";
 
@@ -32,7 +33,7 @@ export function TextScramble({ text, duration = 1.2, className }: TextScramblePr
   }, [inView, reduce, text, duration]);
 
   return (
-    <span ref={ref} className={className ? `${css.root} ${className}` : css.root} aria-label={text}>
+    <span ref={ref} className={cx(css.root, className)} aria-label={text}>
       <span aria-hidden>{reduce ? text : output}</span>
     </span>
   );
