@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useState, type MouseEvent } from "react";
+import * as css from "./ReplayButton.css.ts";
 
 /** 데모를 다시 마운트해 처음 상태부터 재생하기 위한 key */
 export function useReplay() {
@@ -10,10 +11,10 @@ export function useReplay() {
 interface ReplayButtonProps {
   replayKey: number;
   onReplay: () => void;
-  className?: string;
+  size?: keyof typeof css.size;
 }
 
-export function ReplayButton({ replayKey, onReplay, className = "" }: ReplayButtonProps) {
+export function ReplayButton({ replayKey, onReplay, size = "md" }: ReplayButtonProps) {
   function handleClick(e: MouseEvent) {
     // 미리보기 카드에선 클릭이 카드(모달 열기)로 버블링되지 않도록
     e.stopPropagation();
@@ -24,7 +25,7 @@ export function ReplayButton({ replayKey, onReplay, className = "" }: ReplayButt
     <motion.button
       layout="position"
       type="button"
-      className={`replay ${className}`}
+      className={css.size[size]}
       aria-label="인터랙션 다시 보기"
       title="다시 보기"
       onClick={handleClick}

@@ -2,6 +2,8 @@ import type { InteractionDemoModule } from "@awesome/interactions/registry";
 import { motion } from "motion/react";
 import { ReplayButton, useReplay } from "./ReplayButton.tsx";
 import { Tags } from "./Tags.tsx";
+import * as ui from "../styles/ui.css.ts";
+import * as css from "./InteractionMasonry.css.ts";
 
 interface InteractionMasonryProps {
   items: InteractionDemoModule[];
@@ -10,11 +12,11 @@ interface InteractionMasonryProps {
 
 export function InteractionMasonry({ items, onOpen }: InteractionMasonryProps) {
   return (
-    <div className="masonry">
+    <div className={css.masonry}>
       {items.map((mod, i) => (
         <motion.div
           key={mod.meta.slug}
-          className="masonry-item"
+          className={css.item}
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -42,30 +44,32 @@ function PreviewCard({
     <motion.article
       layoutId={`shell-${meta.slug}`}
       layoutCrossfade={false}
-      className="preview-card"
+      className={css.card}
       style={{ borderRadius: 20 }}
       onClick={() => onOpen(meta.slug)}
     >
       <motion.div
         layoutId={`stage-${meta.slug}`}
         layoutCrossfade={false}
-        className="preview-stage"
+        className={css.cardStage}
         style={{ borderRadius: 14 }}
       >
-        <motion.div layout="position" className="demo-fit">
+        <motion.div layout="position" className={ui.demoFit}>
           <Demo key={replayKey} />
         </motion.div>
         {meta.replayable !== false && (
-          <ReplayButton replayKey={replayKey} onReplay={replay} className="replay-card" />
+          <div className={css.replaySlot}>
+            <ReplayButton replayKey={replayKey} onReplay={replay} size="sm" />
+          </div>
         )}
       </motion.div>
-      <motion.footer layout="position" className="preview-footer">
-        <span className="badge">{meta.category}</span>
-        <button type="button" className="preview-open">
+      <motion.footer layout="position" className={css.footer}>
+        <span className={ui.badge}>{meta.category}</span>
+        <button type="button" className={css.openButton}>
           <motion.span
             layoutId={`title-${meta.slug}`}
             layoutCrossfade={false}
-            className="preview-title"
+            className={css.title}
           >
             {meta.title}
           </motion.span>

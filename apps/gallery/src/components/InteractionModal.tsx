@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { ReplayButton, useReplay } from "./ReplayButton.tsx";
 import { Tags } from "./Tags.tsx";
+import * as ui from "../styles/ui.css.ts";
+import * as css from "./InteractionModal.css.ts";
 
 interface InteractionModalProps {
   mod: InteractionDemoModule;
@@ -44,18 +46,18 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
   return (
     <>
       <motion.div
-        className="modal-backdrop"
+        className={css.backdrop}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
       />
-      <div className="modal-layer">
+      <div className={css.layer}>
         <motion.dialog
           open
           layoutId={`shell-${meta.slug}`}
           layoutCrossfade={false}
-          className="modal"
+          className={css.dialog}
           style={{ borderRadius: 28 }}
           aria-modal="true"
           aria-labelledby={titleId}
@@ -64,32 +66,32 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
           <motion.div
             layoutId={`stage-${meta.slug}`}
             layoutCrossfade={false}
-            className="modal-stage"
+            className={css.modalStage}
             style={{ borderRadius: 20 }}
           >
-            <motion.div layout="position" className="demo-fit">
+            <motion.div layout="position" className={ui.demoFit}>
               <Demo key={replayKey} />
             </motion.div>
           </motion.div>
 
-          <motion.div layout="position" className="modal-body">
-            <motion.span className="badge" {...fade}>
+          <motion.div layout="position" className={css.body}>
+            <motion.span className={css.category} {...fade}>
               {meta.category}
             </motion.span>
             <motion.h2
               layoutId={`title-${meta.slug}`}
               layoutCrossfade={false}
               id={titleId}
-              className="modal-title"
+              className={css.title}
             >
               {meta.title}
             </motion.h2>
-            <motion.p className="muted" {...fade}>
+            <motion.p className={ui.muted} {...fade}>
               {meta.description}
             </motion.p>
             <motion.div {...fade}>
               <Tags tags={meta.tags} />
-              <p className="muted source">
+              <p className={css.source}>
                 source: <code>packages/interactions/src/{meta.slug}/</code>
               </p>
             </motion.div>
@@ -98,7 +100,7 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
           <motion.button
             ref={closeRef}
             type="button"
-            className="modal-close"
+            className={css.close}
             aria-label="닫기"
             onClick={onClose}
             {...fade}
@@ -106,7 +108,7 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
             ✕
           </motion.button>
           {meta.replayable !== false && (
-            <motion.div className="modal-replay" {...fade}>
+            <motion.div className={css.replaySlot} {...fade}>
               <ReplayButton replayKey={replayKey} onReplay={replay} />
             </motion.div>
           )}

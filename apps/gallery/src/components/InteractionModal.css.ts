@@ -1,0 +1,69 @@
+import { vars } from "@awesome/theme";
+import { style } from "@vanilla-extract/css";
+import { badge, iconButton, muted, stage } from "../styles/ui.css.ts";
+
+export const backdrop = style({
+  position: "fixed",
+  inset: 0,
+  zIndex: 10,
+  background: vars.color.overlay,
+  backdropFilter: "blur(8px)",
+});
+
+export const layer = style({
+  position: "fixed",
+  inset: 0,
+  zIndex: 11,
+  display: "grid",
+  placeItems: "center",
+  padding: 16,
+  pointerEvents: "none",
+});
+
+export const dialog = style({
+  // <dialog> 기본 스타일 초기화
+  position: "relative",
+  inset: "auto",
+  margin: 0,
+  padding: 0,
+  color: "inherit",
+
+  width: "min(960px, 100%)",
+  maxHeight: "calc(100svh - 32px)",
+  overflow: "auto",
+  border: `1px solid ${vars.color.border}`,
+  background: vars.color.surface,
+  pointerEvents: "auto",
+});
+
+export const modalStage = style([
+  stage,
+  {
+    minHeight: "min(56svh, 520px)",
+    margin: 12,
+    padding: "48px 24px",
+    background: `radial-gradient(circle at 50% 0%, ${vars.color.stageGlowStrong}, ${vars.color.stageBase})`,
+  },
+]);
+
+export const body = style({
+  padding: "4px 28px 28px",
+});
+
+export const category = style([badge, { display: "block" }]);
+
+export const title = style({
+  display: "inline-block",
+  margin: "0 0 16px",
+  fontSize: "1.5rem",
+});
+
+export const source = style([muted, { margin: "16px 0 0", fontSize: "0.85rem" }]);
+
+export const close = style([iconButton, { position: "absolute", top: 20, right: 20 }]);
+
+export const replaySlot = style({
+  position: "absolute",
+  top: 20,
+  right: 64,
+});

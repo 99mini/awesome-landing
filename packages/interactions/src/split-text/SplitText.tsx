@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
+import * as css from "./SplitText.css.ts";
 
 interface SplitTextProps {
   text: string;
@@ -12,19 +13,18 @@ export function SplitText({ text, stagger = 0.03, className }: SplitTextProps) {
 
   return (
     <motion.span
-      className={className}
+      className={className ? `${css.root} ${className}` : css.root}
       aria-label={text}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
       transition={{ staggerChildren: reduce ? 0 : stagger }}
-      style={{ display: "inline-block" }}
     >
       {[...text].map((char, i) => (
         <motion.span
           key={i}
           aria-hidden
-          style={{ display: "inline-block", whiteSpace: "pre" }}
+          className={css.char}
           variants={{
             hidden: { opacity: 0, y: reduce ? 0 : "0.6em", filter: "blur(6px)" },
             visible: { opacity: 1, y: 0, filter: "blur(0px)" },

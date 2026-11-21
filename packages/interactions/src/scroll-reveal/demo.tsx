@@ -1,5 +1,6 @@
 import type { InteractionMeta } from "../types.ts";
 import { ScrollReveal } from "./ScrollReveal.tsx";
+import * as css from "./demo.css.ts";
 
 export const meta: InteractionMeta = {
   slug: "scroll-reveal",
@@ -11,10 +12,10 @@ export const meta: InteractionMeta = {
 
 export default function Demo() {
   return (
-    <div style={{ display: "grid", gap: "1rem", width: "min(100%, 28rem)" }}>
+    <div className={css.list}>
       {["Fast", "Composable", "Accessible", "Delightful"].map((label, i) => (
         <ScrollReveal key={label} delay={i * 0.1} once={false}>
-          <div style={{ padding: "1.5rem", borderRadius: 16, background: "#1c1c22" }}>{label}</div>
+          <div className={css.item}>{label}</div>
         </ScrollReveal>
       ))}
     </div>

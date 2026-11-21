@@ -1,8 +1,9 @@
 import { ScrollReveal, SplitText } from "@awesome/interactions";
+import * as css from "./App.css.ts";
 
 export function App() {
   return (
-    <main className="hero">
+    <main className={css.hero}>
       <h1>
         <SplitText text="__TITLE__" />
       </h1>
