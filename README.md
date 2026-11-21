@@ -53,11 +53,14 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 ## 테스트와 CI
 
 ```sh
-pnpm test:e2e      # Playwright — 앱마다 production 빌드 후 vite preview(4310, 4320~4322)로 띄워 검사
+pnpm test:e2e      # Playwright — 앱마다 production 빌드 후 vite preview(4310, 4320~4322)로 띄워 앱 흐름을 검사
+pnpm storybook     # Storybook (http://localhost:6006)
+pnpm test:stories  # 모든 스토리를 브라우저에서 렌더 + play 함수 + axe 접근성 검사
+pnpm stories:gen   # 인터랙션마다 스토리 생성 (registry 의 meta.controls → Storybook 컨트롤)
 ```
 
 로컬은 설치된 Chrome, CI 는 Playwright 의 Chromium 을 쓴다. PR 마다 GitHub Actions 가
-`pnpm check` + `pnpm build`, E2E, `pnpm audit:design all` 을 돌린다 (`.github/workflows/ci.yml`).
+`pnpm check` + `pnpm build`, E2E, Storybook 테스트, `pnpm audit:design all` 을 돌린다 (`.github/workflows/ci.yml`).
 
 ## 디자인 품질 (Hallmark)
 

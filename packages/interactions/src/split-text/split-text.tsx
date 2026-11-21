@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
+import { visuallyHidden } from "../lib/visually-hidden.css.ts";
 import * as css from "./split-text.css.ts";
 import { cx } from "../lib/cx.ts";
 
@@ -18,42 +19,46 @@ export function SplitText({ text, stagger = 0.03, className }: SplitTextProps) {
   return (
     <motion.span
       className={cx(css.root, className)}
-      aria-label={text}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
     >
-      {words.map((word, w) => (
-        <span key={w}>
-          {w > 0 && " "}
-          <span aria-hidden className={css.word}>
-            {[...word].map((char) => {
-              const i = index++;
-              return (
-                <motion.span
-                  key={i}
-                  className={css.char}
-                  variants={{
-                    hidden: { opacity: 0, y: reduce ? 0 : "0.6em", filter: "blur(6px)" },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      filter: "blur(0px)",
-                      transition: {
-                        duration: 0.5,
-                        delay: reduce ? 0 : i * stagger,
-                        ease: [0.22, 1, 0.36, 1],
+      {/* 역할 없는 span 의 aria-label 은 읽히지 않을 수 있어, 읽을 글은 숨긴 텍스트로 둔다 */}
+      <span className={visuallyHidden}>{text}</span>
+      <span aria-hidden>
+        {words.map((word, w) => (
+          <span key={w}>
+            {w > 0 && " "}
+            <span className={css.word}>
+              {[...word].map((char) => {
+                const i = index++;
+                return (
+                  <motion.span
+                    key={i}
+                    data-char
+                    className={css.char}
+                    variants={{
+                      hidden: { opacity: 0, y: reduce ? 0 : "0.6em", filter: "blur(6px)" },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        filter: "blur(0px)",
+                        transition: {
+                          duration: 0.5,
+                          delay: reduce ? 0 : i * stagger,
+                          ease: [0.22, 1, 0.36, 1],
+                        },
                       },
-                    },
-                  }}
-                >
-                  {char}
-                </motion.span>
-              );
-            })}
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                );
+              })}
+            </span>
           </span>
-        </span>
-      ))}
+        ))}
+      </span>
     </motion.span>
   );
 }

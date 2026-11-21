@@ -15,7 +15,10 @@
     "new:landing": "node scripts/new-landing.mjs",
     "skills:install": "npx -y skills experimental_install --agent claude-code",
     "audit:design": "node scripts/hallmark-audit.mjs",
-    "test:e2e": "pnpm --filter @awesome/e2e test"
+    "test:e2e": "pnpm --filter @awesome/e2e test",
+    "stories:gen": "node scripts/gen-stories.mjs",
+    "storybook": "pnpm --filter @awesome/storybook storybook",
+    "test:stories": "pnpm --filter @awesome/storybook test"
   },
   "devDependencies": {
     "oxfmt": "catalog:",

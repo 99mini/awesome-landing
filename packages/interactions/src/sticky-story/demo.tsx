@@ -31,8 +31,9 @@ export default function Demo({ fade = 0.3 }: ControlValues) {
   return (
     <div className={css.root}>
       <p className={css.hint}>Scroll inside the box.</p>
-      {/* 포커스 가능한 자식이 없는 스크롤 상자는 브라우저가 키보드 포커스를 준다 */}
-      <section ref={scroller} className={css.scroller} aria-label="Sticky story">
+      {/* 스크롤 상자는 키보드로도 움직일 수 있어야 한다 — Chrome 은 자동으로 주지만 다른 브라우저를 위해 명시 */}
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+      <section ref={scroller} className={css.scroller} tabIndex={0} aria-label="Sticky story">
         <StickyStory
           className={css.story}
           container={scroller}
