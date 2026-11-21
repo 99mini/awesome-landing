@@ -1,9 +1,15 @@
-import { interactions } from "@awesome/interactions/registry";
-import { motion } from "motion/react";
-import { Link } from "react-router";
+import { findInteraction, interactions } from "@awesome/interactions/registry";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { InteractionMasonry } from "../components/InteractionMasonry.tsx";
+import { InteractionModal } from "../components/InteractionModal.tsx";
+import { Tags } from "../components/Tags.tsx";
+import { useSelectedInteraction } from "../hooks/useSelectedInteraction.ts";
 import { landings } from "../landings.ts";
 
 export function HomePage() {
+  const { slug, open, close } = useSelectedInteraction();
+  const selected = slug ? findInteraction(slug) : undefined;
+
   return (
     <>
       <section className="section">
@@ -30,35 +36,15 @@ export function HomePage() {
 
       <section className="section">
         <h2>Interactions</h2>
-        <div className="grid">
-          {interactions.map(({ meta }, i) => (
-            <motion.div
-              key={meta.slug}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-            >
-              <Link className="card" to={`/interactions/${meta.slug}`}>
-                <span className="badge">{meta.category}</span>
-                <h3>{meta.title}</h3>
-                <p>{meta.description}</p>
-                <Tags tags={meta.tags} />
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        <LayoutGroup>
+          <InteractionMasonry items={interactions} onOpen={open} />
+          <AnimatePresence>
+            {selected && (
+              <InteractionModal key={selected.meta.slug} mod={selected} onClose={close} />
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
       </section>
     </>
-  );
-}
-
-function Tags({ tags }: { tags?: string[] }) {
-  if (!tags?.length) return null;
-  return (
-    <ul className="tags">
-      {tags.map((t) => (
-        <li key={t}>{t}</li>
-      ))}
-    </ul>
   );
 }
