@@ -14,7 +14,8 @@
     "check": "pnpm fmt:check && pnpm lint && pnpm typecheck",
     "new:landing": "node scripts/new-landing.mjs",
     "skills:install": "npx -y skills experimental_install --agent claude-code",
-    "audit:design": "node scripts/hallmark-audit.mjs"
+    "audit:design": "node scripts/hallmark-audit.mjs",
+    "test:e2e": "pnpm --filter @awesome/e2e test"
   },
   "devDependencies": {
     "oxfmt": "catalog:",

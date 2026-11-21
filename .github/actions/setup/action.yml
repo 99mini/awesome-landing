@@ -1,0 +1,19 @@
+name: Setup
+description: Node and pnpm from mise.toml, cached pnpm store, workspace install
+
+runs:
+  using: composite
+  steps:
+    - uses: jdx/mise-action@v2
+    - name: pnpm store path
+      id: store
+      shell: bash
+      run: echo "path=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+    - uses: actions/cache@v4
+      with:
+        path: ${{ steps.store.outputs.path }}
+        key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: pnpm-${{ runner.os }}-
+    - name: Install
+      shell: bash
+      run: pnpm install --frozen-lockfile

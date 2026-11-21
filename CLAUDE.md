@@ -15,7 +15,9 @@
 - 새 인터랙션: `packages/interactions/src/<slug>/{<slug>.tsx,<slug>.css.ts,demo.tsx,demo.css.ts}` + `src/index.ts` export. 계속 조작하는 인터랙션은 `meta.replayable: false`. 숫자 props 는 `meta.controls` 로 노출하고 데모는 `ControlValues` 를 props 로 받아 컴포넌트에 전달.
 - 갤러리 소스 보기는 `?source` 쿼리(apps/gallery/vite/source-plugin.ts). `.css.ts` 는 VE 가 가로채므로 `?raw` 를 쓰지 말 것.
 - 새 랜딩: `pnpm new:landing <name> "Title"`.
-- 변경 후 `pnpm check` 통과 확인.
+- 변경 후 `pnpm check` 통과 확인. 갤러리·랜딩 동작을 바꿨다면 `pnpm test:e2e` (Playwright, production 빌드를 vite preview 로 띄워 검사).
+  테스트는 `e2e/tests/*.spec.ts` — 셀렉터는 role·aria·텍스트로 (production 빌드의 VE 클래스 이름은 해시라 쓸 수 없다).
+- CI(`.github/workflows/ci.yml`)는 PR 마다 check+build, e2e, `audit:design all` 을 돌린다.
 
 ## 디자인 기준 (Hallmark Floor 중 우리 스택에 맞는 것)
 

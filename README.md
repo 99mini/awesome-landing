@@ -50,6 +50,15 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 | `pnpm check`                 | fmt:check + lint + typecheck |
 | `pnpm fmt` / `pnpm lint:fix` | 포맷 / 린트 자동 수정        |
 
+## 테스트와 CI
+
+```sh
+pnpm test:e2e      # Playwright — 앱마다 production 빌드 후 vite preview(4310, 4320~4322)로 띄워 검사
+```
+
+로컬은 설치된 Chrome, CI 는 Playwright 의 Chromium 을 쓴다. PR 마다 GitHub Actions 가
+`pnpm check` + `pnpm build`, E2E, `pnpm audit:design all` 을 돌린다 (`.github/workflows/ci.yml`).
+
 ## 디자인 품질 (Hallmark)
 
 [Hallmark](https://github.com/Nutlope/hallmark) 스킬을 프로젝트 범위로 쓴다. 본체는 커밋하지 않고 `skills-lock.json` 으로 버전을 고정한다.

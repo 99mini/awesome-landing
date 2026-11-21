@@ -13,3 +13,7 @@ mise.local.toml
 .hallmark/
 # skills experimental_install 이 만드는 canonical 사본 (.claude/skills 와 중복, 8MB+)
 .agents/
+
+# playwright
+e2e/playwright-report/
+e2e/test-results/
