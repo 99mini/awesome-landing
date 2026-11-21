@@ -1,6 +1,7 @@
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import type { ReactNode } from "react";
 import * as css from "./marquee.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface MarqueeProps {
   children: ReactNode;
@@ -22,13 +23,15 @@ export function Marquee({
   pauseOnHover = true,
   className,
 }: MarqueeProps) {
-  const trackClass = [css.track, direction === "right" && css.reverse, pauseOnHover && css.pausable]
-    .filter(Boolean)
-    .join(" ");
+  const trackClass = cx(
+    css.track,
+    direction === "right" && css.reverse,
+    pauseOnHover && css.pausable,
+  );
 
   return (
     <div
-      className={className ? `${css.viewport} ${className}` : css.viewport}
+      className={cx(css.viewport, className)}
       style={assignInlineVars({ [css.durationVar]: `${duration}s`, [css.gapVar]: gap })}
     >
       <div className={trackClass}>

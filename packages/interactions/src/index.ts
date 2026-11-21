@@ -10,4 +10,5 @@ export { SevenSegment } from "./seven-segment/seven-segment.tsx";
 export { SplitText } from "./split-text/split-text.tsx";
 export { TextScramble } from "./text-scramble/text-scramble.tsx";
 export { TiltCard } from "./tilt-card/tilt-card.tsx";
+export { cx } from "./lib/cx.ts";
 export type { InteractionMeta, InteractionCategory } from "./types.ts";

@@ -2,6 +2,7 @@ import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { useState, type PointerEvent, type ReactNode } from "react";
 import * as css from "./cursor-follower.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface CursorFollowerProps {
   children?: ReactNode;
@@ -45,7 +46,7 @@ export function CursorFollower({
 
   return (
     <div
-      className={className ? `${css.area} ${className}` : css.area}
+      className={cx(css.area, className)}
       style={assignInlineVars({ [css.sizeVar]: `${size}px` })}
       onPointerMove={handleMove}
       onPointerLeave={() => setVisible(false)}
@@ -53,7 +54,7 @@ export function CursorFollower({
       {children}
       <motion.div
         aria-hidden
-        className={dotClassName ? `${css.dot} ${dotClassName}` : css.dot}
+        className={cx(css.dot, dotClassName)}
         style={{ x, y }}
         animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.4 }}
         transition={{ duration: 0.2 }}

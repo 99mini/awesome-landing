@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { COLON_W, DIGIT_H, DIGIT_W, GLYPHS, SEGMENTS } from "./geometry.ts";
 import * as css from "./seven-segment.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface SevenSegmentProps {
   /** 표시할 문자열 — 0-9, '-', ' ', ':' */
@@ -37,21 +38,21 @@ export function SevenSegment({
 
   return (
     <svg
-      className={className ? `${css.root} ${className}` : css.root}
+      className={cx(css.root, className)}
       viewBox={`${-lean / 2} 0 ${width + lean} ${DIGIT_H}`}
       height={height}
       role="img"
       aria-label={value}
     >
       <g transform={`translate(${lean / 2} 0) skewX(${-skew}) translate(${-lean / 2} 0)`}>
-        {cells.map(({ char, x: cx }, i) =>
+        {cells.map(({ char, x: cellX }, i) =>
           char === ":" ? (
-            <g key={i} transform={`translate(${cx} 0)`}>
+            <g key={i} transform={`translate(${cellX} 0)`}>
               <circle className={css.on} cx={COLON_W / 2} cy={DIGIT_H * 0.3} r={5} />
               <circle className={css.on} cx={COLON_W / 2} cy={DIGIT_H * 0.7} r={5} />
             </g>
           ) : (
-            <g key={i} transform={`translate(${cx} 0)`}>
+            <g key={i} transform={`translate(${cellX} 0)`}>
               {SEGMENTS.map((points, s) => {
                 const lit = GLYPHS[char]?.[s] === 1;
                 return (

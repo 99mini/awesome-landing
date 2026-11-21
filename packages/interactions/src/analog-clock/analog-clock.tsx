@@ -8,6 +8,7 @@ import {
 } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import * as css from "./analog-clock.css.ts";
+import { cx } from "../lib/cx.ts";
 
 interface AnalogClockProps {
   /** true: 모든 바늘이 연속으로 흐른다 / false: 초침이 1초마다 스프링으로 '틱' */
@@ -64,7 +65,7 @@ export function AnalogClock({
 
   return (
     <svg
-      className={className ? `${css.face} ${className}` : css.face}
+      className={cx(css.face, className)}
       width={size}
       height={size}
       viewBox="-100 -100 200 200"
