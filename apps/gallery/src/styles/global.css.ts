@@ -1,6 +1,7 @@
 /* Hallmark · checked: 2026-11-21 · genre: modern-minimal · scope: app
  * floor: 0 FAIL · fixed: 2a, 24b, 26a, 26b, 29, 39b, 40, 48, 54, 67 · structural: none printed
  * built: the project · redesign: polish · v2.0.0 */
+/* Hallmark · waive 39b · the Morph Modal triggers are tiles holding a title and a hint, not controls · each tile in the Morph Modal demo grows into its own panel */
 /* Hallmark · waive 72 · the marquee track runs past its card by design and the card clips it · the Infinite Marquee demo shows content scrolling under its own edge */
 
 import "@awesome/theme/reset";
