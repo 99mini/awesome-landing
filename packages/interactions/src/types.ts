@@ -2,6 +2,22 @@ import type { ComponentType } from "react";
 
 export type InteractionCategory = "cursor" | "scroll" | "hover" | "text" | "layout";
 
+/** 갤러리 조절기(슬라이더)로 노출할 숫자 prop */
+export interface NumberControl {
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  default: number;
+  /** 값 뒤에 붙일 단위 (표시용) */
+  unit?: string;
+}
+
+/** prop 이름 → 조절기 정의 */
+export type InteractionControls = Record<string, NumberControl>;
+
+export type ControlValues = Record<string, number>;
+
 export interface InteractionMeta {
   /** URL slug — 폴더 이름과 동일하게 */
   slug: string;
@@ -15,10 +31,19 @@ export interface InteractionMeta {
    * hover·pointer 처럼 사용자가 직접 계속 조작하는 인터랙션은 false.
    */
   replayable?: boolean;
+  /** 모달에서 조절할 수 있는 props. 데모는 이 키들을 props 로 받는다 */
+  controls?: InteractionControls;
 }
 
 /** 각 인터랙션 폴더의 `demo.tsx` 가 export 해야 하는 모양 */
 export interface InteractionDemoModule {
   meta: InteractionMeta;
-  default: ComponentType;
+  /** controls 의 현재 값이 props 로 전달된다 */
+  default: ComponentType<ControlValues>;
+}
+
+export interface SourceFile {
+  /** 폴더 기준 파일 이름 (예: TiltCard.tsx) */
+  name: string;
+  code: string;
 }

@@ -39,7 +39,7 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 
 **랜딩** — `pnpm new:landing neon-saas "Neon SaaS"` → `pnpm install` → `landing.json` 설명/태그 수정.
 
-**인터랙션** — `packages/interactions/src/<slug>/` 에 컴포넌트와 `demo.tsx`(`meta` + default export)를 만들고, `src/index.ts` 에 export 추가. 갤러리(`/?interaction=<slug>`)에 자동 노출. 계속 직접 조작하는 인터랙션(hover·pointer)은 `meta.replayable: false`.
+**인터랙션** — `packages/interactions/src/<slug>/` 에 컴포넌트와 `demo.tsx`(`meta` + default export)를 만들고, `src/index.ts` 에 export 추가. 갤러리(`/?interaction=<slug>`)에 자동 노출. 계속 직접 조작하는 인터랙션(hover·pointer)은 `meta.replayable: false`. 조절 가능한 숫자 props 는 `meta.controls` 에 정의하면 모달에 슬라이더가 생기고 데모에 props 로 전달된다. 모달에서 폴더의 소스(컴포넌트·스타일·데모)를 보고 복사할 수 있다.
 
 ## 스크립트
 

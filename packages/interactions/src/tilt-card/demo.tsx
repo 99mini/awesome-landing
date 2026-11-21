@@ -1,4 +1,4 @@
-import type { InteractionMeta } from "../types.ts";
+import type { ControlValues, InteractionMeta } from "../types.ts";
 import { TiltCard } from "./TiltCard.tsx";
 import * as css from "./demo.css.ts";
 
@@ -9,11 +9,14 @@ export const meta: InteractionMeta = {
   category: "hover",
   tags: ["perspective", "useTransform"],
   replayable: false,
+  controls: {
+    maxTilt: { label: "Max tilt", min: 0, max: 30, step: 1, default: 12, unit: "°" },
+  },
 };
 
-export default function Demo() {
+export default function Demo({ maxTilt }: ControlValues) {
   return (
-    <TiltCard>
+    <TiltCard maxTilt={maxTilt}>
       <div className={css.card}>Hover me</div>
     </TiltCard>
   );

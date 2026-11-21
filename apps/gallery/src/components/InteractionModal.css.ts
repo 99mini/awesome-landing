@@ -67,3 +67,9 @@ export const replaySlot = style({
   top: 20,
   right: 64,
 });
+
+export const tools = style({
+  display: "grid",
+  gap: 16,
+  marginTop: 24,
+});

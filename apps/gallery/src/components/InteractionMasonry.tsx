@@ -1,4 +1,4 @@
-import type { InteractionDemoModule } from "@awesome/interactions/registry";
+import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
 import { motion } from "motion/react";
 import { ReplayButton, useReplay } from "./ReplayButton.tsx";
 import { Tags } from "./Tags.tsx";
@@ -55,7 +55,7 @@ function PreviewCard({
         style={{ borderRadius: 14 }}
       >
         <motion.div layout="position" className={ui.demoFit}>
-          <Demo key={replayKey} />
+          <Demo key={replayKey} {...controlDefaults(meta.controls)} />
         </motion.div>
         {meta.replayable !== false && (
           <div className={css.replaySlot}>
