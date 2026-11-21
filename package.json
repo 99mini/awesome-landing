@@ -12,7 +12,8 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "check": "pnpm fmt:check && pnpm lint && pnpm typecheck",
-    "new:landing": "node scripts/new-landing.mjs"
+    "new:landing": "node scripts/new-landing.mjs",
+    "skills:install": "npx -y skills experimental_install --agent claude-code"
   },
   "devDependencies": {
     "oxfmt": "catalog:",

@@ -14,3 +14,8 @@ globalStyle("*, *::before, *::after", {
 globalStyle("body", {
   margin: 0,
 });
+
+// 가로 스크롤 방지 — hidden 은 sticky 를 깨뜨리므로 clip, 100vw 대신 width: 100%
+globalStyle("html, body", {
+  overflowX: "clip",
+});

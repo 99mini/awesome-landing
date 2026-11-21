@@ -1,18 +1,28 @@
 import "@awesome/theme/reset";
 import { globalStyle } from "@vanilla-extract/css";
-import { palette, serif } from "./App.css.ts";
+import { ed } from "./theme.css.ts";
 
 globalStyle(":root", {
   colorScheme: "light",
 });
 
 globalStyle("body", {
-  background: palette.paper,
-  color: palette.ink,
-  fontFamily: serif,
+  background: ed.color.paper,
+  color: ed.color.ink,
+  fontFamily: ed.font.serif,
 });
 
 globalStyle("::selection", {
-  background: palette.ink,
-  color: palette.paper,
+  background: ed.color.ink,
+  color: ed.color.paper,
+});
+
+globalStyle("h1, h2", {
+  overflowWrap: "break-word",
+  minWidth: 0,
+  textWrap: "balance",
+});
+
+globalStyle("p", {
+  textWrap: "pretty",
 });

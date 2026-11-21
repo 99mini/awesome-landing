@@ -1,41 +1,32 @@
-import { vars } from "@awesome/theme";
 import { style } from "@vanilla-extract/css";
+import { ed } from "./theme.css.ts";
 
-/** 이 랜딩 전용 종이 팔레트 (갤러리 다크 테마와 의도적으로 대비) */
-export const palette = {
-  paper: "#f3efe6",
-  ink: "#141210",
-  muted: "#6b645a",
-  accent: "#c2410c",
-};
+const rule = `1px solid ${ed.color.rule}`;
 
-export const serif = '"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif';
-const mono = "ui-monospace, SFMono-Regular, Menlo, monospace";
-const rule = `1px solid ${palette.ink}`;
+const focus = {
+  selectors: {
+    "&:active": { transform: "translateY(1px)" },
+    "&:focus-visible": { outline: `2px solid ${ed.color.accent}`, outlineOffset: 3 },
+  },
+} as const;
 
 export const page = style({
-  maxWidth: 1200,
+  maxWidth: 1360,
   margin: "0 auto",
-  padding: "0 16px",
+  padding: "0 clamp(16px, 4vw, 48px)",
 });
 
 export const masthead = style({
   display: "grid",
   gridTemplateColumns: "1fr auto 1fr",
-  alignItems: "center",
+  alignItems: "baseline",
   gap: 16,
   padding: "20px 0 14px",
   borderBottom: rule,
-  fontFamily: mono,
-  fontSize: "0.75rem",
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
+  color: ed.color.muted,
+  fontSize: "0.95rem",
   "@media": {
-    "(max-width: 640px)": {
-      gridTemplateColumns: "1fr",
-      justifyItems: "center",
-      textAlign: "center",
-    },
+    "(max-width: 640px)": { gridTemplateColumns: "1fr", justifyItems: "center" },
   },
 });
 
@@ -44,53 +35,84 @@ export const mastheadEnd = style({
   "@media": { "(max-width: 640px)": { justifySelf: "center" } },
 });
 
-export const brand = style({
-  fontFamily: serif,
-  fontSize: "1.25rem",
+export const wordmark = style({
+  color: ed.color.ink,
+  fontSize: "1.3rem",
   fontStyle: "italic",
-  letterSpacing: 0,
-  textTransform: "none",
 });
 
+/** 첫 화면을 채운다 — 마스트헤드를 뺀 높이 */
 export const hero = style({
-  padding: "clamp(48px, 10vw, 120px) 0 clamp(40px, 8vw, 96px)",
-});
-
-export const kicker = style({
-  margin: "0 0 24px",
-  color: palette.accent,
-  fontFamily: mono,
-  fontSize: "0.85rem",
-  letterSpacing: "0.12em",
+  display: "grid",
+  alignContent: "center",
+  gap: 44,
+  minHeight: "calc(100svh - 64px)",
+  padding: "48px 0",
 });
 
 export const headline = style({
   margin: 0,
-  fontSize: "clamp(3rem, 11vw, 9.5rem)",
+  maxWidth: "9ch",
+  fontSize: "clamp(3.25rem, 12vw, 11.5rem)",
   fontWeight: 400,
-  lineHeight: 0.92,
+  lineHeight: 0.95,
   letterSpacing: "-0.035em",
 });
 
-export const headlineItalic = style({
-  fontStyle: "italic",
-  color: palette.accent,
+export const dek = style({
+  maxWidth: "30ch",
+  margin: 0,
+  color: ed.color.muted,
+  fontSize: "clamp(1.2rem, 2vw, 1.5rem)",
+  lineHeight: 1.4,
 });
 
-export const dek = style({
-  maxWidth: "34ch",
-  margin: "32px 0 0",
-  color: palette.muted,
-  fontSize: "clamp(1.125rem, 2vw, 1.4rem)",
-  lineHeight: 1.45,
+export const actions = style({
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: 16,
+});
+
+const control = {
+  display: "inline-flex",
+  alignItems: "center",
+  height: 48,
+  padding: "0 28px",
+  borderRadius: 999,
+  fontFamily: ed.font.serif,
+  fontSize: "1.05rem",
+  cursor: "pointer",
+  transition: "background-color 0.2s, color 0.2s",
+} as const;
+
+export const primary = style({
+  ...control,
+  ...focus,
+  border: `1px solid ${ed.color.ink}`,
+  background: ed.color.ink,
+  color: ed.color.paper,
+});
+
+export const secondary = style({
+  ...control,
+  border: `1px solid ${ed.color.ink}`,
+  background: "transparent",
+  color: ed.color.ink,
+  textDecoration: "none",
+  selectors: {
+    "&:hover": { background: ed.color.ink, color: ed.color.paper },
+    "&:active": { transform: "translateY(1px)" },
+    "&:focus-visible": { outline: `2px solid ${ed.color.accent}`, outlineOffset: 3 },
+  },
 });
 
 export const band = style({
-  padding: "18px 0",
+  padding: "20px 0",
   borderTop: rule,
   borderBottom: rule,
-  background: palette.ink,
-  color: palette.paper,
+  background: ed.color.ink,
+  color: ed.color.paper,
 });
 
 export const bandItem = style({
@@ -100,69 +122,72 @@ export const bandItem = style({
 });
 
 export const bandMark = style({
-  color: palette.accent,
+  color: ed.color.paper,
+  opacity: 0.5,
 });
 
-export const stats = style({
+export const facts = style({
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  borderBottom: rule,
+  gap: 40,
+  padding: "140px 0 120px",
 });
 
-export const stat = style({
+export const sectionHead = style({
+  margin: 0,
+  fontSize: "clamp(2.25rem, 4.5vw, 3.5rem)",
+  fontWeight: 400,
+  lineHeight: 1.05,
+});
+
+export const factRow = style({
   display: "grid",
-  gap: 8,
-  padding: "40px 24px",
-  selectors: {
-    "& + &": { borderLeft: rule },
-  },
-  "@media": {
-    "(max-width: 640px)": {
-      selectors: { "& + &": { borderLeft: "none", borderTop: rule } },
-    },
-  },
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+  borderTop: rule,
 });
 
-export const statNumber = style({
-  fontSize: "clamp(3rem, 7vw, 5rem)",
+export const fact = style({
+  display: "grid",
+  gap: 12,
+  padding: "36px 28px 8px 0",
+});
+
+export const factNumber = style({
+  color: ed.color.accent,
+  fontSize: "clamp(4rem, 9vw, 7.5rem)",
   lineHeight: 1,
   fontVariantNumeric: "tabular-nums lining-nums",
 });
 
-export const statLabel = style({
-  color: palette.muted,
-  fontFamily: mono,
-  fontSize: "0.75rem",
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
+export const factLabel = style({
+  color: ed.color.muted,
+  fontSize: "1.05rem",
 });
 
 export const essay = style({
   display: "grid",
-  gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr)",
-  gap: "clamp(24px, 5vw, 72px)",
-  padding: "clamp(56px, 9vw, 112px) 0",
-  borderBottom: rule,
-  "@media": { "(max-width: 800px)": { gridTemplateColumns: "1fr" } },
+  gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)",
+  gap: "clamp(32px, 6vw, 96px)",
+  padding: "140px 0",
+  borderTop: rule,
+  "@media": { "(max-width: 860px)": { gridTemplateColumns: "minmax(0, 1fr)" } },
 });
 
-export const essayTitle = style({
-  margin: 0,
-  fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
-  fontWeight: 400,
-  lineHeight: 1.1,
-});
+export const essayHead = style([
+  sectionHead,
+  {
+    alignSelf: "start",
+    "@media": { "(min-width: 861px)": { position: "sticky", top: 48 } },
+  },
+]);
 
-export const columns = style({
-  columns: "2 260px",
-  columnGap: 40,
-  fontSize: "1.075rem",
+export const prose = style({
+  maxWidth: "60ch",
+  fontSize: "1.2rem",
   lineHeight: 1.65,
 });
 
 export const paragraph = style({
-  margin: "0 0 1em",
-  breakInside: "avoid",
+  margin: "0 0 1.4em",
 });
 
 export const lede = style([
@@ -171,50 +196,50 @@ export const lede = style([
     selectors: {
       "&::first-letter": {
         float: "left",
-        margin: "0.06em 0.08em 0 0",
-        color: palette.accent,
-        fontSize: "4.4em",
+        margin: "0.06em 0.1em 0 0",
+        color: ed.color.accent,
+        fontSize: "4.6em",
         lineHeight: 0.8,
       },
     },
   },
 ]);
 
-export const pullQuote = style({
-  margin: "8px 0 24px",
-  padding: "16px 0",
+export const quote = style({
+  margin: 0,
+  padding: "160px 0",
   borderTop: rule,
-  borderBottom: rule,
-  fontSize: "1.5rem",
+  fontSize: "clamp(2.25rem, 6vw, 5rem)",
   fontStyle: "italic",
-  lineHeight: 1.3,
-  breakInside: "avoid",
+  lineHeight: 1.08,
+  letterSpacing: "-0.02em",
 });
 
-export const footer = style({
+export const quoteText = style({
+  display: "block",
+  maxWidth: "18ch",
+});
+
+export const close = style({
   display: "grid",
   justifyItems: "start",
-  gap: 28,
-  padding: "clamp(56px, 9vw, 112px) 0 72px",
+  gap: 32,
+  padding: "140px 0",
+  borderTop: rule,
 });
 
-export const footerTitle = style({
+export const closeHead = style({
   margin: 0,
-  maxWidth: "16ch",
-  fontSize: "clamp(2.25rem, 6vw, 4.5rem)",
+  maxWidth: "14ch",
+  fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
   fontWeight: 400,
   lineHeight: 1,
   letterSpacing: "-0.02em",
 });
 
-export const cta = style({
-  padding: "16px 32px",
-  border: rule,
-  borderRadius: vars.radius.pill,
-  background: palette.ink,
-  color: palette.paper,
-  fontFamily: serif,
-  fontSize: "1.05rem",
-  fontStyle: "italic",
-  cursor: "pointer",
+export const colophon = style({
+  padding: "24px 0 40px",
+  borderTop: rule,
+  color: ed.color.muted,
+  fontSize: "0.95rem",
 });

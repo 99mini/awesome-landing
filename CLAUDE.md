@@ -13,3 +13,22 @@
 - 갤러리 소스 보기는 `?source` 쿼리(apps/gallery/vite/source-plugin.ts). `.css.ts` 는 VE 가 가로채므로 `?raw` 를 쓰지 말 것.
 - 새 랜딩: `pnpm new:landing <name> "Title"`.
 - 변경 후 `pnpm check` 통과 확인.
+
+## 디자인 기준 (Hallmark Floor 중 우리 스택에 맞는 것)
+
+AI 가 만든 티가 나는 기본값을 피한다. 랜딩·데모·갤러리 UI 모두에 적용.
+
+- 색과 글꼴은 토큰으로만: `@awesome/theme` 의 `vars`, 랜딩은 자체 `theme.css.ts`(`createGlobalTheme`). 컴포넌트 스타일에 색 리터럴·`#000`/`#fff` 금지.
+- `transition: all` 금지. `width`·`height`·`top`·`left` 애니메이션 금지 — `transform`·`opacity` 만.
+- 모든 애니메이션은 `prefers-reduced-motion` 대응. 모든 인터랙티브 요소는 즉시 나타나는 `:focus-visible`.
+- 제목 안의 한 단어만 이탤릭·색·굵기로 강조 금지. 제목은 한 스타일.
+- eyebrow(제목 위 작은 라벨)·자간 넓힌 대문자 라벨(15px 이하 uppercase 또는 letter-spacing > 0.03em) 금지. 워드마크·`<time>`·바이라인은 예외.
+- 템플릿 구두점 금지: `A · B · C` 중점 나열, 버튼/링크 뒤 화살표(`Get started →`), 본문의 em/en 대시. 마키 구분자는 예외.
+- 지어낸 수치·후기·로고 금지. 숫자는 실제 값이거나 페이지에서 계산한 값.
+- 보라→파랑/분홍, 시안-온-다크 그라디언트 금지. 블러 블롭은 그 움직임이 데모 대상일 때만 (CSS 에 `Hallmark · waive 29` 주석으로 근거 기록).
+- 히어로는 제목 + 한 문장 + 액션. 1440×900 한 화면에 약 80단어 이하.
+- 제목은 `overflow-wrap: break-word; min-width: 0`, 이미지 그리드는 `minmax(0, 1fr)`, `100vw` 금지 (reset 이 `overflow-x: clip` 처리).
+- 랜딩 검사: `pnpm skills:install` 후 dev 서버를 띄우고
+  `node .claude/skills/hallmark/scripts/sloplint.mjs landings/<name>/src --url http://localhost:<port> --genre <genre>`.
+  render 검사에는 puppeteer-core 가 필요 — 전역 설치 대신 `HALLMARK_PUPPETEER=<puppeteer-core 가 설치된 폴더>`.
+  VE 스타일은 정적 검사가 읽지 못해 26a/26b(포커스·active) 가 항상 FAIL 로 나온다 — 브라우저에서 확인 후 무시.

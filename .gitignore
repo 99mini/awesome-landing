@@ -7,3 +7,7 @@ dist
 
 # personal local overrides
 mise.local.toml
+
+# hallmark — 스킬 본체는 skills-lock.json 으로 복원 (`pnpm skills:install`), 감사 스크린샷은 로컬 전용
+.claude/skills/
+.hallmark/
