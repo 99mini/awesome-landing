@@ -1,0 +1,26 @@
+{
+  "name": "awesome-landing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @awesome/gallery dev",
+    "dev:all": "pnpm -r --parallel --filter \"./apps/*\" --filter \"./landings/*\" dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "check": "pnpm fmt:check && pnpm lint && pnpm typecheck",
+    "new:landing": "node scripts/new-landing.mjs"
+  },
+  "devDependencies": {
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.22.0"
+}
