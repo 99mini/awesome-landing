@@ -1,6 +1,7 @@
 import type { InteractionDemoModule } from "@awesome/interactions/registry";
 import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
+import { ReplayButton, useReplay } from "./ReplayButton.tsx";
 import { Tags } from "./Tags.tsx";
 
 interface InteractionModalProps {
@@ -17,6 +18,7 @@ const fade = {
 export function InteractionModal({ mod, onClose }: InteractionModalProps) {
   const { meta, default: Demo } = mod;
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { replayKey, replay } = useReplay();
   const titleId = `modal-title-${meta.slug}`;
 
   // 스크롤 잠금 · Esc 닫기 · 포커스 이동/복원
@@ -66,7 +68,7 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
             style={{ borderRadius: 20 }}
           >
             <motion.div layout="position" className="demo-fit">
-              <Demo />
+              <Demo key={replayKey} />
             </motion.div>
           </motion.div>
 
@@ -103,6 +105,9 @@ export function InteractionModal({ mod, onClose }: InteractionModalProps) {
           >
             ✕
           </motion.button>
+          <motion.div className="modal-replay" {...fade}>
+            <ReplayButton replayKey={replayKey} onReplay={replay} />
+          </motion.div>
         </motion.dialog>
       </div>
     </>
