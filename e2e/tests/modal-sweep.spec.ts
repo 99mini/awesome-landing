@@ -47,7 +47,7 @@ async function settledLayout(page: Page) {
 }
 
 test("sweep covers every interaction", () => {
-  expect(INTERACTIONS.length).toBeGreaterThanOrEqual(19);
+  expect(INTERACTIONS.length).toBeGreaterThanOrEqual(23);
 });
 
 for (const { slug, title } of INTERACTIONS) {

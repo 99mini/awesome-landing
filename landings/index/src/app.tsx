@@ -121,12 +121,12 @@ export function App() {
           <h2 id="kinds-head" className={css.sectionHead}>
             Sorted by what sets them off
           </h2>
+          {/* 이름은 위 목록에 분류와 함께 있다 — 여기서 다시 나열하면 한 화면의 글이 너무 많아진다 */}
           <div className={css.kindRow}>
             {kinds.map(([kind, members]) => (
               <div key={kind} className={css.kind}>
                 <span className={css.kindCount}>{members.length}</span>
                 <span className={css.kindName}>{KIND_NAMES[kind as InteractionCategory]}</span>
-                <p className={css.kindMembers}>{members.map((it) => it.meta.title).join(", ")}</p>
               </div>
             ))}
           </div>
