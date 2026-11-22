@@ -131,6 +131,24 @@ test.describe("toast stack", () => {
     }
   });
 
+  test("on a touch screen, tapping the stack fans it out and tapping outside folds it", async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(!isMobile, "터치 화면에서만 — 데스크톱은 hover 로 펼친다");
+    await page.goto("/?interaction=toast-stack");
+    await modal(page).getByRole("slider", { name: "Auto dismiss" }).fill("0");
+    const stage = modal(page).locator("[data-demo-stage]");
+    for (let i = 0; i < 3; i++) await stage.getByRole("button", { name: "Notify" }).tap();
+    const toasts = stage.getByRole("listitem");
+    await expect(toasts).toHaveCount(1);
+
+    await toasts.first().getByText("Theme updated").tap();
+    await expect(toasts).toHaveCount(3);
+    await modal(page).getByRole("heading", { name: "Toast Stack" }).tap();
+    await expect(toasts).toHaveCount(1);
+  });
+
   test("dismisses on its own, but not while the pointer rests on it", async ({ page }) => {
     await page.goto("/?interaction=toast-stack");
     await modal(page).getByRole("slider", { name: "Auto dismiss" }).fill("1");

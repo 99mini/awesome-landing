@@ -26,6 +26,14 @@ test.describe("gallery", () => {
     await expect(page).toHaveScreenshot("gallery-home.png", { stylePath: HIDE_TIME });
   });
 
+  test("phone first screen", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await expect(page.locator("article").first()).toBeVisible();
+    await settle(page);
+    await expect(page).toHaveScreenshot("gallery-phone.png", { stylePath: HIDE_TIME });
+  });
+
   for (const slug of ["accordion", "swipe-cards", "reorder-list"] as const) {
     test(`modal: ${slug}`, async ({ page }) => {
       await page.goto(`/?interaction=${slug}`);

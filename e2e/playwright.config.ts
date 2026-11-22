@@ -36,6 +36,13 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"], ...(CI ? {} : { channel: "chrome" }) },
     },
     {
+      // 폰 — 터치 · 좁은 화면. 갤러리 흐름을 같은 테스트로 다시 돈다
+      name: "mobile",
+      testMatch:
+        /(gallery|filters|modal-sweep|morph-modal|keyboard-and-feedback|gestures|demo-tools|offscreen)\.spec\.ts$/,
+      use: { ...devices["Pixel 7"], ...(CI ? {} : { channel: "chrome" }) },
+    },
+    {
       // 화면 회귀 — 움직임을 줄여(동작 줄이기) 같은 장면을 찍는다
       name: "visual",
       testMatch: /visual\.spec\.ts$/,

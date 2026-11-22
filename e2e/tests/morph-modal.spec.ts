@@ -43,13 +43,16 @@ test.describe("morph modal inside the gallery", () => {
     await expect(page.locator(":focus")).not.toHaveText("Close");
 
     // 패널 자리의 맨 위 요소는 갤러리 모달이어야 한다 (카드 안의 z-index 가 새어 나오지 않음)
-    const box = await card.locator("dialog").boundingBox();
-    if (!box) throw new Error("card panel has no box");
-    const onTop = await page.evaluate(
-      ([x, y]) => (document.elementFromPoint(x!, y!)?.closest("article") ? "card" : "modal"),
-      [box.x + box.width / 2, box.y + box.height / 2],
-    );
-    expect(onTop).toBe("modal");
+    // 폰에서는 다른 카드로 스크롤하는 동안 이 카드가 화면 밖으로 나가 데모가 쉰다(패널도 사라진다) — 그러면 덮을 것이 없다
+    const panel = card.locator("dialog");
+    const box = (await panel.count()) > 0 ? await panel.boundingBox() : null;
+    if (box) {
+      const onTop = await page.evaluate(
+        ([x, y]) => (document.elementFromPoint(x!, y!)?.closest("article") ? "card" : "modal"),
+        [box.x + box.width / 2, box.y + box.height / 2],
+      );
+      expect(onTop).toBe("modal");
+    }
 
     await page.keyboard.press("Escape");
     await expect(page).not.toHaveURL(/interaction=/);

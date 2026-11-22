@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test --project=chromium",
+    "test": "playwright test --project=chromium --project=mobile",
     "typecheck": "tsc",
     "test:visual": "playwright test --project=visual"
   },

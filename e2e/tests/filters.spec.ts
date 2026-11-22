@@ -38,6 +38,8 @@ test.describe("filters, tag dropdown and autocomplete search", () => {
     await page.keyboard.press("ArrowDown");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/interaction=tilt-card/);
+    // 모달이 열리며 포커스를 가져간 뒤에 Esc (그 전에는 키 처리가 아직 붙지 않았다)
+    await expect(page.locator("dialog :focus")).toHaveCount(1);
     await page.keyboard.press("Escape");
     await expect(page.locator("dialog")).toHaveCount(0);
 
