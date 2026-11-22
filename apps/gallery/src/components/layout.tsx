@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router";
+import { GalleryPalette } from "./gallery-palette.tsx";
 import * as css from "./layout.css.ts";
 
 export function Layout() {
@@ -8,6 +9,7 @@ export function Layout() {
         <Link to="/" className={css.logo}>
           awesome<span className={css.logoAccent}>/landing</span>
         </Link>
+        <GalleryPalette />
       </header>
       <main>
         <Outlet />

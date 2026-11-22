@@ -23,6 +23,8 @@ export interface Command {
   hint?: string;
   /** label 에 없는 검색어 */
   keywords?: string[];
+  /** 같은 group 끼리 제목 아래 묶인다 (처음 나온 순서대로) */
+  group?: string;
 }
 
 interface CommandPaletteProps {
@@ -39,6 +41,11 @@ interface CommandPaletteProps {
    * (한 페이지에 여러 개가 있을 때), false: 버튼으로만.
    */
   hotkey?: "global" | "focus" | false;
+  /**
+   * true: 가장 가까운 position 이 있는 조상 안에 뜬다 (카드·데모 안)
+   * false: 화면 전체 위에 뜬다 (페이지 헤더의 검색 등)
+   */
+  contained?: boolean;
   className?: string;
   panelClassName?: string;
 }
@@ -69,6 +76,7 @@ export function CommandPalette({
   label = "Command palette",
   placeholder = "Type a command",
   hotkey = "global",
+  contained = true,
   className,
   panelClassName,
 }: CommandPaletteProps) {
@@ -79,7 +87,16 @@ export function CommandPalette({
   const [active, setActive] = useState(0);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const results = useMemo(() => commands.filter((c) => matches(c, query)), [commands, query]);
+  // 걸러진 명령을 group 별로 묶는다 — ↑/↓ 순서도 화면에 보이는 순서(묶음 순서)를 따른다
+  const sections = useMemo(() => {
+    const groups = new Map<string | undefined, Command[]>();
+    for (const c of commands) {
+      if (!matches(c, query)) continue;
+      groups.set(c.group, [...(groups.get(c.group) ?? []), c]);
+    }
+    return [...groups].map(([group, items]) => ({ group, items }));
+  }, [commands, query]);
+  const results = useMemo(() => sections.flatMap((s) => s.items), [sections]);
   const current = results[Math.min(active, results.length - 1)];
 
   // setState 와 ref 만 쓰므로 렌더마다 새로 만들어도 동작이 같다 — effect 는 열고 닫을 때만 다시 건다
@@ -132,6 +149,34 @@ export function CommandPalette({
       document.getElementById(`${id}-${current.id}`)?.scrollIntoView({ block: "nearest" });
   }, [current, id]);
 
+  function renderOption(command: Command) {
+    const selected = command === current;
+    return (
+      <div
+        key={command.id}
+        id={`${id}-${command.id}`}
+        role="option"
+        tabIndex={-1}
+        aria-selected={selected}
+        className={css.option}
+        onPointerMove={() => setActive(results.indexOf(command))}
+        // 입력칸의 포커스를 지키고 click 으로 실행한다
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => run(command)}
+      >
+        {selected && (
+          <m.span
+            layoutId={`${id}-active`}
+            className={css.highlight}
+            transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 600, damping: 40 }}
+          />
+        )}
+        <span className={css.label}>{command.label}</span>
+        {command.hint && <span className={css.hint}>{command.hint}</span>}
+      </div>
+    );
+  }
+
   function onInputKey(e: ReactKeyboardEvent<HTMLInputElement>) {
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
@@ -169,7 +214,7 @@ export function CommandPalette({
       <AnimatePresence>
         {open && (
           <m.div
-            className={css.layer}
+            className={contained ? css.layer : css.layerFixed}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, pointerEvents: "none" }}
@@ -211,37 +256,18 @@ export function CommandPalette({
                 onKeyDown={onInputKey}
               />
               <div id={`${id}-list`} role="listbox" aria-label={label} className={css.list}>
-                {results.map((command) => {
-                  const selected = command === current;
-                  return (
-                    <div
-                      key={command.id}
-                      id={`${id}-${command.id}`}
-                      role="option"
-                      tabIndex={-1}
-                      aria-selected={selected}
-                      className={css.option}
-                      onPointerMove={() => setActive(results.indexOf(command))}
-                      // 입력칸의 포커스를 지키고 click 으로 실행한다
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => run(command)}
-                    >
-                      {selected && (
-                        <m.span
-                          layoutId={`${id}-active`}
-                          className={css.highlight}
-                          transition={
-                            reduce
-                              ? { duration: 0 }
-                              : { type: "spring", stiffness: 600, damping: 40 }
-                          }
-                        />
-                      )}
-                      <span className={css.label}>{command.label}</span>
-                      {command.hint && <span className={css.hint}>{command.hint}</span>}
+                {sections.map(({ group, items }, g) =>
+                  group === undefined ? (
+                    items.map(renderOption)
+                  ) : (
+                    <div key={group} role="group" aria-labelledby={`${id}-g${g}`}>
+                      <div id={`${id}-g${g}`} role="presentation" className={css.groupLabel}>
+                        {group}
+                      </div>
+                      {items.map(renderOption)}
                     </div>
-                  );
-                })}
+                  ),
+                )}
               </div>
               {results.length === 0 && <p className={css.empty}>No matching commands</p>}
             </m.div>

@@ -31,6 +31,12 @@ export const layer = style({
   padding: 12,
 });
 
+/** 화면 전체 위 — 위쪽에 뜬다 */
+export const layerFixed = style([
+  layer,
+  { position: "fixed", zIndex: 50, paddingTop: "max(12px, 12vh)" },
+]);
+
 export const backdrop = style({
   position: "absolute",
   inset: 0,
@@ -68,10 +74,17 @@ export const input = style({
 
 export const list = style({
   display: "grid",
-  maxHeight: 176,
+  // 긴 목록은 --palette-list-height 로 늘린다
+  maxHeight: "var(--palette-list-height, 176px)",
   padding: 4,
   overflowY: "auto",
   overscrollBehavior: "contain",
+});
+
+export const groupLabel = style({
+  padding: "8px 12px 4px",
+  fontSize: "0.8em",
+  opacity: 0.75,
 });
 
 export const option = style({

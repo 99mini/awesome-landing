@@ -231,3 +231,50 @@ test("number ticker: a new place grows in showing its own digit; the others slid
   const steps = frames.slice(1).map((f, i) => Math.abs(f.units - frames[i]!.units));
   expect(Math.max(...steps)).toBeLessThan(8);
 });
+
+test.describe("gallery search palette", () => {
+  test("⌘K, type, Enter opens the interaction; Esc closes it and focus returns to Search", async ({
+    page,
+    isMobile,
+  }) => {
+    await page.goto("/");
+    const search = page.getByRole("button", { name: /^Search/ });
+    if (isMobile) await search.tap();
+    else await page.keyboard.press("ControlOrMeta+k");
+
+    const input = page.getByRole("combobox", { name: "Search the gallery" });
+    await expect(input).toBeFocused();
+    await expect(page.getByRole("group", { name: "Interactions" })).toBeVisible();
+    await input.pressSequentially("swi");
+    await expect(page.getByRole("option", { name: /Swipe Cards/ })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/interaction=swipe-cards/);
+    await expect(page.locator("dialog :focus")).toHaveCount(1);
+
+    // 모달이 열려 있는 동안 ⌘K 는 아무것도 열지 않는다 (모달이 포커스를 가두고 있다)
+    await page.keyboard.press("ControlOrMeta+k");
+    await expect(input).toHaveCount(0);
+
+    await page.keyboard.press("Escape");
+    await expect(page).not.toHaveURL(/interaction=/);
+    await expect(search).toBeFocused();
+  });
+
+  test("filter commands set and clear the category", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: /^Search/ }).click();
+    await page
+      .getByRole("combobox", { name: "Search the gallery" })
+      .pressSequentially("show layout");
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/category=layout/);
+
+    await page.getByRole("button", { name: /^Search/ }).click();
+    await page.getByRole("combobox", { name: "Search the gallery" }).pressSequentially("clear");
+    await page.keyboard.press("Enter");
+    await expect(page).not.toHaveURL(/category=/);
+  });
+});

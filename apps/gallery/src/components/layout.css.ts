@@ -9,6 +9,10 @@ export const shell = style({
 });
 
 export const header = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 16,
   padding: "24px 0",
 });
 
