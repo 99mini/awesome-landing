@@ -4,8 +4,12 @@ import { style } from "@vanilla-extract/css";
 export const root = style({
   display: "grid",
   justifyItems: "center",
+  alignContent: "start",
   gap: 16,
   width: "min(100%, 320px)",
+  // 높이를 고정해 둔다 — 데모는 무대 가운데에 놓이므로, 알림 수에 따라 높이가 바뀌면
+  // Notify 버튼까지 통째로 위아래로 움직인다 (알림 3개가 들어가는 높이)
+  minHeight: 340,
 });
 
 export const stack = style({
