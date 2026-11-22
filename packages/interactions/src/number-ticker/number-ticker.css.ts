@@ -12,6 +12,8 @@ export const root = style({
 });
 
 export const digits = style({
+  // popLayout 이 사라지는 자리를 absolute 로 띄울 기준
+  position: "relative",
   display: "inline-flex",
 });
 

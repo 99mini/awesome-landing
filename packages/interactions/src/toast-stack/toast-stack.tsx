@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cx } from "../lib/cx.ts";
 import * as css from "./toast-stack.css.ts";
 
-// - 포인터·포커스가 머무는 동안 시간을 멈추는 감싸개는 조작 요소가 아니라 키보드 동작이 따로 없다
+// - 포인터·포커스가 머무는 동안 펼치고 시간을 멈추는 감싸개는 조작 요소가 아니라 키보드 동작이 따로 없다
 //   (포커스는 onFocus 로 같이 받는다).
 // - 새 알림을 읽어 주는 영역: <ol> 에는 status 역할을 줄 수 없고 <output> 은 목록을 담지 못해 div 에 role 로 준다.
 /* oxlint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/prefer-tag-over-role */
@@ -15,27 +15,40 @@ export interface Toast {
 }
 
 interface ToastStackProps {
+  /** 들어온 순서대로 (마지막이 가장 새 알림) */
   toasts: Toast[];
   onDismiss: (id: Toast["id"]) => void;
   /** 저절로 사라지기까지(s). 0 이면 직접 닫을 때까지 남는다 */
   duration?: number;
-  /** 한 번에 보이는 개수 — 넘치는 것은 앞의 것이 사라지면 차례로 나온다 */
+  /** 한 번에 보이는 개수 — 더 오래된 것은 숨어 있다가 앞의 것이 사라지면 나온다 */
   limit?: number;
+  /**
+   * true: 새 알림이 맨 앞에 오고 오래된 것은 뒤로 작게 겹쳐 쌓인다 (iOS 알림처럼).
+   *       포인터를 올리거나 포커스가 들어오면 목록으로 펼쳐진다.
+   * false: 늘 목록으로 보인다.
+   */
+  collapse?: boolean;
   /** 알림 영역 이름 (스크린 리더) */
   label?: string;
   className?: string;
   toastClassName?: string;
 }
 
+/** 겹쳐 쌓일 때 뒤 알림이 아래로 비어져 나오는 길이(px)와 한 단계마다 작아지는 비율 */
+const PEEK = 10;
+const SHRINK = 0.05;
+
 /**
- * 쌓이고 사라지는 알림. 새 알림이 들어오거나 하나가 사라지면 나머지가 layout 애니메이션으로 자리를 옮긴다.
- * 포인터를 올리거나 포커스가 안에 있으면 사라지는 시간이 멈춘다 (읽는 도중 사라지지 않게).
+ * 쌓이고 사라지는 알림. 겹친 더미 ↔ 펼친 목록 전환과, 들어오고 나갈 때 나머지가 자리를 옮기는 것은
+ * 모두 layout 애니메이션(transform)이다.
+ * 포인터나 포커스가 머무는 동안에는 펼쳐 두고 사라지는 시간도 멈춘다 (읽는 도중 사라지지 않게).
  */
 export function ToastStack({
   toasts,
   onDismiss,
   duration = 4,
   limit = 3,
+  collapse = true,
   label = "Notifications",
   className,
   toastClassName,
@@ -43,11 +56,28 @@ export function ToastStack({
   const reduce = useReducedMotion();
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  // 먼저 온 것부터 보여 주고, 넘치는 것은 자리가 날 때까지 기다린다 (타이머도 보일 때부터 간다)
-  const visible = toasts.slice(0, limit);
+  const engaged = hovered || focused;
+  const stacked = collapse && !engaged;
+  // 새 알림이 앞(위)에 온다
+  const visible = toasts.slice(-limit).toReversed();
+  const spring = reduce
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 420, damping: 36 };
+  // 나가는 알림이 닫힌 것인지(목록에서 빠짐), 새 알림에 밀려 숨는 것인지(목록에는 남음) — exit 이 고른다
+  const remaining = new Set(toasts.map((t) => t.id));
 
   return (
     <section aria-label={label} className={cx(css.region, className)}>
+      {/* 숨은 것까지 모든 알림의 시간을 센다 */}
+      {toasts.map((toast) => (
+        <ToastTimer
+          key={toast.id}
+          id={toast.id}
+          duration={duration}
+          paused={engaged}
+          onDismiss={onDismiss}
+        />
+      ))}
       <div
         className={css.pause}
         onPointerEnter={() => setHovered(true)}
@@ -58,28 +88,42 @@ export function ToastStack({
         }}
       >
         <div role="status" aria-live="polite" aria-relevant="additions">
-          <ol className={css.list}>
-            <AnimatePresence initial={false} mode="popLayout">
-              {visible.map((toast) => (
+          <ol className={cx(css.list, stacked && css.stacked)} data-stacked={stacked || undefined}>
+            <AnimatePresence initial={false} mode="popLayout" custom={remaining}>
+              {visible.map((toast, depth) => (
                 <m.li
                   key={toast.id}
                   layout={reduce ? false : "position"}
                   className={cx(css.toast, toastClassName)}
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={
-                    reduce ? { opacity: 0 } : { opacity: 0, x: 48, transition: { duration: 0.2 } }
-                  }
-                  transition={
-                    reduce ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }
-                  }
+                  custom={remaining}
+                  variants={{
+                    // 닫힘: 옆으로 밀려 나간다. 밀려 숨음: 더미 뒤로 작아지며 가라앉는다
+                    exit: (still: Set<Toast["id"]>) =>
+                      reduce
+                        ? { opacity: 0 }
+                        : still.has(toast.id)
+                          ? {
+                              opacity: 0,
+                              y: (stacked ? limit : 0) * PEEK,
+                              scale: 1 - limit * SHRINK,
+                              transition: { duration: 0.2 },
+                            }
+                          : { opacity: 0, x: 48, transition: { duration: 0.2 } },
+                  }}
+                  exit="exit"
+                  // 위에서 내려오며 들어온다. 투명한 동안 뒤 알림이 비쳐 보이지 않게 불투명해지는 것은 빠르게
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: -24, scale: 0.96 }}
+                  // 겹쳤을 때: 뒤로 갈수록 아래로 조금 비어져 나오고 작아진다 (흐리게 하지 않는다 — 글이 읽혀야 한다)
+                  animate={{
+                    opacity: 1,
+                    y: stacked ? depth * PEEK : 0,
+                    scale: stacked ? 1 - depth * SHRINK : 1,
+                    zIndex: visible.length - depth,
+                  }}
+                  transition={{ ...spring, opacity: { duration: reduce ? 0 : 0.12 } }}
+                  // 뒤에 깔린 알림은 겹쳐 있는 동안 읽히지 않는다 — 펼치면 다시 보인다
+                  aria-hidden={stacked && depth > 0 ? true : undefined}
                 >
-                  <ToastTimer
-                    id={toast.id}
-                    duration={duration}
-                    paused={hovered || focused}
-                    onDismiss={onDismiss}
-                  />
                   <div className={css.text}>
                     <span className={css.title}>{toast.title}</span>
                     {toast.body && <span className={css.body}>{toast.body}</span>}
@@ -88,6 +132,8 @@ export function ToastStack({
                     type="button"
                     className={css.dismiss}
                     aria-label="Dismiss"
+                    // 겹쳐 있는 동안 뒤 알림의 버튼은 Tab 순서에서 뺀다 (앞 알림에 포커스가 가면 펼쳐진다)
+                    tabIndex={stacked && depth > 0 ? -1 : undefined}
                     onClick={() => onDismiss(toast.id)}
                   >
                     <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden>
