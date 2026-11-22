@@ -221,11 +221,6 @@ export const kindName = style({
   fontWeight: 600,
 });
 
-export const kindMembers = style({
-  margin: 0,
-  color: ix.color.muted,
-});
-
 export const large = style(section);
 
 export const largeGrid = style({

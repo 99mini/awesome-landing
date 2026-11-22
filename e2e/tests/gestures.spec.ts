@@ -107,6 +107,27 @@ test.describe("gesture interactions", () => {
     await expect(dialog.getByRole("region", { name: "Why not animate height?" })).toHaveCount(0);
   });
 
+  test("compare slider: drag the divider, or use arrows, Home and End on the handle", async ({
+    page,
+  }) => {
+    await page.goto("/?interaction=compare-slider");
+    const handle = modal(page).getByRole("slider", { name: "Compare before and after" });
+    await expect(handle).toHaveAttribute("aria-valuenow", "50");
+    await drag(page, handle, -80, 0);
+    const dragged = Number(await handle.getAttribute("aria-valuenow"));
+    expect(dragged).toBeLessThan(40);
+
+    await handle.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(handle).toHaveAttribute("aria-valuenow", String(dragged + 5));
+    await page.keyboard.press("End");
+    await expect(handle).toHaveAttribute("aria-valuenow", "100");
+    await page.keyboard.press("Home");
+    await expect(handle).toHaveAttribute("aria-valuenow", "0");
+    // 화살표는 손잡이가 먹는다 — 갤러리 모달이 다음 인터랙션으로 넘어가지 않는다
+    await expect(page).toHaveURL(/interaction=compare-slider/);
+  });
+
   test("scroll highlight: words light up as the paragraph scrolls past", async ({ page }) => {
     await page.goto("/?interaction=scroll-highlight");
     const box = modal(page).locator("section[aria-label='Scroll highlight']");
