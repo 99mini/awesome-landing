@@ -7,7 +7,8 @@ test.describe("replay, source viewer and controls", () => {
     await card.scrollIntoViewIfNeeded();
     await expect.poll(() => firstCharOpacity(card)).toBe(1);
     await card.getByRole("button", { name: "인터랙션 다시 보기" }).click();
-    expect(await firstCharOpacity(card)).toBeLessThan(1);
+    // 바로 한 번 재면 부하가 있을 때 다시 재생되는 순간을 놓친다 — 다시 흐려질 때까지 기다린다
+    await expect.poll(() => firstCharOpacity(card), { intervals: [16] }).toBeLessThan(1);
     await expect.poll(() => firstCharOpacity(card)).toBe(1);
     await expect(page).not.toHaveURL(/interaction=/);
   });

@@ -56,6 +56,8 @@ globalStyle(`button:has(> ${trigger}):hover`, {
 });
 
 export const kbd = style({
+  // 키보드가 없는 터치 화면에서는 단축키 표시를 뺀다
+  "@media": { "(hover: none)": { display: "none" } },
   padding: "2px 8px",
   borderRadius: vars.radius.pill,
   background: vars.color.surfaceRaised,

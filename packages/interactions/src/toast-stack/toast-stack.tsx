@@ -6,7 +6,8 @@ import * as css from "./toast-stack.css.ts";
 // - 포인터·포커스가 머무는 동안 펼치고 시간을 멈추는 감싸개는 조작 요소가 아니라 키보드 동작이 따로 없다
 //   (포커스는 onFocus 로 같이 받는다).
 // - 새 알림을 읽어 주는 영역: <ol> 에는 status 역할을 줄 수 없고 <output> 은 목록을 담지 못해 div 에 role 로 준다.
-/* oxlint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/prefer-tag-over-role */
+// - 탭해서 펼치기는 터치 화면을 위한 것 — 키보드는 포커스가 들어오면 이미 펼쳐진다.
+/* oxlint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/prefer-tag-over-role, jsx-a11y/click-events-have-key-events */
 
 export interface Toast {
   id: string | number;
@@ -56,7 +57,19 @@ export function ToastStack({
   const reduce = useReducedMotion();
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const engaged = hovered || focused;
+  // 터치 화면에는 hover 가 없다 — 더미를 탭하면 펼쳐 두고, 바깥을 탭하면 다시 접는다
+  const [pinned, setPinned] = useState(false);
+  const areaRef = useRef<HTMLDivElement>(null);
+  const engaged = hovered || focused || (pinned && toasts.length > 0);
+
+  useEffect(() => {
+    if (!pinned) return;
+    const onDown = (e: PointerEvent) => {
+      if (!areaRef.current?.contains(e.target as Node)) setPinned(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [pinned]);
   const stacked = collapse && !engaged;
   // 새 알림이 앞(위)에 온다
   const visible = toasts.slice(-limit).toReversed();
@@ -79,7 +92,12 @@ export function ToastStack({
         />
       ))}
       <div
+        ref={areaRef}
         className={css.pause}
+        onClick={(e) => {
+          // 닫기 버튼을 누른 것은 닫기만 한다
+          if (collapse && !(e.target as Element).closest("button")) setPinned(true);
+        }}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         onFocus={() => setFocused(true)}

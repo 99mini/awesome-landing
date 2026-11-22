@@ -118,7 +118,9 @@ test.describe("dropdowns left open when a modal opens", () => {
       await page.goto("/");
       await open(page);
       await expect(page.getByRole("listbox")).toHaveCount(1);
-      const opener = page.locator("button[data-open-interaction]").first();
+      // 열린 목록에 덮이지 않은 카드를 누른다 (폰에서는 목록이 첫 카드들을 덮는다 — 그 자리를 누르면 항목이 골라진다)
+      const opener = page.locator("button[data-open-interaction]").nth(4);
+      await opener.scrollIntoViewIfNeeded();
       await opener.click();
       await expect(page).toHaveURL(/interaction=/);
       await expect(page.getByRole("listbox")).toHaveCount(0);

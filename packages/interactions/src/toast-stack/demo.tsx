@@ -38,7 +38,7 @@ export default function Demo({ duration = 4, limit = 3, stack = 1 }: ControlValu
         {toasts.length > limit
           ? `${toasts.length - limit} older hidden`
           : stack === 1
-            ? "Hover or focus the stack to fan it out"
+            ? "Hover, focus or tap the stack to fan it out"
             : duration
               ? "Hover or focus the stack to keep them"
               : "Dismiss each one by hand"}

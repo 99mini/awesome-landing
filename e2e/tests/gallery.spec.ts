@@ -49,6 +49,8 @@ test.describe("gallery routing and modal", () => {
   test("clicking a control inside a demo does not open the modal", async ({ page }) => {
     await page.goto("/");
     const card = page.locator("article", { hasText: "Magnetic Button" });
+    // 화면 밖 카드는 데모를 쉬게 한다 (폰은 한 줄이라 아래에 있다)
+    await card.scrollIntoViewIfNeeded();
     await card.getByRole("button", { name: "Get started" }).click();
     await expect(page).not.toHaveURL(/interaction=/);
   });

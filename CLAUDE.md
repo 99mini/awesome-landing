@@ -24,6 +24,8 @@
 - 새 랜딩: `pnpm new:landing <name> "Title"`.
 - 변경 후 `pnpm check` 통과 확인. 갤러리·랜딩 동작을 바꿨다면 `pnpm test:e2e` (Playwright, production 빌드를 vite preview 로 띄워 검사).
   테스트는 `e2e/tests/*.spec.ts` — 셀렉터는 role·aria·텍스트로 (production 빌드의 VE 클래스 이름은 해시라 쓸 수 없다).
+  갤러리 흐름은 데스크톱(`chromium`)과 폰(`mobile`, Pixel 7 터치) 두 번 돈다. 폰은 한 줄 배치라 카드가 화면 밖이면
+  데모가 쉰다 — 카드를 `scrollIntoViewIfNeeded` 한 뒤 조작할 것. hover 로만 되는 동작은 탭으로도 되게 한다.
 - 컴포넌트 테스트는 Storybook(`apps/storybook`): 모든 스토리를 브라우저에서 렌더하고 play 함수와 axe 접근성 검사를 돌린다 (`pnpm test:stories`).
   인터랙션 스토리는 생성물(`stories/interactions/`), 동작 검사는 직접 쓴다(`stories/behaviors/`). 테스트에서는 Motion 애니메이션이 즉시 끝난다.
 - 화면 회귀(`e2e/tests/visual.spec.ts`)는 CI 의 Playwright 컨테이너에서만 비교한다 — 로컬 macOS 에서 찍은 이미지는 커밋하지 말 것.
