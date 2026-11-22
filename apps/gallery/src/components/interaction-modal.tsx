@@ -31,6 +31,19 @@ const fade = {
   exit: { opacity: 0, transition: { duration: 0.1 } },
 };
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/** 지금 Tab 으로 갈 수 있는 요소들 (보이지 않거나 inert 인 것은 뺀다) */
+function tabbables(root: HTMLElement) {
+  return [...root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+    (el) =>
+      el.tabIndex >= 0 &&
+      !el.closest("[inert]") &&
+      el.checkVisibility({ visibilityProperty: true, opacityProperty: false }),
+  );
+}
+
 /** 화살표 키가 입력·슬라이더 조작이면 넘기지 않는다 */
 function isEditable(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
@@ -43,6 +56,10 @@ function isEditable(target: EventTarget | null) {
 export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: InteractionModalProps) {
   const { meta } = mod;
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  // 닫을 때 돌려줄 포커스 — 렌더 시점에 한 번만 잡는다
+  // (effect 에서 잡으면 StrictMode 의 두 번째 실행이 이미 옮겨 간 ✕ 버튼을 잡는다)
+  const [returnFocus] = useState(() => document.activeElement as HTMLElement | null);
   const titleId = `modal-title-${meta.slug}`;
   // 키보드 핸들러는 열릴 때 한 번만 등록하고, 최신 콜백은 ref 로 읽는다 (리렌더마다 포커스가 튀지 않게)
   const handlers = useRef({ onClose, onPrev, onNext });
@@ -50,28 +67,55 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
     handlers.current = { onClose, onPrev, onNext };
   });
 
-  // 스크롤 잠금 · Esc 닫기 · ←/→ 이동 · 포커스 이동/복원
+  // 스크롤 잠금 · Esc 닫기 · ←/→ 이동 · 포커스 이동/가두기/복원
   useEffect(() => {
-    const prevFocus = document.activeElement as HTMLElement | null;
     const root = document.documentElement;
     const prevOverflow = root.style.overflow;
     root.style.overflow = "hidden";
     closeRef.current?.focus({ preventScroll: true });
 
     function onKey(e: KeyboardEvent) {
+      if (e.key === "Tab") return trapTab(e);
       if (e.key === "Escape") handlers.current.onClose();
       if (e.altKey || e.metaKey || e.ctrlKey || isEditable(e.target)) return;
       if (e.key === "ArrowLeft") handlers.current.onPrev?.();
       if (e.key === "ArrowRight") handlers.current.onNext?.();
     }
+    // Tab 이 모달 끝에 닿으면 반대쪽 끝으로 — 뒤의 카드로 빠져나가 페이지가 스크롤되지 않게
+    function trapTab(e: KeyboardEvent) {
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const list = tabbables(dialog);
+      const first = list[0];
+      const last = list.at(-1);
+      if (!first || !last) return e.preventDefault();
+      const active = document.activeElement;
+      const outside = !dialog.contains(active);
+      if (e.shiftKey && (outside || active === first)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (outside || active === last)) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    // 마우스 등으로 모달 밖에 포커스가 가면 다시 모달로
+    function onFocusIn(e: FocusEvent) {
+      const dialog = dialogRef.current;
+      if (dialog && e.target instanceof Node && !dialog.contains(e.target)) {
+        closeRef.current?.focus({ preventScroll: true });
+      }
+    }
     window.addEventListener("keydown", onKey);
+    document.addEventListener("focusin", onFocusIn);
 
     return () => {
       window.removeEventListener("keydown", onKey);
+      document.removeEventListener("focusin", onFocusIn);
       root.style.overflow = prevOverflow;
-      prevFocus?.focus({ preventScroll: true });
+      returnFocus?.focus({ preventScroll: true });
     };
-  }, []);
+  }, [returnFocus]);
 
   return (
     <>
@@ -84,6 +128,7 @@ export function InteractionModal({ mod, onClose, onPrev, onNext, morph }: Intera
       />
       <div className={css.layer}>
         <m.dialog
+          ref={dialogRef}
           open
           layoutId={morph ? `shell-${meta.slug}` : undefined}
           layoutCrossfade={false}
@@ -160,6 +205,7 @@ function ModalContent({
         layoutCrossfade={false}
         className={css.modalStage}
         style={{ borderRadius: 20 }}
+        data-demo-stage
         {...enter}
       >
         <m.div layout="position" className={ui.demoFit}>
