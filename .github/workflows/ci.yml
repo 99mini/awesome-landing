@@ -38,9 +38,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright
-        with:
-          filter: "@awesome/e2e"
+      - name: Install Chromium
+        run: pnpm --filter @awesome/e2e exec playwright install --with-deps chromium
       - run: pnpm test:e2e --shard=${{ matrix.shard }}/4
       - name: Upload report
         if: failure()
@@ -60,9 +59,8 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Generated stories match the interaction list
         run: pnpm stories:gen --check
-      - uses: ./.github/actions/playwright
-        with:
-          filter: "@awesome/storybook"
+      - name: Install Chromium
+        run: pnpm --filter @awesome/storybook exec playwright install --with-deps chromium
       - name: Render every story, run play functions and axe
         run: pnpm test:stories
 
