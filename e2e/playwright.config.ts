@@ -39,7 +39,7 @@ export default defineConfig({
       // 폰 — 터치 · 좁은 화면. 갤러리 흐름을 같은 테스트로 다시 돈다
       name: "mobile",
       testMatch:
-        /(gallery|filters|modal-sweep|morph-modal|keyboard-and-feedback|gestures|demo-tools|offscreen)\.spec\.ts$/,
+        /(gallery|filters|modal-sweep|morph-modal|keyboard-and-feedback|gestures|demo-tools|offscreen|a11y)\.spec\.ts$/,
       use: { ...devices["Pixel 7"], ...(CI ? {} : { channel: "chrome" }) },
     },
     {
@@ -51,6 +51,9 @@ export default defineConfig({
         viewport: { width: 1440, height: 900 },
         deviceScaleFactor: 1,
         contextOptions: { reducedMotion: "reduce" },
+        // 갤러리는 시스템 테마를 따른다 — 기본 장면은 다크로 고정하고, 라이트는 해당 테스트가 직접 바꾼다
+        // (Playwright 의 기본값은 light)
+        colorScheme: "dark",
         // 로컬에서는 안정성 확인용으로만 돌린다 (기준 이미지는 CI 컨테이너 것)
         ...(CI ? {} : { channel: "chrome" }),
       },

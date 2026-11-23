@@ -95,3 +95,42 @@ test.describe("gallery routing and modal", () => {
     expect(overflow).toBe(false);
   });
 });
+
+const bodyBackground = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+
+test.describe("color theme", () => {
+  const bg = bodyBackground;
+
+  test("follows the system, and the toggle cycles system → light → dark and is remembered", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.goto("/");
+    const toggle = page.getByRole("button", { name: /^Theme:/ });
+    await expect(toggle).toHaveAccessibleName(/Theme: System/);
+    const darkBg = await bg(page);
+
+    // 시스템을 라이트로 바꾸면 따라간다
+    await page.emulateMedia({ colorScheme: "light" });
+    const lightBg = await bg(page);
+    expect(lightBg).not.toBe(darkBg);
+
+    // 시스템은 라이트인 채로 다크를 직접 고른다: system → light → dark
+    await toggle.click();
+    await expect(toggle).toHaveAccessibleName(/Theme: Light/);
+    await toggle.click();
+    await expect(toggle).toHaveAccessibleName(/Theme: Dark/);
+    expect(await bg(page)).toBe(darkBg);
+
+    // 다시 열어도 그대로 — 그리기 전에 index.html 의 스크립트가 적용한다
+    await page.reload();
+    expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("dark");
+    expect(await bg(page)).toBe(darkBg);
+
+    // 한 바퀴 돌면 시스템(라이트)으로
+    await page.getByRole("button", { name: /^Theme:/ }).click();
+    await expect(page.getByRole("button", { name: /^Theme:/ })).toHaveAccessibleName(/System/);
+    expect(await bg(page)).toBe(lightBg);
+  });
+});

@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./reset": "./src/reset.css.ts"
+    "./reset": "./src/reset.css.ts",
+    "./modes": "./src/modes.css.ts"
   },
   "scripts": {
     "typecheck": "tsc"
