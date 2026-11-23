@@ -39,7 +39,7 @@ export default defineConfig({
       // 폰 — 터치 · 좁은 화면. 갤러리 흐름을 같은 테스트로 다시 돈다
       name: "mobile",
       testMatch:
-        /(gallery|filters|modal-sweep|morph-modal|keyboard-and-feedback|gestures|demo-tools|offscreen)\.spec\.ts$/,
+        /(gallery|filters|modal-sweep|morph-modal|keyboard-and-feedback|gestures|demo-tools|offscreen|a11y)\.spec\.ts$/,
       use: { ...devices["Pixel 7"], ...(CI ? {} : { channel: "chrome" }) },
     },
     {

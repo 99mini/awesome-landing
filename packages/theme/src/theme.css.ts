@@ -29,6 +29,8 @@ export const vars = createGlobalThemeContract(
       /** 데모 안의 강조와 두 번째 계열 (차트 등) — UI 강조와 분리 */
       signal: null,
       signalAlt: null,
+      /** signal·signalAlt 색면 위의 글자 (다크: 어둡게, 라이트: 밝게 — signal 의 밝기가 테마마다 뒤집힌다) */
+      signalInk: null,
       /** 한 색조 램프 (틸트 카드) */
       rampFrom: null,
       rampTo: null,
@@ -72,6 +74,22 @@ export const vars = createGlobalThemeContract(
   (_value, path) => `al-${path.join("-")}`,
 );
 
+/** 색이 아닌 토큰 — 라이트·다크가 같다 (modes.css.ts 도 이것을 쓴다) */
+export const shape = {
+  radius: {
+    sm: "4px",
+    md: "16px",
+    lg: "20px",
+    pill: "999px",
+  },
+  font: {
+    body: '"Hanken Grotesk", ui-sans-serif, sans-serif',
+  },
+  ease: {
+    out: "cubic-bezier(0.22, 1, 0.36, 1)",
+  },
+};
+
 // 중립색은 강조 색조(30, coral)로 아주 살짝 기울인다
 createGlobalTheme(":root", vars, {
   color: {
@@ -90,6 +108,7 @@ createGlobalTheme(":root", vars, {
     inverseInk: "oklch(18% 0.01 30)",
     signal: "oklch(84% 0.12 85)",
     signalAlt: "oklch(80% 0.1 180)",
+    signalInk: "oklch(20% 0.03 85)",
     rampFrom: "oklch(74% 0.16 55)",
     rampTo: "oklch(64% 0.2 30)",
     rampInk: "oklch(22% 0.04 40)",
@@ -113,16 +132,5 @@ createGlobalTheme(":root", vars, {
     keyword: "oklch(80% 0.12 0)",
     comment: "oklch(55% 0.01 30)",
   },
-  radius: {
-    sm: "4px",
-    md: "16px",
-    lg: "20px",
-    pill: "999px",
-  },
-  font: {
-    body: '"Hanken Grotesk", ui-sans-serif, sans-serif',
-  },
-  ease: {
-    out: "cubic-bezier(0.22, 1, 0.36, 1)",
-  },
+  ...shape,
 });

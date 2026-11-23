@@ -5,6 +5,7 @@
 /* Hallmark · waive 72 · the marquee track runs past its card by design and the card clips it · the Infinite Marquee demo shows content scrolling under its own edge */
 
 import "@awesome/theme/reset";
+import "@awesome/theme/modes";
 import { vars } from "@awesome/theme";
 import { globalStyle } from "@vanilla-extract/css";
 

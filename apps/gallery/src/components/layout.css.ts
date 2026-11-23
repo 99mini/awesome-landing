@@ -16,6 +16,12 @@ export const header = style({
   padding: "24px 0",
 });
 
+export const tools = style({
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+});
+
 export const logo = style([
   focusRing,
   {

@@ -4,12 +4,17 @@ test.describe("replay, source viewer and controls", () => {
   test("replay restarts the demo in the card without opening the modal", async ({ page }) => {
     await page.goto("/");
     const card = page.locator("article", { hasText: "Split Text Reveal" });
-    await card.scrollIntoViewIfNeeded();
-    await expect.poll(() => firstCharOpacity(card)).toBe(1);
+    // Split Text 는 화면에 충분히 들어와야 재생된다. 막 열린 페이지는 데모가 늦게 받아지며 배치가 움직여
+    // 한 번 스크롤한 카드가 다시 화면 밖으로 밀릴 수 있다 (폰에서) — 기다리는 동안 매번 가운데로 둔다
+    const visibleOpacity = async () => {
+      await card.evaluate((el) => el.scrollIntoView({ block: "center" }));
+      return firstCharOpacity(card);
+    };
+    await expect.poll(visibleOpacity).toBe(1);
     await card.getByRole("button", { name: "인터랙션 다시 보기" }).click();
     // 바로 한 번 재면 부하가 있을 때 다시 재생되는 순간을 놓친다 — 다시 흐려질 때까지 기다린다
     await expect.poll(() => firstCharOpacity(card), { intervals: [16] }).toBeLessThan(1);
-    await expect.poll(() => firstCharOpacity(card)).toBe(1);
+    await expect.poll(visibleOpacity).toBe(1);
     await expect(page).not.toHaveURL(/interaction=/);
   });
 

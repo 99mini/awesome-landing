@@ -8,7 +8,6 @@ const CI = Boolean(process.env.CI);
 export default defineConfig({
   plugins: [storybookTest({ configDir: ".storybook" })],
   test: {
-    name: "storybook",
     browser: {
       enabled: true,
       headless: true,
@@ -17,5 +16,16 @@ export default defineConfig({
       instances: [{ browser: "chromium" }],
     },
     setupFiles: [".storybook/vitest.setup.ts"],
+    // 같은 스토리를 다크·라이트 두 번 (갤러리가 둘 다 지원한다)
+    projects: [
+      { extends: true, test: { name: "dark" } },
+      {
+        extends: true,
+        test: {
+          name: "light",
+          setupFiles: [".storybook/vitest.setup.ts", ".storybook/vitest.light.ts"],
+        },
+      },
+    ],
   },
 });

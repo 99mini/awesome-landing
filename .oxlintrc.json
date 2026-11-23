@@ -20,7 +20,7 @@
     "import/no-unassigned-import": [
       "warn",
       {
-        "allow": ["**/*.css", "**/*.css.ts", "@awesome/theme/reset"]
+        "allow": ["**/*.css", "**/*.css.ts", "@awesome/theme/reset", "@awesome/theme/modes"]
       }
     ],
     "no-restricted-imports": [

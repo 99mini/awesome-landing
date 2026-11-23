@@ -34,6 +34,18 @@ test.describe("gallery", () => {
     await expect(page).toHaveScreenshot("gallery-phone.png", { stylePath: HIDE_TIME });
   });
 
+  test("light theme: first screen and a modal", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+    await expect(page.locator("article").first()).toBeVisible();
+    await settle(page);
+    await expect(page).toHaveScreenshot("gallery-home-light.png", { stylePath: HIDE_TIME });
+    await page.goto("/?interaction=compare-slider");
+    await expect(page.locator("dialog").first()).toBeVisible();
+    await settle(page);
+    await expect(page).toHaveScreenshot("gallery-modal-light.png", { stylePath: HIDE_TIME });
+  });
+
   for (const slug of ["accordion", "swipe-cards", "reorder-list"] as const) {
     test(`modal: ${slug}`, async ({ page }) => {
       await page.goto(`/?interaction=${slug}`);

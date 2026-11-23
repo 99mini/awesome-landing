@@ -64,7 +64,7 @@ export const sketch = {
 /** 완성: 색과 대비를 입힌 같은 화면 */
 export const finished = {
   screen: style({ background: vars.color.toneA }),
-  tag: style({ justifySelf: "end", background: vars.color.signal, color: vars.color.inverseInk }),
+  tag: style({ justifySelf: "end", background: vars.color.signal, color: vars.color.signalInk }),
   hero: style({
     background: `linear-gradient(135deg, ${vars.color.rampFrom}, ${vars.color.rampTo})`,
   }),

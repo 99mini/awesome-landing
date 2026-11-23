@@ -36,15 +36,22 @@ const flag = (name) => {
 };
 const target = args.find((a, i) => !a.startsWith("--") && !args[i - 1]?.startsWith("--"));
 
+// "gallery:dark" 처럼 뒤에 테마를 붙이면 그 테마로 그려서 본다.
+// 렌더 검사(대비 등)는 헤드리스 Chrome 의 기본값(라이트)으로 그리므로,
+// 시스템 설정을 따르는 갤러리는 다크를 따로 한 번 더 본다
+const baseName = (name) => name.split(":")[0];
+const themeOf = (name) => name.split(":")[1];
+
 function targetDir(name) {
-  return name === "gallery" ? join(root, "apps/gallery") : join(root, "landings", name);
+  const base = baseName(name);
+  return base === "gallery" ? join(root, "apps/gallery") : join(root, "landings", base);
 }
 
 function allTargets() {
   const landings = readdirSync(join(root, "landings")).filter((d) =>
     existsSync(join(root, "landings", d, "landing.json")),
   );
-  return ["gallery", ...landings];
+  return ["gallery", "gallery:dark", ...landings];
 }
 
 if (!target) {
@@ -334,7 +341,7 @@ async function audit(name, render) {
     console.error(`알 수 없는 대상: ${name}`);
     return { name, fails: 1, error: "unknown target" };
   }
-  const opts = { ...DEFAULTS[name] };
+  const opts = { ...DEFAULTS[baseName(name)] };
   if (flag("--genre")) opts.genre = flag("--genre");
   if (flag("--scope")) opts.scope = flag("--scope");
   opts.genre ??= "editorial";
@@ -349,6 +356,16 @@ async function audit(name, render) {
   });
   if (build.status !== 0) return { name, fails: 1, error: "build failed" };
   const stamped = stampBuiltCss(dir);
+  const theme = themeOf(name);
+  if (theme) {
+    // 저장된 선택과 같은 방법(<html data-theme>)으로 테마를 고정한다
+    const html = join(dir, "dist/index.html");
+    writeFileSync(
+      html,
+      readFileSync(html, "utf8").replace("<html ", `<html data-theme="${theme}" `),
+    );
+    console.log(`▸ ${name}: rendered with data-theme="${theme}"`);
+  }
   console.log(
     `▸ ${name}: ${stamped ? `${stamped} authored Hallmark comment(s) carried into dist CSS` : "no authored Hallmark stamp in src"}`,
   );
@@ -468,7 +485,7 @@ for (const t of targets) results.push(await audit(t, render));
 if (results.length > 1) {
   console.log("\n요약");
   for (const r of results) {
-    console.log(`  ${r.name.padEnd(12)} ${r.error ?? `${r.fails} FAIL · ${r.reflex} REFLEX`}`);
+    console.log(`  ${r.name.padEnd(14)} ${r.error ?? `${r.fails} FAIL · ${r.reflex} REFLEX`}`);
   }
 }
 process.exit(results.some((r) => r.fails > 0) ? 1 : 0);
