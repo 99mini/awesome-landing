@@ -51,6 +51,9 @@ export default defineConfig({
         viewport: { width: 1440, height: 900 },
         deviceScaleFactor: 1,
         contextOptions: { reducedMotion: "reduce" },
+        // 갤러리는 시스템 테마를 따른다 — 기본 장면은 다크로 고정하고, 라이트는 해당 테스트가 직접 바꾼다
+        // (Playwright 의 기본값은 light)
+        colorScheme: "dark",
         // 로컬에서는 안정성 확인용으로만 돌린다 (기준 이미지는 CI 컨테이너 것)
         ...(CI ? {} : { channel: "chrome" }),
       },
