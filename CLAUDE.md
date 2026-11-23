@@ -31,6 +31,7 @@
 - 화면 회귀(`e2e/tests/visual.spec.ts`)는 CI 의 Playwright 컨테이너에서만 비교한다 — 로컬 macOS 에서 찍은 이미지는 커밋하지 말 것.
   화면을 일부러 바꿨다면 PR 에 `update-snapshots` 라벨 → CI 가 새 기준 이미지를 커밋한다 → 라벨을 떼고 다시 돌려 비교 통과 확인.
 - CI(`.github/workflows/ci.yml`)는 PR 마다 check+build, e2e, visual, storybook, `audit:design all` 을 돌린다.
+  e2e 는 4개 job 으로 나눠(`--shard=N/4`) 동시에 돈다 — 러너 CPU 가 적어 job 안에서는 worker 1개라, 타이밍을 재는 테스트를 위해 worker 대신 job 을 늘렸다.
 
 ## 디자인 기준 (Hallmark Floor 중 우리 스택에 맞는 것)
 
