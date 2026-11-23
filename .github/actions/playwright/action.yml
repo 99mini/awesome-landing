@@ -1,0 +1,29 @@
+name: Playwright Chromium
+description: Chromium for Playwright, with the browser download cached per Playwright version
+
+inputs:
+  filter:
+    description: Workspace package whose Playwright installs the browser
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Playwright version
+      id: version
+      shell: bash
+      run: echo "v=$(pnpm --filter '${{ inputs.filter }}' exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+    - uses: actions/cache@v4
+      id: cache
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.version.outputs.v }}-chromium
+    # 브라우저는 캐시에서, 시스템 라이브러리(apt)는 매번 — 러너는 매번 새로 뜬다
+    - name: Install Chromium and system libraries
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: pnpm --filter '${{ inputs.filter }}' exec playwright install --with-deps chromium
+    - name: Install system libraries (browser from cache)
+      if: steps.cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: pnpm --filter '${{ inputs.filter }}' exec playwright install-deps chromium

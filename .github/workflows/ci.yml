@@ -27,19 +27,26 @@ jobs:
         run: pnpm check:bundle
 
   e2e:
-    name: e2e (playwright)
+    # 러너 CPU 가 적어 한 job 안에서는 worker 가 1개뿐이다 — 애니메이션 타이밍을 재는 테스트가 있어
+    # worker 를 늘리지 않고 job 을 나눠 동시에 돌린다 (데스크톱 + 폰 테스트를 4등분)
+    name: e2e (playwright ${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - name: Install Chromium
-        run: pnpm --filter @awesome/e2e exec playwright install --with-deps chromium
-      - run: pnpm test:e2e
+      - uses: ./.github/actions/playwright
+        with:
+          filter: "@awesome/e2e"
+      - run: pnpm test:e2e --shard=${{ matrix.shard }}/4
       - name: Upload report
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: |
             e2e/playwright-report
             e2e/test-results
@@ -53,8 +60,9 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Generated stories match the interaction list
         run: pnpm stories:gen --check
-      - name: Install Chromium
-        run: pnpm --filter @awesome/storybook exec playwright install --with-deps chromium
+      - uses: ./.github/actions/playwright
+        with:
+          filter: "@awesome/storybook"
       - name: Render every story, run play functions and axe
         run: pnpm test:stories
 
