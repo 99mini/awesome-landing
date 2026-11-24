@@ -38,6 +38,10 @@ interface CommandPaletteProps {
   placeholder?: string;
   /** 걸러진 결과가 없을 때 */
   emptyLabel?: string;
+  /** 검색 방식 — 기본은 대소문자 무시 부분 일치(defaultMatch). 한글 초성 검색 등은 여기서 바꾼다 */
+  match?: CommandMatcher;
+  /** label 에서 맞은 부분(<mark>)의 모양 */
+  markClassName?: string;
   /**
    * ⌘K / Ctrl+K 로 열기.
    * "global": 페이지 어디서나, "focus": 포커스가 이 컴포넌트 안에 있을 때만
@@ -53,15 +57,78 @@ interface CommandPaletteProps {
   panelClassName?: string;
 }
 
-function matches(command: Command, query: string) {
+/** 검색어가 맞은 결과 — 없으면(null) 목록에서 빠진다 */
+export interface CommandMatch {
+  /** label 안에서 맞은 구간 [시작, 끝) — 하이라이트한다 */
+  ranges?: readonly (readonly [number, number])[];
+  /** 클수록 같은 묶음 안에서 위로 (기본 0) */
+  score?: number;
+}
+
+export type CommandMatcher = (command: Command, query: string) => CommandMatch | null;
+
+/** label 에서 word 가 나오는 모든 구간 (대소문자 무시) */
+function occurrences(label: string, word: string) {
+  const ranges: [number, number][] = [];
+  const lower = label.toLowerCase();
+  for (let at = lower.indexOf(word); at !== -1; at = lower.indexOf(word, at + word.length)) {
+    ranges.push([at, at + word.length]);
+  }
+  return ranges;
+}
+
+/**
+ * 기본 검색: 띄어 쓴 단어가 모두 label · hint · keywords 어딘가에 들어 있으면 맞다.
+ * label 에서 맞은 곳을 하이라이트하고, label 이 검색어로 시작하면 > 단어 첫머리에서 맞으면 > 그 밖 순으로 위로 올린다.
+ * 다른 언어(초성 검색 등)는 `match` prop 으로 바꾼다.
+ */
+export const defaultMatch: CommandMatcher = (command, query) => {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return {};
   const haystack = [command.label, command.hint ?? "", ...(command.keywords ?? [])]
     .join(" ")
     .toLowerCase();
-  return query
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean)
-    .every((word) => haystack.includes(word));
+  if (!words.every((word) => haystack.includes(word))) return null;
+  const label = command.label.toLowerCase();
+  const whole = query.trim().toLowerCase();
+  const score = label.startsWith(whole)
+    ? 3
+    : new RegExp(`(^|\\s)${whole.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&")}`).test(label)
+      ? 2
+      : label.includes(whole)
+        ? 1
+        : 0;
+  return { ranges: words.flatMap((word) => occurrences(command.label, word)), score };
+};
+
+/** 겹치거나 붙은 구간을 합친다 */
+function merge(ranges: readonly (readonly [number, number])[]) {
+  const sorted = [...ranges].filter(([a, b]) => b > a).toSorted((x, y) => x[0] - y[0]);
+  const out: [number, number][] = [];
+  for (const [a, b] of sorted) {
+    const last = out.at(-1);
+    if (last && a <= last[1]) last[1] = Math.max(last[1], b);
+    else out.push([a, b]);
+  }
+  return out;
+}
+
+/** label 을 맞은 구간은 <mark> 로 감싸 나눈다 */
+function highlight(label: string, ranges: CommandMatch["ranges"], markClassName?: string) {
+  if (!ranges?.length) return label;
+  const parts: ReactNode[] = [];
+  let at = 0;
+  for (const [a, b] of merge(ranges)) {
+    if (a > at) parts.push(label.slice(at, a));
+    parts.push(
+      <mark key={a} className={cx(css.mark, markClassName)}>
+        {label.slice(a, b)}
+      </mark>,
+    );
+    at = b;
+  }
+  if (at < label.length) parts.push(label.slice(at));
+  return parts;
 }
 
 const isHotkey = (e: KeyboardEvent | ReactKeyboardEvent) =>
@@ -79,6 +146,8 @@ export function CommandPalette({
   label = "Command palette",
   placeholder = "Type a command",
   emptyLabel = "No matching commands",
+  match = defaultMatch,
+  markClassName,
   hotkey = "global",
   contained = true,
   className,
@@ -92,14 +161,22 @@ export function CommandPalette({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   // 걸러진 명령을 group 별로 묶는다 — ↑/↓ 순서도 화면에 보이는 순서(묶음 순서)를 따른다
-  const sections = useMemo(() => {
+  // 묶음 순서는 명령 순서 그대로, 묶음 안에서는 점수가 높은 것부터 (같으면 원래 순서)
+  const { sections, hits } = useMemo(() => {
+    const found = new Map<Command, CommandMatch>();
     const groups = new Map<string | undefined, Command[]>();
     for (const c of commands) {
-      if (!matches(c, query)) continue;
+      const hit = match(c, query);
+      if (!hit) continue;
+      found.set(c, hit);
       groups.set(c.group, [...(groups.get(c.group) ?? []), c]);
     }
-    return [...groups].map(([group, items]) => ({ group, items }));
-  }, [commands, query]);
+    const ordered = [...groups].map(([group, items]) => ({
+      group,
+      items: items.toSorted((a, b) => (found.get(b)?.score ?? 0) - (found.get(a)?.score ?? 0)),
+    }));
+    return { sections: ordered, hits: found };
+  }, [commands, query, match]);
   const results = useMemo(() => sections.flatMap((s) => s.items), [sections]);
   const current = results[Math.min(active, results.length - 1)];
 
@@ -183,7 +260,9 @@ export function CommandPalette({
             transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 600, damping: 40 }}
           />
         )}
-        <span className={css.label}>{command.label}</span>
+        <span className={css.label}>
+          {highlight(command.label, hits.get(command)?.ranges, markClassName)}
+        </span>
         {command.hint && <span className={css.hint}>{command.hint}</span>}
       </div>
     );
