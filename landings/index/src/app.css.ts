@@ -114,6 +114,10 @@ export const entryName = style({
 export const entryKind = style({
   fontSize: "0.9rem",
   opacity: 0.75,
+  selectors: {
+    // 가리킨 이름의 분류만 — 인터랙션이 늘어도 첫 화면의 글이 두 배로 불지 않게
+    "[aria-pressed=false] > &": { visibility: "hidden" },
+  },
 });
 
 export const stageColumn = style({
