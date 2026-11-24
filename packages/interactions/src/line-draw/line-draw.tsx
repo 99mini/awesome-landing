@@ -18,6 +18,8 @@ interface LineDrawProps {
   className?: string;
   /** 시리즈 i 의 선 클래스 (색 지정) */
   lineClassName?: (index: number) => string | undefined;
+  /** 스크린 리더가 읽을 이름 */
+  label?: string;
 }
 
 const PAD = 8;
@@ -29,6 +31,7 @@ export function LineDraw({
   thickness = 2.5,
   width = 320,
   height = 160,
+  label = "Line chart",
   className,
   lineClassName,
 }: LineDrawProps) {
@@ -56,7 +59,7 @@ export function LineDraw({
       viewport={{ once: true, amount: 0.4 }}
       viewBox={`0 0 ${width} ${height}`}
       role="img"
-      aria-label="Line chart"
+      aria-label={label}
     >
       {[0.25, 0.5, 0.75].map((r) => (
         <line key={r} className={css.grid} x1={0} x2={width} y1={height * r} y2={height * r} />

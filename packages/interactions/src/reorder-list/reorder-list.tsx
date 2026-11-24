@@ -4,6 +4,19 @@ import { cx } from "../lib/cx.ts";
 import { visuallyHidden } from "../lib/visually-hidden.css.ts";
 import * as css from "./reorder-list.css.ts";
 
+/** 스크린 리더가 읽는 문장 — 다른 언어로 바꿀 때 */
+export interface ReorderMessages {
+  /** 손잡이 이름 */
+  handle: (label: string) => string;
+  /** 옮긴 뒤 알림 (position 은 1부터) */
+  moved: (label: string, position: number, total: number) => string;
+}
+
+const MESSAGES: ReorderMessages = {
+  handle: (label) => `Reorder ${label}. Use arrow up and down.`,
+  moved: (label, position, total) => `${label}, position ${position} of ${total}`,
+};
+
 interface ReorderListProps<T extends string> {
   items: readonly T[];
   onReorder: (items: T[]) => void;
@@ -14,6 +27,7 @@ interface ReorderListProps<T extends string> {
   className?: string;
   itemClassName?: string;
   handleClassName?: string;
+  messages?: Partial<ReorderMessages>;
 }
 
 const defaultLabel = (item: string) => item;
@@ -31,7 +45,9 @@ export function ReorderList<T extends string>({
   className,
   itemClassName,
   handleClassName,
+  messages,
 }: ReorderListProps<T>) {
+  const text = { ...MESSAGES, ...messages };
   const [announcement, setAnnouncement] = useState("");
 
   function move(item: T, step: -1 | 1) {
@@ -42,7 +58,7 @@ export function ReorderList<T extends string>({
     next.splice(from, 1);
     next.splice(to, 0, item);
     onReorder(next);
-    setAnnouncement(`${itemLabel(item)}, position ${to + 1} of ${items.length}`);
+    setAnnouncement(text.moved(itemLabel(item), to + 1, items.length));
   }
 
   return (
@@ -57,7 +73,7 @@ export function ReorderList<T extends string>({
           <Item
             key={item}
             item={item}
-            label={itemLabel(item)}
+            handleLabel={text.handle(itemLabel(item))}
             onMove={(step) => move(item, step)}
             className={itemClassName}
             handleClassName={handleClassName}
@@ -75,14 +91,14 @@ export function ReorderList<T extends string>({
 
 function Item<T extends string>({
   item,
-  label,
+  handleLabel,
   onMove,
   className,
   handleClassName,
   children,
 }: {
   item: T;
-  label: string;
+  handleLabel: string;
   onMove: (step: -1 | 1) => void;
   className?: string;
   handleClassName?: string;
@@ -112,7 +128,7 @@ function Item<T extends string>({
       <button
         type="button"
         className={cx(css.handle, handleClassName)}
-        aria-label={`Reorder ${label}. Use arrow up and down.`}
+        aria-label={handleLabel}
         onPointerDown={(e) => controls.start(e)}
         onKeyDown={onKeyDown}
       >

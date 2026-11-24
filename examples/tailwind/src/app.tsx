@@ -90,6 +90,25 @@ export function App() {
         </div>
       </section>
 
+      <section className="grid gap-4" aria-labelledby="photo">
+        <h2 id="photo" className="text-xl font-semibold">
+          Full-screen Morph Modal
+        </h2>
+        {/* 사진 앨범처럼 — 작은 칸이 화면 전체로 커진다. body 로 꺼내 열리고, 스크롤·Tab 이 갇힌다 */}
+        <MorphModal
+          label="Photo"
+          closeLabel="Done"
+          className="aspect-square w-40 overflow-hidden rounded-lg bg-amber-300"
+          panelClassName="grid aspect-[4/3] w-[min(48rem,100%)] place-items-center rounded-2xl bg-amber-300"
+          closeClassName="rounded-full bg-stone-900 px-4 py-2 text-white"
+          preview={
+            <span className="grid h-full place-items-center text-sm font-medium">Photo</span>
+          }
+        >
+          <p className="text-2xl font-semibold">A large photo</p>
+        </MorphModal>
+      </section>
+
       <section className="grid gap-4" aria-labelledby="accordion">
         <h2 id="accordion" className="text-xl font-semibold">
           Accordion

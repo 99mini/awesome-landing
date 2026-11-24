@@ -64,6 +64,14 @@ export const close = style({
   position: "absolute",
   top: 12,
   right: 12,
+  cursor: "pointer",
+  selectors: {
+    "&:focus-visible": { outline: "2px solid currentColor", outlineOffset: 2 },
+  },
+});
+
+// 모양은 우선순위 0 — closeClassName 이 언제나 덮어쓴다
+globalStyle(`:where(${close})`, {
   padding: "8px 12px",
   border: "1px solid currentColor",
   borderRadius: 999,
@@ -71,8 +79,4 @@ export const close = style({
   color: "inherit",
   font: "inherit",
   fontSize: "0.85rem",
-  cursor: "pointer",
-  selectors: {
-    "&:focus-visible": { outline: "2px solid currentColor", outlineOffset: 2 },
-  },
 });

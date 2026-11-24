@@ -35,6 +35,8 @@ interface CommandPaletteProps {
   /** 패널·입력칸 이름 (스크린 리더) */
   label?: string;
   placeholder?: string;
+  /** 걸러진 결과가 없을 때 */
+  emptyLabel?: string;
   /**
    * ⌘K / Ctrl+K 로 열기.
    * "global": 페이지 어디서나, "focus": 포커스가 이 컴포넌트 안에 있을 때만
@@ -75,6 +77,7 @@ export function CommandPalette({
   trigger,
   label = "Command palette",
   placeholder = "Type a command",
+  emptyLabel = "No matching commands",
   hotkey = "global",
   contained = true,
   className,
@@ -269,7 +272,7 @@ export function CommandPalette({
                   ),
                 )}
               </div>
-              {results.length === 0 && <p className={css.empty}>No matching commands</p>}
+              {results.length === 0 && <p className={css.empty}>{emptyLabel}</p>}
             </m.div>
           </m.div>
         )}

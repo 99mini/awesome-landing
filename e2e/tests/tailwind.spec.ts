@@ -68,3 +68,31 @@ test("animations on the first screen run even though Motion features load later"
     )
     .toBe("1");
 });
+
+test("a full-screen morph modal behaves like a modal: portal, scroll lock, focus trap", async ({
+  page,
+}) => {
+  const trigger = page.getByRole("button", { name: "Photo" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Photo" });
+  await expect(dialog).toBeVisible();
+
+  // body 로 꺼내 열린다 (조상의 transform·overflow 에 갇히지 않게)
+  expect(await dialog.evaluate((el) => el.closest("main") === null)).toBe(true);
+  // 뒤 페이지가 스크롤되지 않는다
+  expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("hidden");
+  // 닫기 버튼의 글자를 바꿀 수 있다
+  const close = dialog.getByRole("button", { name: "Done" });
+  await expect(close).toBeFocused();
+
+  // Tab 이 패널 밖으로 나가지 않는다
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press("Tab");
+    expect(await page.evaluate(() => !!document.activeElement?.closest("dialog"))).toBe(true);
+  }
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("");
+});
