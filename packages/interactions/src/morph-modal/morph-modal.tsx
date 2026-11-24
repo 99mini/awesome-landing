@@ -23,6 +23,8 @@ interface MorphModalProps {
   contained?: boolean;
   className?: string;
   panelClassName?: string;
+  /** 패널 뒤를 덮는 막 — 전체 화면이면 body 아래에 그려지므로 색은 이것으로 준다 */
+  backdropClassName?: string;
   /** 닫기 버튼 글자 (스크린 리더도 이것을 읽는다) */
   closeLabel?: string;
   closeClassName?: string;
@@ -38,6 +40,7 @@ export function MorphModal({
   contained = false,
   className,
   panelClassName,
+  backdropClassName,
   closeLabel = "Close",
   closeClassName,
 }: MorphModalProps) {
@@ -117,7 +120,7 @@ export function MorphModal({
               exit={{ pointerEvents: "none" }}
             >
               <m.div
-                className={css.backdrop}
+                className={cx(css.backdrop, backdropClassName)}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

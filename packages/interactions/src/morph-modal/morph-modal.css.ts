@@ -39,7 +39,10 @@ export const layerContained = style({ ...layer, position: "absolute", inset: 0 }
 export const backdrop = style({
   position: "absolute",
   inset: 0,
-  // 기본값은 페이지 바탕색(Canvas)으로 덮어 흐리게 — 바꾸려면 --morph-backdrop
+});
+
+// 기본값은 페이지 바탕색(Canvas)으로 덮어 흐리게 — --morph-backdrop 이나 backdropClassName 으로 바꾼다 (우선순위 0)
+globalStyle(`:where(${backdrop})`, {
   background: "var(--morph-backdrop, color-mix(in oklab, Canvas 60%, transparent))",
 });
 
