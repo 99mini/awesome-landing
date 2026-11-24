@@ -59,7 +59,7 @@ test.describe("gallery", () => {
   }
 });
 
-for (const name of ["aurora", "editorial", "index"] as const) {
+for (const name of ["aurora", "editorial", "index", "ochre"] as const) {
   test.describe(`landing: ${name}`, () => {
     // 랜딩은 시스템 테마를 따른다 — 두 테마 모두
     for (const scheme of ["dark", "light"] as const) {

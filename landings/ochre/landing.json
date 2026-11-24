@@ -1,0 +1,7 @@
+{
+  "name": "ochre",
+  "title": "Ochre",
+  "description": "가상의 릴리스 노트 도구 소개 페이지. 스크롤로 넘어가는 사용 흐름, 전후 비교, 페이지에서 센 숫자",
+  "port": 5203,
+  "tags": ["product", "sticky story", "compare"]
+}
