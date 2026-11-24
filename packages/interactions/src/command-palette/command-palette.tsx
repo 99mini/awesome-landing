@@ -8,6 +8,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { cx } from "../lib/cx.ts";
 import * as css from "./command-palette.css.ts";
 
@@ -116,6 +117,14 @@ export function CommandPalette({
   useEffect(() => {
     actions.current = { show, hide };
   });
+  // 화면 전체를 덮을 때는 body 로 꺼낸다 — sticky·transform 조상이 만드는 쌓임 맥락에 갇히면
+  // 뒤따르는 본문 아래에 깔린다. className 은 꺼낸 쪽에도 붙여 쓰는 쪽이 준 CSS 변수(--palette-*)가 그대로 닿게 한다.
+  // (서버 렌더에는 document 가 없고 닫혀 있으므로 꺼낼 것도 없다)
+  const portal = (node: ReactNode) =>
+    contained || typeof document === "undefined"
+      ? node
+      : createPortal(<div className={cx(css.root, className)}>{node}</div>, document.body);
+
   function run(command: Command) {
     hide(true);
     onRun(command);
@@ -214,69 +223,71 @@ export function CommandPalette({
         {trigger}
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <m.div
-            className={contained ? css.layer : css.layerFixed}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, pointerEvents: "none" }}
-            transition={{ duration: reduce ? 0 : 0.15 }}
-          >
-            <div className={css.backdrop} aria-hidden onClick={() => hide(false)} />
+      {portal(
+        <AnimatePresence>
+          {open && (
             <m.div
-              ref={panelRef}
-              role="dialog"
-              aria-label={label}
-              className={cx(css.panel, panelClassName)}
-              initial={reduce ? false : { scale: 0.96, y: -8 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={reduce ? undefined : { scale: 0.98, y: -4 }}
-              transition={
-                reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 36 }
-              }
-              onBlur={(e) => {
-                // Tab 등으로 패널을 떠나면 닫는다 (포커스는 옮겨 간 곳에 둔다)
-                if (!e.currentTarget.contains(e.relatedTarget)) hide(false);
-              }}
+              className={contained ? css.layer : css.layerFixed}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, pointerEvents: "none" }}
+              transition={{ duration: reduce ? 0 : 0.15 }}
             >
-              <input
-                // oxlint-disable-next-line jsx-a11y/no-autofocus -- 열자마자 입력하도록
-                autoFocus
-                className={css.input}
-                role="combobox"
+              <div className={css.backdrop} aria-hidden onClick={() => hide(false)} />
+              <m.div
+                ref={panelRef}
+                role="dialog"
                 aria-label={label}
-                aria-expanded
-                aria-controls={`${id}-list`}
-                aria-autocomplete="list"
-                aria-activedescendant={current ? `${id}-${current.id}` : undefined}
-                placeholder={placeholder}
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setActive(0);
+                className={cx(css.panel, panelClassName)}
+                initial={reduce ? false : { scale: 0.96, y: -8 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={reduce ? undefined : { scale: 0.98, y: -4 }}
+                transition={
+                  reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 36 }
+                }
+                onBlur={(e) => {
+                  // Tab 등으로 패널을 떠나면 닫는다 (포커스는 옮겨 간 곳에 둔다)
+                  if (!e.currentTarget.contains(e.relatedTarget)) hide(false);
                 }}
-                onKeyDown={onInputKey}
-              />
-              <div id={`${id}-list`} role="listbox" aria-label={label} className={css.list}>
-                {sections.map(({ group, items }, g) =>
-                  group === undefined ? (
-                    items.map(renderOption)
-                  ) : (
-                    <div key={group} role="group" aria-labelledby={`${id}-g${g}`}>
-                      <div id={`${id}-g${g}`} role="presentation" className={css.groupLabel}>
-                        {group}
+              >
+                <input
+                  // oxlint-disable-next-line jsx-a11y/no-autofocus -- 열자마자 입력하도록
+                  autoFocus
+                  className={css.input}
+                  role="combobox"
+                  aria-label={label}
+                  aria-expanded
+                  aria-controls={`${id}-list`}
+                  aria-autocomplete="list"
+                  aria-activedescendant={current ? `${id}-${current.id}` : undefined}
+                  placeholder={placeholder}
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setActive(0);
+                  }}
+                  onKeyDown={onInputKey}
+                />
+                <div id={`${id}-list`} role="listbox" aria-label={label} className={css.list}>
+                  {sections.map(({ group, items }, g) =>
+                    group === undefined ? (
+                      items.map(renderOption)
+                    ) : (
+                      <div key={group} role="group" aria-labelledby={`${id}-g${g}`}>
+                        <div id={`${id}-g${g}`} role="presentation" className={css.groupLabel}>
+                          {group}
+                        </div>
+                        {items.map(renderOption)}
                       </div>
-                      {items.map(renderOption)}
-                    </div>
-                  ),
-                )}
-              </div>
-              {results.length === 0 && <p className={css.empty}>{emptyLabel}</p>}
+                    ),
+                  )}
+                </div>
+                {results.length === 0 && <p className={css.empty}>{emptyLabel}</p>}
+              </m.div>
             </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+      )}
     </div>
   );
 }
