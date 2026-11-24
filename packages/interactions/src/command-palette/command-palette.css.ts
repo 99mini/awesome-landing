@@ -34,7 +34,8 @@ export const layer = style({
 /** 화면 전체 위 — 위쪽에 뜬다 */
 export const layerFixed = style([
   layer,
-  { position: "fixed", zIndex: 50, paddingTop: "max(12px, 12vh)" },
+  // 사이트 헤더·사이드바(보통 z-40~50)보다 위에 — 바꾸려면 :root 에 --palette-layer-z
+  { position: "fixed", zIndex: "var(--palette-layer-z, 1000)", paddingTop: "max(12px, 12vh)" },
 ]);
 
 export const backdrop = style({

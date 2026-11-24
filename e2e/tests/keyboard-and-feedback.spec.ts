@@ -245,6 +245,29 @@ test.describe("gallery search palette", () => {
     const input = page.getByRole("combobox", { name: "Search the gallery" });
     await expect(input).toBeFocused();
     await expect(page.getByRole("group", { name: "Interactions" })).toBeVisible();
+
+    // 화면 전체 팔레트는 body 로 꺼내 그린다 — sticky·transform 조상에 갇혀 본문 아래에 깔리지 않게
+    const panel = page.getByRole("dialog", { name: "Search the gallery" });
+    expect(await panel.evaluate((el) => el.closest("header") === null)).toBe(true);
+    expect(
+      await panel.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + 20));
+      }),
+    ).toBe(true);
+    // className 으로 준 CSS 변수(--palette-backdrop)가 꺼낸 쪽에도 닿는다 — 기본값(Canvas 섞기)이 아니다
+    const [backdrop, scrim] = await panel.evaluate((el) => {
+      const probe = document.createElement("div");
+      probe.style.background = "var(--al-color-scrim)";
+      document.body.append(probe);
+      const colors = [
+        getComputedStyle(el.previousElementSibling!).backgroundColor,
+        getComputedStyle(probe).backgroundColor,
+      ];
+      probe.remove();
+      return colors;
+    });
+    expect(backdrop).toBe(scrim);
     await input.pressSequentially("swi");
     await expect(page.getByRole("option", { name: /Swipe Cards/ })).toHaveAttribute(
       "aria-selected",
