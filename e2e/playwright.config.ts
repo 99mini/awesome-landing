@@ -9,6 +9,7 @@ const servers = [
   { filter: "@landing/aurora", port: 4320 },
   { filter: "@landing/editorial", port: 4321 },
   { filter: "@landing/index", port: 4322 },
+  { filter: "@landing/ochre", port: 4323 },
 ];
 
 export default defineConfig({

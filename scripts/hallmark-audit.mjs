@@ -27,6 +27,7 @@ const DEFAULTS = {
   aurora: { genre: "atmospheric" },
   editorial: { genre: "editorial" },
   index: { genre: "modern-minimal" },
+  ochre: { genre: "modern-minimal", scope: "page" },
 };
 
 const args = process.argv.slice(2);
@@ -419,6 +420,8 @@ async function audit(name, render) {
       const real = await occlusionRecheck(puppeteerPath, url);
       if (real && real.length === 0) {
         occlusion.grade = "DISMISSED";
+        // 이 스크립트가 FAIL 을 다시 확인해서 지운 것 — 요약의 FAIL 수에서 뺀다
+        occlusion.rechecked = true;
         occlusion.evidence +=
           " — rechecked: the covered text is clipped by an overflow ancestor and never painted";
         fails -= 1;
@@ -446,7 +449,10 @@ async function audit(name, render) {
 
 function printReport(name, report) {
   const { summary, findings = [] } = report;
-  const dismissed = findings.filter((f) => f.grade === "DISMISSED").length;
+  // 요약에서 빼는 것은 이 스크립트가 다시 확인해 지운 FAIL 만이다.
+  // .css.ts 의 `Hallmark · dismissed` 주석으로 넘긴 것(WARN 등)은 sloplint 가 이미 FAIL 수에서 빼 두었다
+  const dismissed = findings.filter((f) => f.grade === "DISMISSED" && f.rechecked).length;
+  const dismissedOnRecord = findings.filter((f) => f.grade === "DISMISSED" && !f.rechecked).length;
   const order = { FAIL: 0, REFLEX: 1, WARN: 2, REJECTED: 3, DISMISSED: 4 };
   const shown = findings
     .filter((f) => f.grade in order)
@@ -459,7 +465,7 @@ function printReport(name, report) {
     if (f.grade === "FAIL" || f.grade === "REFLEX") console.log(`  ${"".padEnd(11)}→ ${f.fix}`);
   }
   console.log(
-    `  ${name}: ${summary.fails - dismissed} FAIL · ${summary.reflex} REFLEX · ${summary.warns} WARN${dismissed ? ` · ${dismissed} dismissed after recheck` : ""}${summary.waived ? ` · ${summary.waived} waived` : ""}${summary.rejected ? ` · ${summary.rejected} waiver(s) rejected` : ""} · render ${summary.render}`,
+    `  ${name}: ${summary.fails - dismissed} FAIL · ${summary.reflex} REFLEX · ${summary.warns} WARN${dismissed ? ` · ${dismissed} dismissed after recheck` : ""}${dismissedOnRecord ? ` · ${dismissedOnRecord} dismissed on record` : ""}${summary.waived ? ` · ${summary.waived} waived` : ""}${summary.rejected ? ` · ${summary.rejected} waiver(s) rejected` : ""} · render ${summary.render}`,
   );
 }
 

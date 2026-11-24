@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures.ts";
 import { URLS } from "./urls.ts";
 
-const LANDINGS = ["aurora", "editorial", "index"] as const;
+const LANDINGS = ["aurora", "editorial", "index", "ochre"] as const;
 
 for (const name of LANDINGS) {
   test.describe(`landing: ${name}`, () => {
@@ -38,3 +38,42 @@ for (const name of LANDINGS) {
     });
   });
 }
+
+const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
+
+test.describe("landing: ochre", () => {
+  test("its counts come from the page, and its actions tell the truth", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto(URLS.ochre);
+
+    // 숫자는 비교 화면 두 글의 실제 단어 수
+    const thread = await page
+      .getByRole("figure", { name: "Team chat thread" })
+      .locator("p")
+      .allInnerTexts();
+    // 이름(첫 줄)을 빼고 말한 내용만 센다
+    const threadWords = thread.reduce((n, t) => n + words(t.split("\n").slice(1).join(" ")), 0);
+    await page.getByText("Thread words").scrollIntoViewIfNeeded();
+    await expect(page.locator("dd").first()).toContainText(String(threadWords));
+
+    // 링크 복사는 실제로 복사한다
+    await page.getByRole("button", { name: "Copy page link" }).click();
+    await expect(page.getByRole("status")).toContainText("Link copied");
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(page.url());
+
+    // 가입은 예시 페이지라 아무것도 보내지 않았다고 알린다
+    await page.getByRole("button", { name: "Request access" }).first().click();
+    await expect(page.getByRole("status")).toContainText("Nothing was sent");
+  });
+
+  test("the story picture follows the step in the middle of the screen", async ({ page }) => {
+    await page.goto(URLS.ochre);
+    await page
+      .getByRole("heading", { name: "Publish everywhere" })
+      .evaluate((el) => el.scrollIntoView({ block: "center" }));
+    await expect(page.getByText("Email digest", { exact: true })).toBeVisible();
+  });
+});

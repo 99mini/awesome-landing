@@ -58,7 +58,7 @@ for (const scheme of ["dark", "light"] as const) {
 for (const scheme of ["dark", "light"] as const) {
   test.describe(`landings, ${scheme} system theme`, () => {
     test.use({ colorScheme: scheme });
-    for (const name of ["aurora", "editorial", "index"] as const) {
+    for (const name of ["aurora", "editorial", "index", "ochre"] as const) {
       test(name, async ({ page }) => {
         await page.goto(URLS[name]);
         await expect(page.locator("h1")).toBeVisible();

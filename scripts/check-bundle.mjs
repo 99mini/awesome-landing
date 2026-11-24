@@ -45,6 +45,7 @@ const APPS = [
   ["aurora", "landings/aurora", 95 * KB, "85KB"],
   ["editorial", "landings/editorial", 115 * KB, "104KB"],
   ["index", "landings/index", 100 * KB, "88KB"],
+  ["ochre", "landings/ochre", 100 * KB, "91KB"],
 ];
 
 /** 갤러리에서 나중에 받는 것들 — 가장 큰 파일 기준 */
