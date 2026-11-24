@@ -192,6 +192,9 @@ export function App() {
           <a className={css.navLink} href="http://localhost:5201">
             Editorial
           </a>
+          <a className={css.navLink} href="http://localhost:5203">
+            Ochre
+          </a>
         </nav>
       </footer>
     </>

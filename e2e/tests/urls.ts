@@ -4,4 +4,5 @@ export const URLS = {
   aurora: "http://localhost:4320",
   editorial: "http://localhost:4321",
   index: "http://localhost:4322",
+  ochre: "http://localhost:4323",
 } as const;
