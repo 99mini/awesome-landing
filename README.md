@@ -27,6 +27,7 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 │     └─ src/<slug>/
 │        ├─ <slug>.tsx      #   실제 구현 (index.ts 에서 export)
 │        └─ demo.tsx        #   meta + 데모 → 갤러리에 자동 등록
+├─ examples/tailwind/       # 바깥 프로젝트처럼 빌드된 패키지를 Tailwind v4 로 쓰는 예제 (:5400, E2E 대상)
 ├─ templates/landing/       # new:landing 이 복사하는 템플릿
 ├─ scripts/new-landing.mjs
 ├─ pnpm-workspace.yaml      # workspace + catalog(공통 버전)
@@ -40,6 +41,38 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 **랜딩** — `pnpm new:landing neon-saas "Neon SaaS"` → `pnpm install` → `landing.json` 설명/태그 수정.
 
 **인터랙션** — `packages/interactions/src/<slug>/` 에 컴포넌트와 `demo.tsx`(`meta` + default export)를 만들고, `src/index.ts` 에 export 추가. 갤러리(`/?interaction=<slug>`)에 자동 노출. 계속 직접 조작하는 인터랙션(hover·pointer)은 `meta.replayable: false`. 조절 가능한 숫자 props 는 `meta.controls` 에 정의하면 모달에 슬라이더가 생기고 데모에 props 로 전달된다. 모달에서 폴더의 소스(컴포넌트·스타일·데모)를 보고 복사할 수 있다.
+
+## 다른 앱에서 쓰기 (Tailwind v4 포함)
+
+`@awesome/interactions` 는 JS · 타입 · CSS 파일 하나로 빌드된다 (`pnpm --filter @awesome/interactions build` → `dist/`).
+쓰는 쪽은 vanilla-extract 플러그인이 필요 없다 — `motion`·`react` 만 있으면 된다.
+
+```tsx
+import { MotionProvider } from "@awesome/interactions/motion";
+import { CommandPalette } from "@awesome/interactions";
+
+root.render(
+  <MotionProvider>
+    <App />
+  </MotionProvider>,
+);
+```
+
+CSS 는 `@layer awesome` 안에 있어서, 쓰는 쪽의 클래스가 우선순위와 상관없이 덮어쓴다. 모양은 `className`·`panelClassName` 등으로 준다.
+
+```css
+/* Tailwind v4 — 반드시 layer(components) 로. 그래야 utilities 가 이긴다 */
+@import "tailwindcss";
+@import "@awesome/interactions/style.css" layer(components);
+```
+
+```css
+/* 레이어를 쓰지 않는 일반 CSS — 그냥 가져오면 된다 (레이어 밖의 CSS 가 언제나 이긴다) */
+@import "@awesome/interactions/style.css";
+```
+
+Tailwind 에서 `layer(...)` 없이 가져오면 `awesome` 레이어가 utilities 뒤에 선언되어 패키지 스타일이 이긴다 — `examples/tailwind` 와
+`e2e/tests/tailwind.spec.ts` 가 이것을 확인한다.
 
 ## 스크립트
 

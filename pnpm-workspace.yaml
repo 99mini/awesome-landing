@@ -2,6 +2,7 @@ packages:
   - apps/*
   - landings/*
   - packages/*
+  - examples/*
   - e2e
 
 # 모든 워크스페이스가 공유하는 버전 (package.json 에서 "catalog:" 로 참조)
@@ -30,6 +31,8 @@ catalog:
   sugar-high: ^2.7.0
   typescript: ^7.0.2
   vite: ^8.3.8
+  tailwindcss: ^4.3.5
+  "@tailwindcss/vite": ^4.3.5
   "@vitejs/plugin-react": ^6.3.0
   oxlint: ^1.94.0
   oxfmt: ^0.79.0

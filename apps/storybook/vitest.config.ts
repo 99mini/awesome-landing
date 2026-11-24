@@ -1,5 +1,6 @@
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
+import { defaultClientConditions } from "vite";
 import { defineConfig } from "vitest/config";
 
 const CI = Boolean(process.env.CI);
@@ -7,6 +8,7 @@ const CI = Boolean(process.env.CI);
 /** 모든 스토리를 실제 브라우저에서 렌더 + play 함수 + axe 접근성 검사로 돌린다 */
 export default defineConfig({
   plugins: [storybookTest({ configDir: ".storybook" })],
+  resolve: { conditions: ["source", ...defaultClientConditions] },
   test: {
     browser: {
       enabled: true,

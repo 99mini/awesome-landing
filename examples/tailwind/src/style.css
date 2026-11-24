@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/*
+ * 미리 빌드된 패키지 CSS (안에서 @layer awesome 으로 감싸져 있다).
+ * components 레이어에 넣어 Tailwind utilities 보다 앞에 둔다 — 그래서 className 으로 넘긴 유틸리티가 이긴다.
+ * layer(...) 없이 가져오면 awesome 레이어가 utilities 뒤에 선언되어 오히려 이긴다.
+ */
+@import "@awesome/interactions/style.css" layer(components);
