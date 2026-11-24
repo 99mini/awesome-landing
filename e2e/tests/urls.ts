@@ -5,4 +5,5 @@ export const URLS = {
   editorial: "http://localhost:4321",
   index: "http://localhost:4322",
   ochre: "http://localhost:4323",
+  tailwind: "http://localhost:4330",
 } as const;

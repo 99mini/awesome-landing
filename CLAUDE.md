@@ -13,6 +13,13 @@
   인터랙션 컴포넌트(`packages/interactions/src/<slug>/<slug>.tsx`)는 테마 import 금지 — 데모(`demo.css.ts`)만 사용.
   motion value 와 layout 애니메이션용 `borderRadius` 만 inline style 허용.
 - 새 Vite 앱은 `vanillaExtractPlugin()` 필수. 워크스페이스 패키지의 `.css.ts` 는 앱 플러그인이 컴파일한다.
+  또 `resolve.conditions: ["source", ...defaultClientConditions]` 를 넣는다 — `@awesome/interactions` 의 exports 는
+  `source` 조건이면 소스, 아니면 빌드 결과(`dist`)로 풀린다 (tsconfig.base 의 `customConditions` 도 같은 이유).
+- `@awesome/interactions` 는 바깥에서 쓸 수 있게 빌드된다(`vite build` + `tsc`, CSS 는 `@layer awesome` 로 감쌈).
+  `examples/tailwind` 가 vanilla-extract 없이 dist 를 Tailwind v4 로 쓰는 것을 E2E 로 확인한다 — 컴포넌트 구조 스타일을
+  바꾸면 Tailwind 클래스가 여전히 덮어쓰는지 거기서 본다.
+- 첫 화면에 바로 보일 수 있는 인터랙션은 `useInView` 로 `animate` 값을 바꾸지 말고 `whileInView` 를 쓴다 —
+  LazyMotion 기능 묶음이 늦게 오면 그 전에 바뀐 animate 를 놓친다. `animate()` 직접 호출은 엔진을 첫 로드로 끌어온다.
 - 공유 `.css.ts`(`styles/ui.css.ts`, `@awesome/theme`) 수정 후 클래스 해시가 어긋난 현상이 한 번 있었으나 재현되지 않는다 (단일·다중 파일 동시 수정, 일시적 import 오류, 수정 직후 oxfmt 모두 확인). 테마·global 스타일 변경은 entry 까지 올라가 전체 새로고침되며, entry 는 `import.meta.hot.data` 로 root 를 재사용한다. 그래도 클래스와 스타일이 어긋나면 dev 서버 재시작.
 - 갤러리 UI 강조색(`vars.color.accent`)은 선택·상태·포커스에만. 데모 안의 강조는 `vars.color.signal`/`signalAlt`.
 - 갤러리·Storybook·랜딩 모두 라이트/다크 둘 다. 시스템 설정을 따르고 `<html data-theme>` 로 고정된다.

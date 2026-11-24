@@ -1,8 +1,11 @@
-import { m, useInView, useReducedMotion } from "motion/react";
-import { useRef } from "react";
+import { m, useReducedMotion } from "motion/react";
 import * as css from "./line-draw.css.ts";
+
 import { smoothPath } from "./path.ts";
 import { cx } from "../lib/cx.ts";
+
+// m.svg 는 <svg> 다 — 차트 그림에 role="img" + aria-label 이 맞는 표기인데, 린트는 m.svg 를 svg 로 알아보지 못한다
+/* oxlint-disable jsx-a11y/prefer-tag-over-role */
 
 interface LineDrawProps {
   /** 시리즈별 y 값 배열 (x 는 균등 간격) */
@@ -29,8 +32,6 @@ export function LineDraw({
   className,
   lineClassName,
 }: LineDrawProps) {
-  const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.4 });
   const reduce = useReducedMotion();
   const all = series.flat();
   const max = Math.max(...all, 0);
@@ -46,9 +47,13 @@ export function LineDraw({
   });
 
   return (
-    <svg
-      ref={ref}
+    // 화면에 들어오면 그린다 — whileInView 는 Motion 기능 묶음이 늦게 와도(LazyMotion) 그때 관찰을 시작해 놓치지 않는다.
+    // (useInView 로 animate 값을 바꾸면, 페이지 맨 위처럼 기능이 오기 전에 이미 보이는 경우 그리지 않고 멈춰 있었다)
+    <m.svg
       className={cx(css.root, className)}
+      initial="hidden"
+      whileInView="shown"
+      viewport={{ once: true, amount: 0.4 }}
       viewBox={`0 0 ${width} ${height}`}
       role="img"
       aria-label="Line chart"
@@ -65,11 +70,16 @@ export function LineDraw({
               d={d}
               className={css.line}
               style={{ strokeWidth: thickness }}
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={inView ? { pathLength: 1, opacity: 1 } : undefined}
-              transition={{
-                pathLength: { duration: time, delay, ease: [0.65, 0, 0.35, 1] },
-                opacity: { duration: 0.01, delay },
+              variants={{
+                hidden: { pathLength: 0, opacity: 0 },
+                shown: {
+                  pathLength: 1,
+                  opacity: 1,
+                  transition: {
+                    pathLength: { duration: time, delay, ease: [0.65, 0, 0.35, 1] },
+                    opacity: { duration: 0.01, delay },
+                  },
+                },
               }}
             />
             {end && (
@@ -78,14 +88,23 @@ export function LineDraw({
                 cx={end[0]}
                 cy={end[1]}
                 r={thickness + 2}
-                initial={{ scale: 0 }}
-                animate={inView ? { scale: 1 } : undefined}
-                transition={{ delay: delay + time, type: "spring", stiffness: 500, damping: 18 }}
+                variants={{
+                  hidden: { scale: 0 },
+                  shown: {
+                    scale: 1,
+                    transition: {
+                      delay: delay + time,
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 18,
+                    },
+                  },
+                }}
               />
             )}
           </g>
         );
       })}
-    </svg>
+    </m.svg>
   );
 }
