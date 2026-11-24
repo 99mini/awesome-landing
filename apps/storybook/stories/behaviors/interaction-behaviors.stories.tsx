@@ -1,6 +1,12 @@
-import { CountUp, MorphModal, SevenSegment, TextScramble } from "@awesome/interactions";
+import {
+  CountUp,
+  MorphModal,
+  PhotoViewer,
+  SevenSegment,
+  TextScramble,
+} from "@awesome/interactions";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, waitFor, within } from "storybook/test";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 
 /** 렌더만으로는 알 수 없는 동작을 확인하는 스토리들 */
 const meta = {
@@ -53,5 +59,47 @@ export const MorphModalOpensAndRestoresFocus: StoryObj = {
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(canvas.queryByRole("dialog")).toBeNull(), { timeout: 3000 });
     await waitFor(() => expect(trigger).toHaveFocus());
+  },
+};
+
+const photos = ["Dawn", "Noon", "Night"].map((label) => ({
+  id: label,
+  label,
+  aspect: 4 / 3,
+  thumbnail: <span>Open {label}</span>,
+  content: <div>{label} photo</div>,
+}));
+
+const reachedEnd = fn();
+
+export const PhotoViewerMovesAndReturnsToTheShownPhoto: StoryObj = {
+  render: () => <PhotoViewer items={photos} total={5} onReachEnd={reachedEnd} />,
+  play: async ({ canvasElement }) => {
+    reachedEnd.mockClear();
+    const canvas = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "Open Dawn" }));
+    await expect(canvas.getByRole("dialog", { name: "Dawn" })).toBeVisible();
+    await waitFor(() => expect(canvas.getByRole("button", { name: "Close" })).toHaveFocus());
+    await expect(canvas.getByText("1 of 5")).toBeInTheDocument();
+
+    // 첫 장에서 더 앞으로는 가지 않는다
+    const previous = canvas.getByRole("button", { name: "Previous photo" });
+    await expect(previous).toHaveAttribute("aria-disabled", "true");
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(canvas.getByRole("dialog", { name: "Dawn" })).toBeVisible();
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(canvas.getByRole("dialog", { name: "Noon" })).toBeVisible();
+    await expect(reachedEnd).not.toHaveBeenCalled();
+    await userEvent.click(canvas.getByRole("button", { name: "Next photo" }));
+    await expect(canvas.getByRole("dialog", { name: "Night" })).toBeVisible();
+    await waitFor(() => expect(reachedEnd).toHaveBeenCalledTimes(1));
+    await expect(canvas.getByText("3 of 5")).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(canvas.queryByRole("dialog")).toBeNull(), { timeout: 3000 });
+    // 처음 누른 칸이 아니라 마지막에 본 사진의 칸으로
+    await waitFor(() => expect(canvas.getByRole("button", { name: "Open Night" })).toHaveFocus());
+    await expect(canvasElement.ownerDocument.documentElement.style.overflow).toBe("");
   },
 };
