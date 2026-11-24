@@ -273,6 +273,10 @@ test.describe("gallery search palette", () => {
       "aria-selected",
       "true",
     );
+    // 검색어가 맞은 부분을 하이라이트한다 (대소문자는 label 그대로)
+    await expect(page.getByRole("option", { name: /Swipe Cards/ }).locator("mark")).toHaveText(
+      "Swi",
+    );
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/interaction=swipe-cards/);
     await expect(page.locator("dialog :focus")).toHaveCount(1);

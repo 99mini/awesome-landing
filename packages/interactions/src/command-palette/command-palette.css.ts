@@ -125,3 +125,12 @@ export const empty = style({
   padding: 16,
   opacity: 0.75,
 });
+
+/** 검색어가 맞은 부분 — 기본은 굵게만 (색은 markClassName 이나 --palette-mark 로, 우선순위 0) */
+export const mark = style({});
+
+globalStyle(`:where(${mark})`, {
+  background: "transparent",
+  color: "var(--palette-mark, inherit)",
+  fontWeight: 600,
+});
