@@ -33,7 +33,13 @@ const layer = {
   padding: 16,
 } as const;
 
-export const layerFixed = style({ ...layer, position: "fixed", inset: 0 });
+// 화면 전체를 덮을 때는 사이트 헤더(보통 z-40~50)보다 위에 — 바꾸려면 :root 에 --morph-layer-z
+export const layerFixed = style({
+  ...layer,
+  position: "fixed",
+  inset: 0,
+  zIndex: "var(--morph-layer-z, 1000)",
+});
 export const layerContained = style({ ...layer, position: "absolute", inset: 0 });
 
 export const backdrop = style({
