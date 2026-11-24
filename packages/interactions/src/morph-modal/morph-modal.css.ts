@@ -33,13 +33,22 @@ const layer = {
   padding: 16,
 } as const;
 
-export const layerFixed = style({ ...layer, position: "fixed", inset: 0 });
+// 화면 전체를 덮을 때는 사이트 헤더(보통 z-40~50)보다 위에 — 바꾸려면 :root 에 --morph-layer-z
+export const layerFixed = style({
+  ...layer,
+  position: "fixed",
+  inset: 0,
+  zIndex: "var(--morph-layer-z, 1000)",
+});
 export const layerContained = style({ ...layer, position: "absolute", inset: 0 });
 
 export const backdrop = style({
   position: "absolute",
   inset: 0,
-  // 기본값은 페이지 바탕색(Canvas)으로 덮어 흐리게 — 바꾸려면 --morph-backdrop
+});
+
+// 기본값은 페이지 바탕색(Canvas)으로 덮어 흐리게 — --morph-backdrop 이나 backdropClassName 으로 바꾼다 (우선순위 0)
+globalStyle(`:where(${backdrop})`, {
   background: "var(--morph-backdrop, color-mix(in oklab, Canvas 60%, transparent))",
 });
 
@@ -64,6 +73,14 @@ export const close = style({
   position: "absolute",
   top: 12,
   right: 12,
+  cursor: "pointer",
+  selectors: {
+    "&:focus-visible": { outline: "2px solid currentColor", outlineOffset: 2 },
+  },
+});
+
+// 모양은 우선순위 0 — closeClassName 이 언제나 덮어쓴다
+globalStyle(`:where(${close})`, {
   padding: "8px 12px",
   border: "1px solid currentColor",
   borderRadius: 999,
@@ -71,8 +88,4 @@ export const close = style({
   color: "inherit",
   font: "inherit",
   fontSize: "0.85rem",
-  cursor: "pointer",
-  selectors: {
-    "&:focus-visible": { outline: "2px solid currentColor", outlineOffset: 2 },
-  },
 });

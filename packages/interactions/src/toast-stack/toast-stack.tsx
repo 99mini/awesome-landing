@@ -31,6 +31,8 @@ interface ToastStackProps {
   collapse?: boolean;
   /** 알림 영역 이름 (스크린 리더) */
   label?: string;
+  /** 닫기 버튼 이름 (스크린 리더) */
+  dismissLabel?: string;
   className?: string;
   toastClassName?: string;
 }
@@ -51,6 +53,7 @@ export function ToastStack({
   limit = 3,
   collapse = true,
   label = "Notifications",
+  dismissLabel = "Dismiss",
   className,
   toastClassName,
 }: ToastStackProps) {
@@ -149,7 +152,7 @@ export function ToastStack({
                   <button
                     type="button"
                     className={css.dismiss}
-                    aria-label="Dismiss"
+                    aria-label={dismissLabel}
                     // 겹쳐 있는 동안 뒤 알림의 버튼은 Tab 순서에서 뺀다 (앞 알림에 포커스가 가면 펼쳐진다)
                     tabIndex={stacked && depth > 0 ? -1 : undefined}
                     onClick={() => onDismiss(toast.id)}

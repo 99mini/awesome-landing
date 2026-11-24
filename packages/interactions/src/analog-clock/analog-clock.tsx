@@ -16,6 +16,8 @@ interface AnalogClockProps {
   secondHand?: boolean;
   /** 지름(px) */
   size?: number;
+  /** 스크린 리더가 읽을 이름 */
+  label?: string;
   className?: string;
 }
 
@@ -32,6 +34,7 @@ export function AnalogClock({
   smooth = false,
   secondHand = true,
   size = 200,
+  label = "Analog clock",
   className,
 }: AnalogClockProps) {
   const reduce = useReducedMotion();
@@ -70,7 +73,7 @@ export function AnalogClock({
       height={size}
       viewBox="-100 -100 200 200"
       role="img"
-      aria-label="Analog clock"
+      aria-label={label}
     >
       <circle className={css.dial} r={R} />
       {Array.from({ length: 60 }, (_, i) => {
