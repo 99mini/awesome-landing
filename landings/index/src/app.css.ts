@@ -274,13 +274,15 @@ export const stepText = style({
 export const code = style({
   display: "block",
   padding: "12px 16px",
-  overflowX: "auto",
   borderRadius: 10,
   background: ix.color.stage,
   color: ix.color.stageInk,
   fontFamily: ix.font.code,
   fontSize: "0.95rem",
-  whiteSpace: "pre",
+  // 짧은 한두 줄이라 가로 스크롤 대신 줄바꿈 — 스크롤 영역은 키보드로도 닿아야 하는데(axe scrollable-region-focusable)
+  // 폰 폭에서 넘치던 줄을 감싸면 그럴 일이 없다
+  whiteSpace: "pre-wrap",
+  overflowWrap: "anywhere",
 });
 
 export const footer = style({

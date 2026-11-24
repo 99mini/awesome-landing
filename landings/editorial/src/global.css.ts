@@ -2,10 +2,6 @@ import "@awesome/theme/reset";
 import { globalStyle } from "@vanilla-extract/css";
 import { ed } from "./theme.css.ts";
 
-globalStyle(":root", {
-  colorScheme: "light",
-});
-
 globalStyle("body", {
   background: ed.color.paper,
   color: ed.color.ink,

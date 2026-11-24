@@ -15,10 +15,12 @@
 - 새 Vite 앱은 `vanillaExtractPlugin()` 필수. 워크스페이스 패키지의 `.css.ts` 는 앱 플러그인이 컴파일한다.
 - 공유 `.css.ts`(`styles/ui.css.ts`, `@awesome/theme`) 수정 후 클래스 해시가 어긋난 현상이 한 번 있었으나 재현되지 않는다 (단일·다중 파일 동시 수정, 일시적 import 오류, 수정 직후 oxfmt 모두 확인). 테마·global 스타일 변경은 entry 까지 올라가 전체 새로고침되며, entry 는 `import.meta.hot.data` 로 root 를 재사용한다. 그래도 클래스와 스타일이 어긋나면 dev 서버 재시작.
 - 갤러리 UI 강조색(`vars.color.accent`)은 선택·상태·포커스에만. 데모 안의 강조는 `vars.color.signal`/`signalAlt`.
-- 갤러리·Storybook 은 라이트/다크 둘 다 (`@awesome/theme/modes`: 시스템 설정을 따르고, `<html data-theme>` 로 고정. 랜딩은 import 하지 않는다).
-  색은 토큰으로만 쓰면 테마를 따라간다. `signal` 은 라이트에서 진한 호박색이라 그 위 글자는 `signalInk`(테마마다 뒤집힘).
-  대비는 테마마다 따로 깨질 수 있다 — Storybook 은 다크·라이트 두 프로젝트로 axe 를 돌리고, 갤러리 화면은 `e2e/tests/a11y.spec.ts`,
-  디자인 감사는 `gallery`(라이트로 렌더)와 `gallery:dark` 를 따로 본다.
+- 갤러리·Storybook·랜딩 모두 라이트/다크 둘 다. 시스템 설정을 따르고 `<html data-theme>` 로 고정된다.
+  반대 테마는 `colorSchemes(base, assignVars(...))`(`@awesome/theme/color-schemes`) 로 붙인다 — 갤러리는 `@awesome/theme/modes`,
+  랜딩은 각자 `theme.css.ts` 에서. 새 랜딩도 두 테마를 설계하고 대비를 계산해 주석에 남긴다.
+  `signal` 은 라이트에서 진한 호박색이라 그 위 글자는 `signalInk`(테마마다 뒤집힘).
+  대비는 테마마다 따로 깨질 수 있다 — Storybook 은 다크·라이트 두 프로젝트로 axe, 갤러리·랜딩 화면은 `e2e/tests/a11y.spec.ts`,
+  디자인 감사는 대상마다 라이트(기본 렌더)와 `<대상>:dark` 를 따로 본다.
 - 새 인터랙션: `packages/interactions/src/<slug>/{<slug>.tsx,<slug>.css.ts,meta.ts,demo.tsx,demo.css.ts}` + `src/index.ts` export, 그리고 `pnpm stories:gen` (Storybook 스토리 생성 — CI 가 `--check` 로 확인). 계속 조작하는 인터랙션은 `meta.replayable: false`. 숫자 props 는 `meta.controls` 로 노출하고 데모는 `ControlValues` 를 props 로 받아 컴포넌트에 전달.
 - `meta.ts`(제목·카테고리·controls)는 첫 로드에 들어가고 `demo.tsx` 는 처음 그려질 때 받는다(레지스트리의 `default` 는 lazy).
   데모를 렌더하는 곳은 `<Suspense>` 안에 둔다. 갤러리 masonry 는 경계가 하나라 첫 화면이 한 번에 그려지고(CLS 방지),

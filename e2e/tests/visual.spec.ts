@@ -61,12 +61,18 @@ test.describe("gallery", () => {
 
 for (const name of ["aurora", "editorial", "index"] as const) {
   test.describe(`landing: ${name}`, () => {
-    test("desktop first screen", async ({ page }) => {
-      await page.goto(URLS[name]);
-      await expect(page.locator("h1")).toBeVisible();
-      await settle(page);
-      await expect(page).toHaveScreenshot(`${name}-desktop.png`, { stylePath: HIDE_TIME });
-    });
+    // 랜딩은 시스템 테마를 따른다 — 두 테마 모두
+    for (const scheme of ["dark", "light"] as const) {
+      test(`desktop first screen (${scheme})`, async ({ page }) => {
+        await page.emulateMedia({ colorScheme: scheme });
+        await page.goto(URLS[name]);
+        await expect(page.locator("h1")).toBeVisible();
+        await settle(page);
+        await expect(page).toHaveScreenshot(`${name}-desktop-${scheme}.png`, {
+          stylePath: HIDE_TIME,
+        });
+      });
+    }
 
     test("phone first screen", async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });

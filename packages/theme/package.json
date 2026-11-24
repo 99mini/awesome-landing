@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./reset": "./src/reset.css.ts",
-    "./modes": "./src/modes.css.ts"
+    "./modes": "./src/modes.css.ts",
+    "./color-schemes": "./src/color-schemes.ts"
   },
   "scripts": {
     "typecheck": "tsc"
