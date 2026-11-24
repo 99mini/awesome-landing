@@ -1,4 +1,5 @@
-import { createGlobalTheme } from "@vanilla-extract/css";
+import { colorSchemes } from "@awesome/theme/color-schemes";
+import { assignVars, createGlobalTheme } from "@vanilla-extract/css";
 
 /**
  * Editorial 전용 토큰 — 색과 글꼴은 전부 여기서만 정의한다 (Hallmark Floor 1).
@@ -16,3 +17,15 @@ export const ed = createGlobalTheme(":root", {
     serif: '"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif',
   },
 });
+
+// 시스템이 다크면 잉크색 지면에 밝은 활자, 코발트는 밝게 (대비: 글자 15.6 · 흐린 글자 7.7 · 강조 8.9)
+colorSchemes(
+  "light",
+  assignVars(ed.color, {
+    paper: "oklch(17% 0.01 70)",
+    ink: "oklch(93% 0.012 85)",
+    muted: "oklch(72% 0.015 80)",
+    rule: "oklch(93% 0.012 85 / 0.8)",
+    accent: "oklch(76% 0.11 262)",
+  }),
+);

@@ -1,4 +1,5 @@
-import { assignVars, globalStyle } from "@vanilla-extract/css";
+import { assignVars } from "@vanilla-extract/css";
+import { colorSchemes } from "./color-schemes.ts";
 import { shape, vars } from "./theme.css.ts";
 
 /**
@@ -57,12 +58,5 @@ const lightVars = assignVars(vars, {
   ...shape,
 });
 
-// 시스템이 라이트이고 다크를 직접 고르지 않았을 때
-globalStyle(':root:not([data-theme="dark"])', {
-  "@media": {
-    "(prefers-color-scheme: light)": { vars: lightVars, colorScheme: "light" },
-  },
-});
-
-// 라이트를 직접 골랐을 때 (시스템 설정과 상관없이)
-globalStyle(':root[data-theme="light"]', { vars: lightVars, colorScheme: "light" });
+// 기본(다크) + 라이트. 시스템 설정을 따르고 data-theme 으로 고정할 수 있다
+colorSchemes("dark", lightVars);

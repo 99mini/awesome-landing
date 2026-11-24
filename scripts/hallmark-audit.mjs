@@ -36,9 +36,8 @@ const flag = (name) => {
 };
 const target = args.find((a, i) => !a.startsWith("--") && !args[i - 1]?.startsWith("--"));
 
-// "gallery:dark" 처럼 뒤에 테마를 붙이면 그 테마로 그려서 본다.
-// 렌더 검사(대비 등)는 헤드리스 Chrome 의 기본값(라이트)으로 그리므로,
-// 시스템 설정을 따르는 갤러리는 다크를 따로 한 번 더 본다
+// "aurora:dark" 처럼 뒤에 테마를 붙이면 <html data-theme> 으로 그 테마를 고정해서 본다.
+// 렌더 검사(대비 등)는 헤드리스 Chrome 의 기본값(라이트)으로 그리므로, 다크는 따로 한 번 더 본다
 const baseName = (name) => name.split(":")[0];
 const themeOf = (name) => name.split(":")[1];
 
@@ -51,7 +50,8 @@ function allTargets() {
   const landings = readdirSync(join(root, "landings")).filter((d) =>
     existsSync(join(root, "landings", d, "landing.json")),
   );
-  return ["gallery", "gallery:dark", ...landings];
+  // 모두 라이트(헤드리스 Chrome 기본값)와 다크 두 번 — 갤러리·랜딩 모두 시스템 테마를 따른다
+  return ["gallery", ...landings].flatMap((t) => [t, `${t}:dark`]);
 }
 
 if (!target) {

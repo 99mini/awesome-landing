@@ -3,7 +3,6 @@ import { globalStyle } from "@vanilla-extract/css";
 import { ix } from "./theme.css.ts";
 
 globalStyle(":root", {
-  colorScheme: "light",
   fontSynthesis: "none",
 });
 

@@ -1,9 +1,10 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures.ts";
+import { URLS } from "./urls.ts";
 
 /**
- * 갤러리 화면 자체의 접근성 (데모는 Storybook 이 스토리마다 axe 로 본다).
+ * 갤러리와 랜딩 화면의 접근성 (데모는 Storybook 이 스토리마다 axe 로 본다).
  * 대비는 테마마다 따로 깨질 수 있어 다크·라이트를 모두 돈다.
  */
 
@@ -50,5 +51,28 @@ for (const scheme of ["dark", "light"] as const) {
       await page.waitForTimeout(400);
       await audit(page);
     });
+  });
+}
+
+// 랜딩도 시스템 테마를 따른다 — 각 랜딩의 기본 테마와 반대 테마를 모두 본다
+for (const scheme of ["dark", "light"] as const) {
+  test.describe(`landings, ${scheme} system theme`, () => {
+    test.use({ colorScheme: scheme });
+    for (const name of ["aurora", "editorial", "index"] as const) {
+      test(name, async ({ page }) => {
+        await page.goto(URLS[name]);
+        await expect(page.locator("h1")).toBeVisible();
+        // 아래 섹션의 등장 애니메이션까지 끝나게 한 번 훑는다
+        await page.evaluate(async () => {
+          for (let y = 0; y < document.documentElement.scrollHeight; y += 600) {
+            scrollTo(0, y);
+            await new Promise((r) => setTimeout(r, 120));
+          }
+          scrollTo(0, 0);
+        });
+        await settle(page);
+        await audit(page);
+      });
+    }
   });
 }
