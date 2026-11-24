@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc"
+    "typecheck": "pnpm --filter @awesome/interactions build && tsc"
   },
   "dependencies": {
     "@awesome/interactions": "workspace:*",
