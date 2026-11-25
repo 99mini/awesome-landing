@@ -27,11 +27,33 @@ function cssLayer(name: string): Plugin {
 }
 
 /**
+ * 진입점마다 `<이름>.client.js` 를 하나 더 만든다 — `"use client"` 를 붙여 그대로 다시 내보내는 얇은 파일.
+ * exports 의 `react-server` 조건(Next.js 같은 서버 컴포넌트 환경)에서만 이것을 준다. 나머지 환경은 지시어 없는
+ * 본체를 받아 번들러 경고가 없고, 두 길이 같은 본체를 가리켜 코드가 두 벌 들어가지 않는다.
+ * (`export *` 는 클라이언트 경계에서 쓸 수 없어 이름을 하나씩 적는다)
+ */
+function clientEntries(): Plugin {
+  return {
+    name: "awesome:client-entries",
+    generateBundle(_, bundle) {
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type !== "chunk" || !chunk.isEntry) continue;
+        this.emitFile({
+          type: "asset",
+          fileName: chunk.fileName.replace(/\.js$/, ".client.js"),
+          source: `"use client";\nexport { ${chunk.exports.join(", ")} } from "./${chunk.fileName}";\n`,
+        });
+      }
+    },
+  };
+}
+
+/**
  * 패키지 빌드 — 쓰는 쪽은 vanilla-extract 플러그인 없이 JS 와 CSS 파일 하나만 가져다 쓴다.
  * 이 저장소의 앱은 `source` 조건으로 소스를 그대로 쓴다 (package.json exports 참고).
  */
 export default defineConfig({
-  plugins: [react(), vanillaExtractPlugin(), cssLayer("awesome")],
+  plugins: [react(), vanillaExtractPlugin(), cssLayer("awesome"), clientEntries()],
   build: {
     lib: {
       entry: { index: "src/index.ts", motion: "src/motion/motion-provider.tsx" },
@@ -42,8 +64,6 @@ export default defineConfig({
     // 소스맵은 소스 전체를 담는다 — 저장소가 비공개인 동안은 배포물에 넣지 않는다
     sourcemap: false,
     rolldownOptions: {
-      // 모두 훅을 쓰는 클라이언트 컴포넌트 — Next.js 같은 서버 컴포넌트 환경에서 바로 가져다 쓰게
-      output: { banner: '"use client";' },
       // 쓰는 쪽이 가진 것은 묶지 않는다
       external: [/^react($|\/)/, /^react-dom($|\/)/, /^motion($|\/)/, /^@vanilla-extract\/dynamic/],
     },

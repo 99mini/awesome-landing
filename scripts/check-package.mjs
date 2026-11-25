@@ -57,8 +57,28 @@ try {
         .join("/");
       expect(base in declared, `${file}: ${base} 가 dependencies 에 없다`);
     }
+    // "use client" 는 서버 컴포넌트 환경에 주는 얇은 파일에만
     if (file.endsWith(".js"))
-      expect(code.startsWith('"use client"'), `${file}: "use client" 가 없다`);
+      expect(
+        code.startsWith('"use client"') === file.endsWith(".client.js"),
+        `${file}: "use client" 가 ${file.endsWith(".client.js") ? "없다" : "있다"}`,
+      );
+  }
+
+  // 그 파일이 본체와 같은 것을 내보낸다
+  const names = (path) =>
+    [...readFileSync(join(pkg, path), "utf8").matchAll(/export \{([^}]+)\}/g)]
+      .flatMap(([, list]) => list.split(",").map((n) => n.trim().split(" as ").at(-1)))
+      .toSorted()
+      .join();
+  for (const [entry, target] of Object.entries(manifest.exports)) {
+    if (typeof target === "string" || !target.default.endsWith(".js")) continue;
+    expect(target["react-server"], `${entry}: react-server 조건이 없다`);
+    if (target["react-server"])
+      expect(
+        names(target["react-server"]) === names(target.default),
+        `${entry}: react-server 파일이 본체와 다른 것을 내보낸다`,
+      );
   }
 
   // CHANGELOG 에 이 버전의 항목이 있다

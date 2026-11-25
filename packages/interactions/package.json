@@ -43,10 +43,12 @@
     "exports": {
       ".": {
         "types": "./dist/types/index.d.ts",
+        "react-server": "./dist/index.client.js",
         "default": "./dist/index.js"
       },
       "./motion": {
         "types": "./dist/types/motion/motion-provider.d.ts",
+        "react-server": "./dist/motion.client.js",
         "default": "./dist/motion.js"
       },
       "./style.css": {
