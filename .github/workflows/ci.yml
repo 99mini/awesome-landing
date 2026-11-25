@@ -6,6 +6,8 @@ on:
     types: [opened, synchronize, reopened, labeled]
   push:
     branches: [main]
+  # 화면 기준 이미지를 커밋한 뒤 commit-screenshots 가 부른다 (봇의 푸시는 CI 를 깨우지 않는다)
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -71,32 +73,28 @@ jobs:
     runs-on: ubuntu-latest
     # 기준 이미지와 같은 렌더링 환경 — 로컬(macOS)과는 글꼴 렌더링이 달라 비교하지 않는다
     container: mcr.microsoft.com/playwright:v1.65.1-noble
-    permissions:
-      contents: write
     env:
       UPDATE: ${{ contains(github.event.pull_request.labels.*.name, 'update-snapshots') }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - uses: ./.github/actions/setup
       - name: Compare screenshots
         if: env.UPDATE != 'true'
         run: pnpm test:visual
-      - name: Update screenshots and commit them to the PR branch
+      - name: Update screenshots
         if: env.UPDATE == 'true'
-        run: |
-          pnpm --filter @awesome/e2e exec playwright test --project=visual --update-snapshots=all
-          git add e2e/tests/__screenshots__
-          if git diff --cached --quiet; then
-            echo "screenshots unchanged"
-          else
-            git -c user.name="github-actions[bot]" \
-                -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-                commit -m "test(visual): update screenshots"
-            git push
-          fi
+        run: pnpm --filter @awesome/e2e exec playwright test --project=visual --update-snapshots=all
+      - name: Hand the screenshots to commit-screenshots
+        if: env.UPDATE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: e2e/tests/__screenshots__
+          retention-days: 1
       - name: Upload diffs
         if: failure()
         uses: actions/upload-artifact@v4
@@ -104,6 +102,54 @@ jobs:
           name: visual-diffs
           path: e2e/test-results
           retention-days: 7
+
+  # `update-snapshots` 라벨: 새 기준 이미지를 PR 브랜치에 커밋하고, 라벨을 떼고, 그 커밋에서 CI 를 다시 돌린다.
+  # 쓰기 권한은 여기에만 있다 — PR 의 코드를 실행하지 않고 이미지(png)만 옮긴다. 포크의 PR 에서는 돌지 않는다.
+  commit-screenshots:
+    name: commit screenshots
+    needs: visual
+    if: >-
+      contains(github.event.pull_request.labels.*.name, 'update-snapshots')
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BRANCH: ${{ github.head_ref }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: screenshots
+          path: ${{ runner.temp }}/screenshots
+      - name: Commit, push and start CI on the new commit
+        run: |
+          if [ -n "$(find "$RUNNER_TEMP/screenshots" -type f ! -name '*.png')" ]; then
+            echo "::error::png 가 아닌 파일이 있습니다"
+            exit 1
+          fi
+          rsync -a --delete "$RUNNER_TEMP/screenshots/" e2e/tests/__screenshots__/
+          git add -A e2e/tests/__screenshots__
+          drop_label() { gh api --silent -X DELETE "repos/$GH_REPO/issues/$PR/labels/update-snapshots"; }
+          if git diff --cached --quiet; then
+            echo "screenshots unchanged"
+            drop_label
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "test(visual): update screenshots"
+          # 그사이 브랜치가 앞서갔으면 밀어 넣지 않고 실패한다
+          git push origin "HEAD:refs/heads/$BRANCH"
+          drop_label
+          gh workflow run ci.yml --ref "$BRANCH"
 
   design-audit:
     name: design audit (hallmark)
