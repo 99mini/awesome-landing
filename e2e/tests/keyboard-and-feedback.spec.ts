@@ -25,6 +25,51 @@ test.describe("command palette", () => {
     await expect(trigger).toBeFocused();
   });
 
+  test("Enter and Esc while composing belong to the IME; the next Enter runs", async ({ page }) => {
+    await page.goto("/?interaction=command-palette");
+    // 팔레트가 Esc 의 전파를 멈추므로, 열기 전에 먼저 듣는다
+    await page.evaluate(() => {
+      addEventListener("keydown", (e) => (document.title = `${e.key} ${e.isComposing}`), {
+        capture: true,
+      });
+    });
+    const stage = modal(page).locator("[data-demo-stage]");
+    await stage.getByRole("button", { name: /open commands/i }).click();
+    const input = stage.getByRole("combobox", { name: "Command palette" });
+    await expect(input).toBeFocused();
+    await input.pressSequentially("use");
+    const options = stage.getByRole("option");
+    await expect(options).toHaveText([/Use yellow/, /Use teal/]);
+
+    // 실제 조합 상태를 만든다 — 이때의 keydown 은 isComposing 이 true
+    const cdp = await page.context().newCDPSession(page);
+    const compose = () =>
+      cdp.send("Input.imeSetComposition", { text: " ", selectionStart: 1, selectionEnd: 1 });
+    const press = async (key: string, code: number) => {
+      const event = { key, code: key, windowsVirtualKeyCode: code };
+      await cdp.send("Input.dispatchKeyEvent", { type: "rawKeyDown", ...event });
+      await cdp.send("Input.dispatchKeyEvent", { type: "keyUp", ...event });
+    };
+
+    await compose();
+    await press("Escape", 27);
+    await expect(page).toHaveTitle("Escape true");
+    await expect(stage.getByRole("dialog")).toBeVisible();
+
+    await compose();
+    await expect(options).toHaveText([/Use yellow/, /Use teal/]);
+    await press("Enter", 13);
+    await expect(page).toHaveTitle("Enter true");
+    await expect(stage.getByText(/^Ran/)).toHaveCount(0);
+    await expect(stage.getByRole("dialog")).toBeVisible();
+
+    // 조합이 끝난 뒤의 Enter 는 실행한다
+    await cdp.send("Input.insertText", { text: " " });
+    await expect(options).toHaveText([/Use yellow/, /Use teal/]);
+    await page.keyboard.press("Enter");
+    await expect(stage.getByText('Ran "Use yellow"')).toBeVisible();
+  });
+
   test("Esc closes only the palette inside the gallery modal; ⌘K reopens it there", async ({
     page,
   }) => {
