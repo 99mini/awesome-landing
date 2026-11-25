@@ -136,6 +136,8 @@ export function SearchCombobox({ value, onChange, onPick }: SearchComboboxProps)
   }
 
   function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    // 한글 조합 중의 Enter·Esc·방향키는 입력기의 것 (229 는 Safari 의 확정 Enter)
+    if (e.nativeEvent.isComposing || e.keyCode === 229) return;
     const last = suggestions.length - 1;
     switch (e.key) {
       case "ArrowDown":

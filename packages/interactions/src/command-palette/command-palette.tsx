@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "../lib/cx.ts";
+import { isComposing } from "../lib/is-composing.ts";
 import * as css from "./command-palette.css.ts";
 
 // 입력칸이 포커스를 갖고 aria-activedescendant 로 고른 줄을 알리는 combobox 패턴 —
@@ -226,7 +227,8 @@ export function CommandPalette({
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape" || !panelRef.current?.contains(document.activeElement)) return;
       e.stopImmediatePropagation();
-      actions.current.hide(true);
+      // 조합을 취소하는 Esc 로는 닫지 않는다
+      if (!isComposing(e)) actions.current.hide(true);
     };
     window.addEventListener("keydown", onKey, { capture: true });
     return () => window.removeEventListener("keydown", onKey, { capture: true });
@@ -269,6 +271,7 @@ export function CommandPalette({
   }
 
   function onInputKey(e: ReactKeyboardEvent<HTMLInputElement>) {
+    if (isComposing(e.nativeEvent)) return;
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
       if (results.length === 0) return;
