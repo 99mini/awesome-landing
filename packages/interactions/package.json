@@ -1,6 +1,6 @@
 {
   "name": "@99mini/interactions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Accessible React interactions: photo viewer, command palette, morphing modal, toasts, tickers and more. Unstyled, works with Tailwind v4 or plain CSS.",
   "keywords": [
     "animation",
@@ -14,6 +14,11 @@
   ],
   "license": "MIT",
   "author": "99mini",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/99mini/awesome-landing.git",
+    "directory": "packages/interactions"
+  },
   "files": [
     "dist",
     "CHANGELOG.md"

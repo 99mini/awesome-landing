@@ -1,6 +1,6 @@
 # @99mini/interactions 를 npm 에 올린다. 손으로 실행할 때만 돈다 (Actions → Release → Run workflow).
 # 토큰을 저장하지 않는다 — npm 의 Trusted Publisher(OIDC)로 이 워크플로만 올릴 수 있게 한다.
-# 처음 한 번은 손으로 올려야 npm 에서 Trusted Publisher 를 설정할 수 있다 (README 의 "npm 배포").
+# 등록 방법은 README 의 "npm 배포".
 name: Release
 
 on:
@@ -29,6 +29,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Version is not on npm yet
+        run: |
+          name=$(node -p "require('./packages/interactions/package.json').name")
+          version=$(node -p "require('./packages/interactions/package.json').version")
+          status=$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/$name/$version")
+          if [ "$status" = 200 ]; then
+            echo "::error::$name@$version 은 이미 npm 에 있습니다. packages/interactions 의 version 과 CHANGELOG.md 를 올려 병합한 뒤 다시 실행하세요."
+            exit 1
+          fi
       - run: pnpm check
       - run: pnpm check:package
       - run: pnpm --filter @99mini/interactions pack --pack-destination "$RUNNER_TEMP"
