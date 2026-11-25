@@ -151,3 +151,7 @@ Claude Code 에서는 `/hallmark audit <path>`, 새 페이지는 `/hallmark cust
   - 인터랙션 컴포넌트는 구조 스타일만 갖고, 겉모습은 `className` 과 CSS 변수로 열어 둔다. 테마에 의존하지 않는다.
   - Motion 의 motion value(x, y, rotate 등)와 Motion 레이아웃 애니메이션이 보정하는 `borderRadius` 는 inline `style` 로 둔다.
 - 워크스페이스 패키지는 빌드 없이 TS 소스를 직접 export (Vite 가 처리).
+
+## 라이선스
+
+[MIT](LICENSE)
