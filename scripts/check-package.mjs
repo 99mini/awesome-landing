@@ -35,6 +35,11 @@ try {
   const text = JSON.stringify(manifest);
   for (const leak of ["workspace:", "catalog:", "@awesome/"])
     expect(!text.includes(leak), `package.json 에 ${leak} 가 남아 있다`);
+  // npm Trusted Publisher 는 이 주소가 저장소와 정확히 같아야 올려 준다
+  expect(
+    manifest.repository?.url === "git+https://github.com/99mini/awesome-landing.git",
+    "repository.url 이 GitHub 저장소와 다르다",
+  );
   expect(!manifest.private, "private 이라 배포되지 않는다");
   expect(!manifest.devDependencies && !manifest.scripts, "개발용 항목이 남아 있다");
 

@@ -82,16 +82,12 @@ Tailwind 에서 `layer(...)` 없이 가져오면 `awesome` 레이어가 utilitie
 새 버전: `packages/interactions/package.json` 의 `version` 과 `CHANGELOG.md` 를 함께 올려 병합한 뒤
 Actions → **Release** → Run workflow (기본은 dry-run).
 
-처음 한 번은 손으로 올려야 한다 — 패키지가 있어야 npm 에서 Trusted Publisher 를 설정할 수 있다.
+토큰은 쓰지 않는다. npmjs.com 의 패키지 Settings → Trusted publishing → GitHub Actions 에 한 번 등록한다:
+`99mini` / `awesome-landing` / `release.yml`, Environment 는 비우고 Allowed actions 에서 `npm publish` 를 켠다.
 
-```sh
-npm login                                  # 99mini 계정
-pnpm check:package
-pnpm --filter @99mini/interactions pack --pack-destination /tmp
-npm publish /tmp/99mini-interactions-0.1.0.tgz --access public
-```
-
-그다음 npmjs.com 의 패키지 설정 → Trusted Publisher → GitHub Actions: `99mini/awesome-landing`, 워크플로 `release.yml`.
+- 등록하고 2일 안에 배포에 성공해야 한다(아니면 만료) — 배포 직전에 등록한다.
+- `package.json` 의 `repository.url` 이 이 저장소와 정확히 같아야 한다 (`check:package` 가 확인).
+- 배포에 성공하면 Settings → Publishing access 에서 2FA 를 요구하고 토큰을 막는다.
 
 ## 스크립트
 
