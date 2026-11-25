@@ -110,7 +110,8 @@ pnpm test:visual   # 화면 회귀 — 기준 이미지는 CI 컨테이너 것�
 
 로컬은 설치된 Chrome, CI 는 Playwright 의 Chromium 을 쓴다. PR 마다 GitHub Actions 가
 `pnpm check` + `pnpm build`, E2E, 화면 회귀, Storybook 테스트, `pnpm audit:design all` 을 돌린다.
-화면을 일부러 바꿨다면 PR 에 `update-snapshots` 라벨을 붙인다 — CI 가 기준 이미지를 다시 만들어 커밋하고, 라벨을 떼고, 그 커밋에서 CI 를 다시 돌린다 (`.github/workflows/ci.yml`).
+화면을 일부러 바꿨다면 PR 에 `update-snapshots` 라벨을 붙인다 — CI 가 기준 이미지를 다시 만들어 커밋하고 라벨을 뗀다.
+봇 커밋의 CI 는 승인을 기다리니, 이미지를 확인하고 PR 에서 워크플로 실행을 승인한다 (`.github/workflows/ci.yml`).
 
 ## 디자인 품질 (Hallmark)
 

@@ -44,8 +44,8 @@
 - 컴포넌트 테스트는 Storybook(`apps/storybook`): 모든 스토리를 브라우저에서 렌더하고 play 함수와 axe 접근성 검사를 돌린다 (`pnpm test:stories`).
   인터랙션 스토리는 생성물(`stories/interactions/`), 동작 검사는 직접 쓴다(`stories/behaviors/`). 테스트에서는 Motion 애니메이션이 즉시 끝난다.
 - 화면 회귀(`e2e/tests/visual.spec.ts`)는 CI 의 Playwright 컨테이너에서만 비교한다 — 로컬 macOS 에서 찍은 이미지는 커밋하지 말 것.
-  화면을 일부러 바꿨다면 PR 에 `update-snapshots` 라벨 → CI 가 새 기준 이미지를 커밋하고, 라벨을 떼고, 그 커밋에서 CI 를 다시 돌린다.
-  커밋된 이미지가 의도한 것뿐인지 보고, 비교가 통과하는지 확인한다.
+  화면을 일부러 바꿨다면 PR 에 `update-snapshots` 라벨 → CI 가 새 기준 이미지를 커밋하고 라벨을 뗀다.
+  봇 커밋의 CI 는 승인을 기다린다 — 커밋된 이미지가 의도한 것뿐인지 보고, PR 에서 사람이 워크플로 실행을 승인한다.
 - CI(`.github/workflows/ci.yml`)는 PR 마다 check+build, e2e, visual, storybook, `audit:design all` 을 돌린다.
   e2e 는 4개 job 으로 나눠(`--shard=N/4`) 동시에 돈다 — 러너 CPU 가 적어 job 안에서는 worker 1개라, 타이밍을 재는 테스트를 위해 worker 대신 job 을 늘렸다.
 
