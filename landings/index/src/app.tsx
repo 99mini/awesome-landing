@@ -4,8 +4,8 @@ import {
   interactions,
   type InteractionCategory,
   type InteractionDemoModule,
-} from "@awesome/interactions/registry";
-import { cx } from "@awesome/interactions";
+} from "@99mini/interactions/registry";
+import { cx } from "@99mini/interactions";
 import { m, useReducedMotion } from "motion/react";
 import { Suspense, useState } from "react";
 import * as css from "./app.css.ts";
@@ -164,7 +164,7 @@ export function App() {
             </li>
             <li className={css.step}>
               <p className={css.stepText}>Import it from the package.</p>
-              <code className={css.code}>{`import { ${name} } from "@awesome/interactions";`}</code>
+              <code className={css.code}>{`import { ${name} } from "@99mini/interactions";`}</code>
             </li>
             {propKey && prop && (
               <li className={css.step}>

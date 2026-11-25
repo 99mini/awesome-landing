@@ -23,7 +23,7 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 │  └─ aurora/               #   landing.json(메타·포트) 으로 갤러리에 자동 노출 (:5200~)
 ├─ packages/
 │  ├─ theme/                # @awesome/theme — 디자인 토큰(--al-*) + 공통 reset
-│  └─ interactions/         # @awesome/interactions — 재사용 인터랙션 컴포넌트
+│  └─ interactions/         # @99mini/interactions — 재사용 인터랙션 컴포넌트
 │     └─ src/<slug>/
 │        ├─ <slug>.tsx      #   실제 구현 (index.ts 에서 export)
 │        └─ demo.tsx        #   meta + 데모 → 갤러리에 자동 등록
@@ -44,12 +44,12 @@ pnpm dev:all        # 갤러리 + 모든 랜딩 동시 실행
 
 ## 다른 앱에서 쓰기 (Tailwind v4 포함)
 
-`@awesome/interactions` 는 JS · 타입 · CSS 파일 하나로 빌드된다 (`pnpm --filter @awesome/interactions build` → `dist/`).
+`@99mini/interactions` 는 JS · 타입 · CSS 파일 하나로 빌드된다 (`pnpm --filter @99mini/interactions build` → `dist/`).
 쓰는 쪽은 vanilla-extract 플러그인이 필요 없다 — `motion`·`react` 만 있으면 된다.
 
 ```tsx
-import { MotionProvider } from "@awesome/interactions/motion";
-import { CommandPalette } from "@awesome/interactions";
+import { MotionProvider } from "@99mini/interactions/motion";
+import { CommandPalette } from "@99mini/interactions";
 
 root.render(
   <MotionProvider>
@@ -63,16 +63,35 @@ CSS 는 `@layer awesome` 안에 있어서, 쓰는 쪽의 클래스가 우선순�
 ```css
 /* Tailwind v4 — 반드시 layer(components) 로. 그래야 utilities 가 이긴다 */
 @import "tailwindcss";
-@import "@awesome/interactions/style.css" layer(components);
+@import "@99mini/interactions/style.css" layer(components);
 ```
 
 ```css
 /* 레이어를 쓰지 않는 일반 CSS — 그냥 가져오면 된다 (레이어 밖의 CSS 가 언제나 이긴다) */
-@import "@awesome/interactions/style.css";
+@import "@99mini/interactions/style.css";
 ```
 
 Tailwind 에서 `layer(...)` 없이 가져오면 `awesome` 레이어가 utilities 뒤에 선언되어 패키지 스타일이 이긴다 — `examples/tailwind` 와
 `e2e/tests/tailwind.spec.ts` 가 이것을 확인한다.
+
+## npm 배포 (`@99mini/interactions`)
+
+배포물은 빌드 결과(JS · 타입 · CSS)와 README · LICENSE · CHANGELOG 뿐이다. 레지스트리·데모·소스 경로는 저장소 안에서만 쓰이고
+(`publishConfig.exports` 가 지운다), 개발용 항목은 `.pnpmfile.mjs` 가 뺀다. `pnpm check:package` 가 tarball 을 만들어 확인한다 (CI).
+
+새 버전: `packages/interactions/package.json` 의 `version` 과 `CHANGELOG.md` 를 함께 올려 병합한 뒤
+Actions → **Release** → Run workflow (기본은 dry-run).
+
+처음 한 번은 손으로 올려야 한다 — 패키지가 있어야 npm 에서 Trusted Publisher 를 설정할 수 있다.
+
+```sh
+npm login                                  # 99mini 계정
+pnpm check:package
+pnpm --filter @99mini/interactions pack --pack-destination /tmp
+npm publish /tmp/99mini-interactions-0.1.0.tgz --access public
+```
+
+그다음 npmjs.com 의 패키지 설정 → Trusted Publisher → GitHub Actions: `99mini/awesome-landing`, 워크플로 `release.yml`.
 
 ## 스크립트
 
@@ -123,7 +142,7 @@ Claude Code 에서는 `/hallmark audit <path>`, 새 페이지는 `/hallmark cust
   인터랙션을 쓰는 앱은 루트를 한 번 감싼다:
 
   ```tsx
-  import { MotionProvider } from "@awesome/interactions/motion";
+  import { MotionProvider } from "@99mini/interactions/motion";
   root.render(
     <MotionProvider>
       <App />

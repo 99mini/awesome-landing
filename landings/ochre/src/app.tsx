@@ -4,7 +4,7 @@ import {
   StickyStory,
   ToastStack,
   type Toast,
-} from "@awesome/interactions";
+} from "@99mini/interactions";
 import { useRef, useState } from "react";
 import * as css from "./app.css.ts";
 import { COUNTS, DESTINATIONS, NOTE, STEPS, THREAD } from "./content.ts";

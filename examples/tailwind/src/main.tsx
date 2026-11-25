@@ -1,4 +1,4 @@
-import { MotionProvider } from "@awesome/interactions/motion";
+import { MotionProvider } from "@99mini/interactions/motion";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app.tsx";

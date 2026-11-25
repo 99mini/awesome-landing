@@ -4,7 +4,7 @@ import { defaultClientConditions, defineConfig } from "vite";
 import meta from "./landing.json" with { type: "json" };
 
 export default defineConfig({
-  // 워크스페이스 패키지는 빌드 결과(dist)가 아니라 소스를 쓴다 (@awesome/interactions 의 exports 참고)
+  // 워크스페이스 패키지는 빌드 결과(dist)가 아니라 소스를 쓴다 (@99mini/interactions 의 exports 참고)
   resolve: { conditions: ["source", ...defaultClientConditions] },
   plugins: [react(), vanillaExtractPlugin()],
   base: "./",

@@ -2,7 +2,7 @@ import {
   controlDefaults,
   findInteraction,
   type InteractionControls,
-} from "@awesome/interactions/registry";
+} from "@99mini/interactions/registry";
 import type { ArgTypes } from "@storybook/react-vite";
 
 /** 갤러리 조절기 정의(meta.controls)를 Storybook 컨트롤로 옮긴다 — 정의는 한 곳(데모)에만 둔다 */

@@ -20,6 +20,7 @@
     "storybook": "pnpm --filter @awesome/storybook storybook",
     "test:stories": "pnpm --filter @awesome/storybook test",
     "check:bundle": "node scripts/check-bundle.mjs",
+    "check:package": "node scripts/check-package.mjs",
     "test:visual": "pnpm --filter @awesome/e2e test:visual",
     "vendor:interactions": "node scripts/vendor.mjs"
   },

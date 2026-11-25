@@ -1,4 +1,4 @@
-import type { ControlValues, InteractionControls } from "@awesome/interactions/registry";
+import type { ControlValues, InteractionControls } from "@99mini/interactions/registry";
 import * as css from "./controls-panel.css.ts";
 
 interface ControlsPanelProps {

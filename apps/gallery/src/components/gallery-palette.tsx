@@ -1,5 +1,5 @@
-import { CommandPalette, type Command } from "@awesome/interactions";
-import { interactions } from "@awesome/interactions/registry";
+import { CommandPalette, type Command } from "@99mini/interactions";
+import { interactions } from "@99mini/interactions/registry";
 import { startTransition } from "react";
 import { useSearchParams } from "react-router";
 import { CATEGORIES, categoryCount } from "../hooks/use-gallery-filters.ts";

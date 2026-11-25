@@ -5,7 +5,7 @@ import {
   ScrollReveal,
   SplitText,
   TextScramble,
-} from "@awesome/interactions";
+} from "@99mini/interactions";
 import { Fragment } from "react";
 import * as css from "./app.css.ts";
 

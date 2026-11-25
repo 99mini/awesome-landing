@@ -1,4 +1,4 @@
-import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
+import { controlDefaults, type InteractionDemoModule } from "@99mini/interactions/registry";
 import { m } from "motion/react";
 import { Fragment, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ControlsPanel } from "./controls-panel.tsx";

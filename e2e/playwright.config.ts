@@ -10,7 +10,7 @@ const servers = [
   { filter: "@landing/editorial", port: 4321 },
   { filter: "@landing/index", port: 4322 },
   { filter: "@landing/ochre", port: 4323 },
-  // 바깥 프로젝트처럼 미리 빌드된 패키지(dist)를 쓴다 — `...` 로 의존 패키지(@awesome/interactions)부터 빌드
+  // 바깥 프로젝트처럼 미리 빌드된 패키지(dist)를 쓴다 — `...` 로 의존 패키지(@99mini/interactions)부터 빌드
   { filter: "@example/tailwind", port: 4330, withDeps: true },
 ];
 

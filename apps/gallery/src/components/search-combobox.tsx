@@ -4,7 +4,7 @@
  * 키보드 조작은 옵션이 아니라 combobox(버튼·입력칸)가 맡으므로, 옵션의 click 은 포인터 전용이다.
  */
 /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/click-events-have-key-events */
-import { interactions } from "@awesome/interactions/registry";
+import { interactions } from "@99mini/interactions/registry";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { CATEGORIES, TAGS, categoryCount, tagCount } from "../hooks/use-gallery-filters.ts";

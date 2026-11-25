@@ -1,4 +1,4 @@
-import { findInteraction, interactions } from "@awesome/interactions/registry";
+import { findInteraction, interactions } from "@99mini/interactions/registry";
 import { AnimatePresence, LayoutGroup, m } from "motion/react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { EmptyResult, GalleryFilters } from "../components/gallery-filters.tsx";

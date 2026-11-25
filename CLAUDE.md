@@ -7,15 +7,17 @@
 - 의존성 추가 시 `pnpm-workspace.yaml` catalog 에 버전을 넣고 패키지에선 `"catalog:"`.
 - 애니메이션은 `motion/react` import. 모든 인터랙션은 `useReducedMotion` 대응.
   컴포넌트는 `motion.*` 가 아니라 `m.*` (oxlint `no-restricted-imports` 가 막는다). 기능 묶음은 `MotionProvider`
-  (`@awesome/interactions/motion`, `LazyMotion`)가 나중에 받으니, 새 앱·스토리 루트는 이것으로 감싼다.
-  `@awesome/interactions` 는 `sideEffects` 를 `.css.ts` 로 한정 — barrel 에서 하나만 가져와도 다른 컴포넌트가 따라오지 않는다.
+  (`@99mini/interactions/motion`, `LazyMotion`)가 나중에 받으니, 새 앱·스토리 루트는 이것으로 감싼다.
+  `@99mini/interactions` 는 `sideEffects` 를 `.css.ts` 로 한정 — barrel 에서 하나만 가져와도 다른 컴포넌트가 따라오지 않는다.
 - 스타일은 vanilla-extract `*.css.ts` (컴포넌트 옆, `import * as css from "./X.css.ts"`). 토큰은 `@awesome/theme` 의 `vars`.
   인터랙션 컴포넌트(`packages/interactions/src/<slug>/<slug>.tsx`)는 테마 import 금지 — 데모(`demo.css.ts`)만 사용.
   motion value 와 layout 애니메이션용 `borderRadius` 만 inline style 허용.
 - 새 Vite 앱은 `vanillaExtractPlugin()` 필수. 워크스페이스 패키지의 `.css.ts` 는 앱 플러그인이 컴파일한다.
-  또 `resolve.conditions: ["source", ...defaultClientConditions]` 를 넣는다 — `@awesome/interactions` 의 exports 는
+  또 `resolve.conditions: ["source", ...defaultClientConditions]` 를 넣는다 — `@99mini/interactions` 의 exports 는
   `source` 조건이면 소스, 아니면 빌드 결과(`dist`)로 풀린다 (tsconfig.base 의 `customConditions` 도 같은 이유).
-- `@awesome/interactions` 는 바깥에서 쓸 수 있게 빌드된다(`vite build` + `tsc`, CSS 는 `@layer awesome` 로 감쌈).
+- `@99mini/interactions` 는 바깥에서 쓸 수 있게 빌드된다(`vite build` + `tsc`, CSS 는 `@layer awesome` 로 감쌈).
+  npm 공개 패키지다 — 공개 API(`index.ts` export, props, CSS 변수)를 바꾸면 `packages/interactions` 의 `version` 과 `CHANGELOG.md` 를
+  함께 올린다. `pnpm check:package` 가 tarball 내용을 확인한다(CI). 배포는 사람이 Release 워크플로로 한다.
   `examples/tailwind` 가 vanilla-extract 없이 dist 를 Tailwind v4 로 쓰는 것을 E2E 로 확인한다 — 컴포넌트 구조 스타일을
   바꾸면 Tailwind 클래스가 여전히 덮어쓰는지 거기서 본다.
 - 첫 화면에 바로 보일 수 있는 인터랙션은 `useInView` 로 `animate` 값을 바꾸지 말고 `whileInView` 를 쓴다 —

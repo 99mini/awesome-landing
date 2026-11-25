@@ -261,6 +261,8 @@ catalogs:
       specifier: ^5.1.1
       version: 5.1.1
 
+pnpmfileChecksum: sha256-Ij+4+frQ+STdOiROqWIFeoq5Y1VlI94pDA361ih+HjM=
+
 importers:
 
   .:
@@ -277,7 +279,7 @@ importers:
 
   apps/gallery:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       '@awesome/theme':
@@ -329,7 +331,7 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       '@awesome/theme':
@@ -423,7 +425,7 @@ importers:
 
   examples/tailwind:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       motion:
@@ -460,7 +462,7 @@ importers:
 
   landings/aurora:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       '@awesome/theme':
@@ -500,7 +502,7 @@ importers:
 
   landings/editorial:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       '@awesome/theme':
@@ -540,7 +542,7 @@ importers:
 
   landings/index:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       '@awesome/theme':
@@ -580,7 +582,7 @@ importers:
 
   landings/ochre:
     dependencies:
-      '@awesome/interactions':
+      '@99mini/interactions':
         specifier: workspace:*
         version: link:../../packages/interactions
       '@awesome/theme':
@@ -620,22 +622,22 @@ importers:
 
   packages/interactions:
     dependencies:
-      '@awesome/theme':
-        specifier: workspace:*
-        version: link:../theme
-      '@vanilla-extract/css':
-        specifier: 'catalog:'
-        version: 1.21.3
       '@vanilla-extract/dynamic':
         specifier: 'catalog:'
         version: 2.1.5
     devDependencies:
+      '@awesome/theme':
+        specifier: workspace:*
+        version: link:../theme
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
+      '@vanilla-extract/css':
+        specifier: 'catalog:'
+        version: 1.21.3
       '@vanilla-extract/vite-plugin':
         specifier: 'catalog:'
         version: 5.2.6(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0))

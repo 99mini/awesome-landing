@@ -8,7 +8,7 @@ import {
   ToastStack,
   type Command,
   type Toast,
-} from "@awesome/interactions";
+} from "@99mini/interactions";
 import { useRef, useState } from "react";
 
 const COMMANDS: Command[] = [

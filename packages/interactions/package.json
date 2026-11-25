@@ -1,9 +1,22 @@
 {
-  "name": "@awesome/interactions",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@99mini/interactions",
+  "version": "0.1.0",
+  "description": "Accessible React interactions: photo viewer, command palette, morphing modal, toasts, tickers and more. Unstyled, works with Tailwind v4 or plain CSS.",
+  "keywords": [
+    "animation",
+    "command-palette",
+    "interaction",
+    "lightbox",
+    "modal",
+    "motion",
+    "react",
+    "tailwindcss"
+  ],
+  "license": "MIT",
+  "author": "99mini",
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "type": "module",
   "sideEffects": [
@@ -26,18 +39,38 @@
     "./sources": "./src/sources.ts",
     "./demo/*": "./src/*/demo.tsx"
   },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./motion": {
+        "types": "./dist/types/motion/motion-provider.d.ts",
+        "default": "./dist/motion.js"
+      },
+      "./style.css": {
+        "types": "./dist/style.d.ts",
+        "default": "./dist/style.css"
+      },
+      "./package.json": "./package.json"
+    },
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@awesome/theme": "workspace:*",
-    "@vanilla-extract/css": "catalog:",
     "@vanilla-extract/dynamic": "catalog:"
   },
   "devDependencies": {
+    "@awesome/theme": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vanilla-extract/css": "catalog:",
     "@vanilla-extract/vite-plugin": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "motion": "catalog:",
@@ -47,8 +80,8 @@
     "vite": "catalog:"
   },
   "peerDependencies": {
-    "motion": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:"
+    "motion": "^12.0.0 || ^13.0.0 || ^14.0.0",
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
   }
 }

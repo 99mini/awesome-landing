@@ -8,7 +8,7 @@ import { defineConfig, type Plugin } from "vite";
  * 빌드된 CSS 를 `@layer <name>` 으로 감싼다.
  * 레이어 밖의 CSS 는 레이어 안의 CSS 를 언제나 이긴다 — 그래서 쓰는 쪽의 클래스(일반 CSS·Tailwind 등)가
  * 우선순위와 상관없이 이 패키지의 구조 스타일을 덮어쓸 수 있다.
- * (Tailwind v4 는 `@import "@awesome/interactions/style.css" layer(components);` 로 utilities 보다 앞에 둔다)
+ * (Tailwind v4 는 `@import "@99mini/interactions/style.css" layer(components);` 로 utilities 보다 앞에 둔다)
  */
 function cssLayer(name: string): Plugin {
   return {
@@ -19,6 +19,8 @@ function cssLayer(name: string): Plugin {
         if (file.type !== "asset" || !file.fileName.endsWith(".css")) continue;
         const path = join(options.dir ?? "dist", file.fileName);
         writeFileSync(path, `@layer ${name} {\n${readFileSync(path, "utf8")}\n}\n`);
+        // `import ".../style.css"` 의 타입 — CSS 선언이 없는 프로젝트에서도 TypeScript 가 찾게
+        writeFileSync(path.replace(/\.css$/, ".d.ts"), "export {};\n");
       }
     },
   };
@@ -37,8 +39,11 @@ export default defineConfig({
       cssFileName: "style",
     },
     cssCodeSplit: false,
-    sourcemap: true,
+    // 소스맵은 소스 전체를 담는다 — 저장소가 비공개인 동안은 배포물에 넣지 않는다
+    sourcemap: false,
     rolldownOptions: {
+      // 모두 훅을 쓰는 클라이언트 컴포넌트 — Next.js 같은 서버 컴포넌트 환경에서 바로 가져다 쓰게
+      output: { banner: '"use client";' },
       // 쓰는 쪽이 가진 것은 묶지 않는다
       external: [/^react($|\/)/, /^react-dom($|\/)/, /^motion($|\/)/, /^@vanilla-extract\/dynamic/],
     },

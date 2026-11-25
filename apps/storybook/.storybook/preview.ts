@@ -1,4 +1,4 @@
-import { MotionProvider } from "@awesome/interactions/motion";
+import { MotionProvider } from "@99mini/interactions/motion";
 import type { Preview } from "@storybook/react-vite";
 import { createElement } from "react";
 import "./preview.css.ts";

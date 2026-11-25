@@ -1,5 +1,5 @@
 // 자동 생성 — `pnpm stories:gen` 으로 다시 만든다. 직접 고치지 말 것.
-import Demo from "@awesome/interactions/demo/scroll-highlight";
+import Demo from "@99mini/interactions/demo/scroll-highlight";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { interactionStory } from "../../src/interaction-story.ts";
 
