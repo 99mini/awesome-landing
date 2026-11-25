@@ -25,6 +25,8 @@ jobs:
       - run: pnpm build
       - name: Bundle budget (gallery)
         run: pnpm check:bundle
+      - name: npm package contents
+        run: pnpm check:package
 
   e2e:
     # 러너 CPU 가 적어 한 job 안에서는 worker 가 1개뿐이다 — 애니메이션 타이밍을 재는 테스트가 있어

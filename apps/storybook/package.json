@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@awesome/interactions": "workspace:*",
+    "@99mini/interactions": "workspace:*",
     "@awesome/theme": "workspace:*",
     "@vanilla-extract/css": "catalog:",
     "@vanilla-extract/dynamic": "catalog:",

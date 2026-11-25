@@ -1,4 +1,4 @@
-import { interactions } from "@awesome/interactions/registry";
+import { interactions } from "@99mini/interactions/registry";
 import {
   CATEGORIES,
   TAGS,

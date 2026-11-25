@@ -1,10 +1,4 @@
-import {
-  CountUp,
-  MorphModal,
-  PhotoViewer,
-  SevenSegment,
-  TextScramble,
-} from "@awesome/interactions";
+import { CountUp, MorphModal, PhotoViewer, SevenSegment, TextScramble } from "@99mini/interactions";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 

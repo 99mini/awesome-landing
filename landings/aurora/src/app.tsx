@@ -1,4 +1,4 @@
-import { MagneticButton, ScrollReveal, SplitText } from "@awesome/interactions";
+import { MagneticButton, ScrollReveal, SplitText } from "@99mini/interactions";
 import { m, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import * as css from "./app.css.ts";

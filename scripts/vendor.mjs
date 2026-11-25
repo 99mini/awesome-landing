@@ -1,5 +1,5 @@
 // 사용법: pnpm vendor:interactions <대상 폴더>
-// @awesome/interactions 를 빌드해서 다른 저장소에 복사해 넣는다 (npm 배포 전까지의 방식).
+// @99mini/interactions 를 빌드해서 다른 저장소에 복사해 넣는다 (npm 배포 전까지의 방식).
 // 빌드 결과(JS·CSS·타입)만 옮기고 소스맵은 뺀다 — 소스가 없는 곳에서는 가리킬 데가 없다.
 // 어느 커밋에서 만들었는지 VENDOR.json 에 남긴다.
 import { execFileSync, spawnSync } from "node:child_process";
@@ -13,7 +13,7 @@ if (!target) {
   process.exit(2);
 }
 
-const build = spawnSync("pnpm", ["--filter", "@awesome/interactions", "build"], {
+const build = spawnSync("pnpm", ["--filter", "@99mini/interactions", "build"], {
   cwd: root,
   stdio: "inherit",
 });
@@ -37,7 +37,7 @@ writeFileSync(
   join(target, "VENDOR.json"),
   `${JSON.stringify(
     {
-      package: "@awesome/interactions",
+      package: "@99mini/interactions",
       source: "awesome-landing",
       commit: git("rev-parse", "HEAD"),
       dirty,

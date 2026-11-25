@@ -1,4 +1,4 @@
-import { ScrollReveal, SplitText } from "@awesome/interactions";
+import { ScrollReveal, SplitText } from "@99mini/interactions";
 import * as css from "./app.css.ts";
 
 export function App() {

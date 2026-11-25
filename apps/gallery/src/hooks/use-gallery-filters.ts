@@ -3,7 +3,7 @@ import {
   interactions,
   type InteractionCategory,
   type InteractionDemoModule,
-} from "@awesome/interactions/registry";
+} from "@99mini/interactions/registry";
 import { useSearchParams } from "react-router";
 
 export const CATEGORIES = [

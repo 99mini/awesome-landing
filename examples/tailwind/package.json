@@ -7,10 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "pnpm --filter @awesome/interactions build && tsc"
+    "typecheck": "pnpm --filter @99mini/interactions build && tsc"
   },
   "dependencies": {
-    "@awesome/interactions": "workspace:*",
+    "@99mini/interactions": "workspace:*",
     "motion": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

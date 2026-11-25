@@ -1,4 +1,4 @@
-import { controlDefaults, type InteractionDemoModule } from "@awesome/interactions/registry";
+import { controlDefaults, type InteractionDemoModule } from "@99mini/interactions/registry";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { m } from "motion/react";
 import { Suspense, useEffect, useRef } from "react";
